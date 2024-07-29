@@ -25,8 +25,10 @@ const InvoiceForm = () => {
     const [errorState, setError] = useState(null);
 
     useEffect(() => {
+        // Fetch persons
         apiGet("/api/persons").then((data) => setPersons(data));
 
+        // Fetch invoice data if editing
         if (id) {
             apiGet("/api/invoices/" + id).then((data) => {
                 setInvoice({
