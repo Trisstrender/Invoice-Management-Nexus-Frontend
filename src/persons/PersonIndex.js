@@ -1,7 +1,5 @@
-import React, {useEffect, useState} from "react";
-
-import {apiDelete, apiGet} from "../utils/api";
-
+import React, { useEffect, useState } from "react";
+import { apiDelete, apiGet } from "../utils/api";
 import PersonTable from "./PersonTable";
 
 const PersonIndex = () => {
@@ -10,11 +8,11 @@ const PersonIndex = () => {
     const deletePerson = async (id) => {
         try {
             await apiDelete("/api/persons/" + id);
+            setPersons(persons.filter((item) => item.id !== id));
         } catch (error) {
-            console.log(error.message);
-            alert(error.message)
+            console.error(error.message);
+            alert("Error deleting person: " + error.message);
         }
-        setPersons(persons.filter((item) => item._id !== id));
     };
 
     useEffect(() => {
@@ -32,4 +30,5 @@ const PersonIndex = () => {
         </div>
     );
 };
+
 export default PersonIndex;

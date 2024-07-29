@@ -3,16 +3,39 @@ const API_URL = "http://localhost:8080";
 const fetchData = (url, requestOptions) => {
     const apiUrl = `${API_URL}${url}`;
 
+    console.log('Request URL:', apiUrl);
+    console.log('Request Options:', JSON.stringify(requestOptions, null, 2));
+
     return fetch(apiUrl, requestOptions)
         .then((response) => {
             if (!response.ok) {
-                throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+                console.log('Response status:', response.status);
+                console.log('Response statusText:', response.statusText);
+                return response.text().then(text => {
+                    console.log('Response body:', text);
+                    throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+                });
             }
 
             if (requestOptions.method !== 'DELETE')
                 return response.json();
         })
+        .then(data => {
+            // Convert _id to id if present
+            if (Array.isArray(data)) {
+                return data.map(item => {
+                    if (item._id) {
+                        item.id = item._id;
+                    }
+                    return item;
+                });
+            } else if (data && data._id) {
+                data.id = data._id;
+            }
+            return data;
+        })
         .catch((error) => {
+            console.error('Fetch error:', error);
             throw error;
         });
 };
