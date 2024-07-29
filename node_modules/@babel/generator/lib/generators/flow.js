@@ -78,8 +78,9 @@ exports.VoidTypeAnnotation = VoidTypeAnnotation;
 exports._interfaceish = _interfaceish;
 exports._variance = _variance;
 var _t = require("@babel/types");
-var _modules = require("./modules");
-var _types2 = require("./types");
+var _modules = require("./modules.js");
+var _index = require("../node/index.js");
+var _types2 = require("./types.js");
 const {
   isDeclareExportDeclaration,
   isStatement
@@ -335,7 +336,8 @@ function FunctionTypeAnnotation(node, parent) {
     this.print(node.rest, node);
   }
   this.tokenChar(41);
-  if (parent && (parent.type === "ObjectTypeCallProperty" || parent.type === "ObjectTypeInternalSlot" || parent.type === "DeclareFunction" || parent.type === "ObjectTypeProperty" && parent.method)) {
+  const type = parent == null ? void 0 : parent.type;
+  if (type != null && (type === "ObjectTypeCallProperty" || type === "ObjectTypeInternalSlot" || type === "DeclareFunction" || type === "ObjectTypeProperty" && parent.method)) {
     this.tokenChar(58);
   } else {
     this.space();
@@ -367,26 +369,31 @@ function _interfaceish(node) {
     this.space();
     this.printList(node.extends, node);
   }
-  if (node.mixins && node.mixins.length) {
-    this.space();
-    this.word("mixins");
-    this.space();
-    this.printList(node.mixins, node);
-  }
-  if (node.implements && node.implements.length) {
-    this.space();
-    this.word("implements");
-    this.space();
-    this.printList(node.implements, node);
+  if (node.type === "DeclareClass") {
+    var _node$mixins, _node$implements;
+    if ((_node$mixins = node.mixins) != null && _node$mixins.length) {
+      this.space();
+      this.word("mixins");
+      this.space();
+      this.printList(node.mixins, node);
+    }
+    if ((_node$implements = node.implements) != null && _node$implements.length) {
+      this.space();
+      this.word("implements");
+      this.space();
+      this.printList(node.implements, node);
+    }
   }
   this.space();
   this.print(node.body, node);
 }
 function _variance(node) {
-  if (node.variance) {
-    if (node.variance.kind === "plus") {
+  var _node$variance;
+  const kind = (_node$variance = node.variance) == null ? void 0 : _node$variance.kind;
+  if (kind != null) {
+    if (kind === "plus") {
       this.tokenChar(43);
-    } else if (node.variance.kind === "minus") {
+    } else if (kind === "minus") {
       this.tokenChar(45);
     }
   }
@@ -402,8 +409,9 @@ function andSeparator() {
   this.space();
 }
 function InterfaceTypeAnnotation(node) {
+  var _node$extends2;
   this.word("interface");
-  if (node.extends && node.extends.length) {
+  if ((_node$extends2 = node.extends) != null && _node$extends2.length) {
     this.space();
     this.word("extends");
     this.space();
@@ -457,10 +465,14 @@ function TypeAlias(node) {
   this.print(node.right, node);
   this.semicolon();
 }
-function TypeAnnotation(node) {
+function TypeAnnotation(node, parent) {
   this.tokenChar(58);
   this.space();
-  if (node.optional) this.tokenChar(63);
+  if (parent.type === "ArrowFunctionExpression") {
+    this.tokenContext |= _index.TokenContext.arrowFlowReturnType;
+  } else if (node.optional) {
+    this.tokenChar(63);
+  }
   this.print(node.typeAnnotation, node);
 }
 function TypeParameterInstantiation(node) {
