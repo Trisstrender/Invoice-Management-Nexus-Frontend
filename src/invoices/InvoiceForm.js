@@ -9,7 +9,6 @@ const InvoiceForm = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const [invoice, setInvoice] = useState({
-        _id: null,
         invoiceNumber: "",
         issued: "",
         dueDate: "",
@@ -17,8 +16,8 @@ const InvoiceForm = () => {
         price: "",
         vat: "",
         note: "",
-        buyer: { id: "" },
-        seller: { id: "" },
+        buyer: null,
+        seller: null,
     });
     const [persons, setPersons] = useState([]);
     const [sentState, setSent] = useState(false);
@@ -32,8 +31,8 @@ const InvoiceForm = () => {
             apiGet("/api/invoices/" + id).then((data) => {
                 setInvoice({
                     ...data,
-                    buyer: { id: data.buyer.id },
-                    seller: { id: data.seller.id },
+                    buyer: data.buyer,
+                    seller: data.seller,
                     issued: data.issued.split('T')[0],
                     dueDate: data.dueDate.split('T')[0],
                 });
@@ -41,36 +40,44 @@ const InvoiceForm = () => {
         }
     }, [id]);
 
+    const handlePersonChange = (field) => (e) => {
+        const selectedId = e.target.value;
+        const selectedPerson = persons.find(p => String(p.id) === selectedId || String(p._id) === selectedId);
+        if (selectedPerson) {
+            setInvoice({
+                ...invoice,
+                [field]: selectedPerson
+            });
+        }
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
         const submitData = {
-            ...invoice,
             invoiceNumber: parseInt(invoice.invoiceNumber),
+            issued: invoice.issued,
+            dueDate: invoice.dueDate,
+            product: invoice.product,
             price: parseInt(invoice.price),
             vat: parseInt(invoice.vat),
-            buyer: { id: parseInt(invoice.buyer.id) },
-            seller: { id: parseInt(invoice.seller.id) },
+            note: invoice.note,
+            buyer: invoice.buyer,
+            seller: invoice.seller,
         };
 
-        // Remove _id if it's null (for new invoices)
-        if (submitData._id === null) {
-            delete submitData._id;
-        }
-
-        console.log('Submitting data:', JSON.stringify(submitData, null, 2));
+        console.log("Submitting data:", submitData);
 
         const apiCall = id ? apiPut("/api/invoices/" + id, submitData) : apiPost("/api/invoices", submitData);
 
         apiCall
-            .then((response) => {
-                console.log('API response:', response);
+            .then(() => {
                 setSent(true);
                 setSuccess(true);
                 navigate("/invoices");
             })
             .catch((error) => {
-                console.error('API error:', error);
+                console.error("Error:", error.message);
                 setError(error.message);
                 setSent(true);
                 setSuccess(false);
@@ -154,8 +161,8 @@ const InvoiceForm = () => {
                     label="Kupující"
                     prompt="Vyberte kupujícího"
                     items={persons}
-                    value={invoice.buyer.id}
-                    handleChange={(e) => setInvoice({ ...invoice, buyer: { id: e.target.value } })}
+                    value={invoice.buyer ? invoice.buyer.id || invoice.buyer._id : ''}
+                    handleChange={handlePersonChange('buyer')}
                 />
                 <InputSelect
                     required={true}
@@ -163,8 +170,8 @@ const InvoiceForm = () => {
                     label="Prodávající"
                     prompt="Vyberte prodávajícího"
                     items={persons}
-                    value={invoice.seller.id}
-                    handleChange={(e) => setInvoice({ ...invoice, seller: { id: e.target.value } })}
+                    value={invoice.seller ? invoice.seller.id || invoice.seller._id : ''}
+                    handleChange={handlePersonChange('seller')}
                 />
                 <input type="submit" className="btn btn-primary" value="Uložit" />
             </form>

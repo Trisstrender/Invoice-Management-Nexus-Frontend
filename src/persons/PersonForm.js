@@ -40,7 +40,7 @@ const PersonForm = () => {
         const apiCall = id ? apiPut("/api/persons/" + id, person) : apiPost("/api/persons", person);
 
         apiCall
-            .then((response) => {
+            .then(() => {
                 setSent(true);
                 setSuccess(true);
                 navigate("/persons");
