@@ -18,6 +18,7 @@ const memoize = require("./util/memoize");
 /** @typedef {import("../declarations/WebpackOptions").Externals} Externals */
 /** @typedef {import("../declarations/WebpackOptions").FileCacheOptions} FileCacheOptions */
 /** @typedef {import("../declarations/WebpackOptions").LibraryOptions} LibraryOptions */
+/** @typedef {import("../declarations/WebpackOptions").MemoryCacheOptions} MemoryCacheOptions */
 /** @typedef {import("../declarations/WebpackOptions").ModuleOptions} ModuleOptions */
 /** @typedef {import("../declarations/WebpackOptions").ResolveOptions} ResolveOptions */
 /** @typedef {import("../declarations/WebpackOptions").RuleSetCondition} RuleSetCondition */
@@ -30,12 +31,15 @@ const memoize = require("./util/memoize");
 /** @typedef {import("../declarations/WebpackOptions").WebpackOptionsNormalized} WebpackOptionsNormalized */
 /** @typedef {import("../declarations/WebpackOptions").WebpackPluginFunction} WebpackPluginFunction */
 /** @typedef {import("../declarations/WebpackOptions").WebpackPluginInstance} WebpackPluginInstance */
+/** @typedef {import("./ChunkGroup")} ChunkGroup */
 /** @typedef {import("./Compilation").Asset} Asset */
 /** @typedef {import("./Compilation").AssetInfo} AssetInfo */
 /** @typedef {import("./Compilation").EntryOptions} EntryOptions */
 /** @typedef {import("./Compilation").PathData} PathData */
 /** @typedef {import("./Compiler").AssetEmittedInfo} AssetEmittedInfo */
+/** @typedef {import("./MultiCompiler").MultiCompilerOptions} MultiCompilerOptions */
 /** @typedef {import("./MultiStats")} MultiStats */
+/** @typedef {import("./NormalModuleFactory").ResolveData} ResolveData */
 /** @typedef {import("./Parser").ParserState} ParserState */
 /** @typedef {import("./ResolverFactory").ResolvePluginInstance} ResolvePluginInstance */
 /** @typedef {import("./ResolverFactory").Resolver} Resolver */
@@ -56,6 +60,8 @@ const memoize = require("./util/memoize");
 /** @typedef {import("./stats/DefaultStatsFactoryPlugin").StatsModuleTraceDependency} StatsModuleTraceDependency */
 /** @typedef {import("./stats/DefaultStatsFactoryPlugin").StatsModuleTraceItem} StatsModuleTraceItem */
 /** @typedef {import("./stats/DefaultStatsFactoryPlugin").StatsProfile} StatsProfile */
+/** @typedef {import("./util/fs").InputFileSystem} InputFileSystem */
+/** @typedef {import("./util/fs").OutputFileSystem} OutputFileSystem */
 
 /**
  * @template {Function} T
@@ -217,6 +223,9 @@ module.exports = mergeExports(fn, {
 	get HotModuleReplacementPlugin() {
 		return require("./HotModuleReplacementPlugin");
 	},
+	get InitFragment() {
+		return require("./InitFragment");
+	},
 	get IgnorePlugin() {
 		return require("./IgnorePlugin");
 	},
@@ -267,8 +276,14 @@ module.exports = mergeExports(fn, {
 	get MultiCompiler() {
 		return require("./MultiCompiler");
 	},
+	get OptimizationStages() {
+		return require("./OptimizationStages");
+	},
 	get Parser() {
 		return require("./Parser");
+	},
+	get PlatformPlugin() {
+		return require("./PlatformPlugin");
 	},
 	get PrefetchPlugin() {
 		return require("./PrefetchPlugin");
@@ -569,6 +584,9 @@ module.exports = mergeExports(fn, {
 		},
 		get LazySet() {
 			return require("./util/LazySet");
+		},
+		get compileBooleanMatcher() {
+			return require("./util/compileBooleanMatcher");
 		}
 	},
 

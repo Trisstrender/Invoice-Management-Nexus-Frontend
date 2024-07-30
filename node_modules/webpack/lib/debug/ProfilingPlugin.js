@@ -17,7 +17,14 @@ const createSchemaValidation = require("../util/create-schema-validation");
 const { dirname, mkdirpSync } = require("../util/fs");
 
 /** @typedef {import("../../declarations/plugins/debug/ProfilingPlugin").ProfilingPluginOptions} ProfilingPluginOptions */
+/** @typedef {import("../Compilation")} Compilation */
+/** @typedef {import("../Compiler")} Compiler */
+/** @typedef {import("../ContextModuleFactory")} ContextModuleFactory */
+/** @typedef {import("../ModuleFactory")} ModuleFactory */
+/** @typedef {import("../NormalModuleFactory")} NormalModuleFactory */
 /** @typedef {import("../util/fs").IntermediateFileSystem} IntermediateFileSystem */
+
+/** @typedef {TODO} Inspector */
 
 const validate = createSchemaValidation(
 	require("../../schemas/plugins/debug/ProfilingPlugin.check.js"),
@@ -27,16 +34,21 @@ const validate = createSchemaValidation(
 		baseDataPath: "options"
 	}
 );
+
+/** @type {Inspector | undefined} */
 let inspector = undefined;
 
 try {
-	// eslint-disable-next-line node/no-unsupported-features/node-builtins
+	// eslint-disable-next-line n/no-unsupported-features/node-builtins
 	inspector = require("inspector");
 } catch (e) {
 	console.log("Unable to CPU profile in < node 8.0");
 }
 
 class Profiler {
+	/**
+	 * @param {Inspector} inspector inspector
+	 */
 	constructor(inspector) {
 		this.session = undefined;
 		this.inspector = inspector;
@@ -72,6 +84,11 @@ class Profiler {
 		]);
 	}
 
+	/**
+	 * @param {string} method method name
+	 * @param {object} [params] params
+	 * @returns {Promise<TODO>} Promise for the result
+	 */
 	sendCommand(method, params) {
 		if (this.hasSession()) {
 			return new Promise((res, rej) => {
@@ -100,6 +117,8 @@ class Profiler {
 		return this.sendCommand("Profiler.stop").then(({ profile }) => {
 			const hrtime = process.hrtime();
 			const endTime = hrtime[0] * 1000000 + Math.round(hrtime[1] / 1000);
+			// Avoid coverage problems due indirect changes
+			/* istanbul ignore next */
 			if (profile.startTime < this._startTime || profile.endTime > endTime) {
 				// In some cases timestamps mismatch and we need to adjust them
 				// Both process.hrtime and the inspector timestamps claim to be relative
@@ -118,7 +137,7 @@ class Profiler {
 
 /**
  * an object that wraps Tracer and Profiler with a counter
- * @typedef {Object} Trace
+ * @typedef {object} Trace
  * @property {Tracer} trace instance of Tracer
  * @property {number} counter Counter
  * @property {Profiler} profiler instance of Profiler
@@ -132,7 +151,7 @@ class Profiler {
  */
 const createTrace = (fs, outputPath) => {
 	const trace = new Tracer();
-	const profiler = new Profiler(inspector);
+	const profiler = new Profiler(/** @type {Inspector} */ (inspector));
 	if (/\/|\\/.test(outputPath)) {
 		const dirPath = dirname(fs, outputPath);
 		mkdirpSync(fs, dirPath);
@@ -201,9 +220,15 @@ class ProfilingPlugin {
 		this.outputPath = options.outputPath || "events.json";
 	}
 
+	/**
+	 * Apply the plugin
+	 * @param {Compiler} compiler the compiler instance
+	 * @returns {void}
+	 */
 	apply(compiler) {
 		const tracer = createTrace(
-			compiler.intermediateFileSystem,
+			/** @type {IntermediateFileSystem} */
+			(compiler.intermediateFileSystem),
 			this.outputPath
 		);
 		tracer.profiler.startProfiling();
@@ -307,6 +332,11 @@ class ProfilingPlugin {
 	}
 }
 
+/**
+ * @param {any} instance instance
+ * @param {Trace} tracer tracer
+ * @param {string} logLabel log label
+ */
 const interceptAllHooksFor = (instance, tracer, logLabel) => {
 	if (Reflect.has(instance, "hooks")) {
 		Object.keys(instance.hooks).forEach(hookName => {
@@ -318,6 +348,10 @@ const interceptAllHooksFor = (instance, tracer, logLabel) => {
 	}
 };
 
+/**
+ * @param {NormalModuleFactory} moduleFactory normal module factory
+ * @param {Trace} tracer tracer
+ */
 const interceptAllParserHooks = (moduleFactory, tracer) => {
 	const moduleTypes = [
 		JAVASCRIPT_MODULE_TYPE_AUTO,
@@ -337,6 +371,10 @@ const interceptAllParserHooks = (moduleFactory, tracer) => {
 	});
 };
 
+/**
+ * @param {Compilation} compilation compilation
+ * @param {Trace} tracer tracer
+ */
 const interceptAllJavascriptModulesPluginHooks = (compilation, tracer) => {
 	interceptAllHooksFor(
 		{
@@ -361,7 +399,7 @@ const makeInterceptorFor = (instance, tracer) => hookName => ({
 						name,
 						type,
 						fn
-				  });
+					});
 		return {
 			...tapInfo,
 			fn: newFn

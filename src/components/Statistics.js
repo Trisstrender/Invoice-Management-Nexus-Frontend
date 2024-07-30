@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { apiGet } from '../utils/api';
+import formatCurrency from '../utils/currencyFormatter';
 
 const Statistics = () => {
     const [invoiceStats, setInvoiceStats] = useState(null);
@@ -16,14 +17,28 @@ const Statistics = () => {
         <div>
             <h1>Statistics</h1>
             <h2>Invoice Statistics</h2>
-            <p>Current Year Sum: {invoiceStats.currentYearSum}</p>
-            <p>All Time Sum: {invoiceStats.allTimeSum}</p>
-            <p>Invoices Count: {invoiceStats.invoicesCount}</p>
+            <table className="table">
+                <tbody>
+                <tr>
+                    <th>Current Year Sum</th>
+                    <td>{formatCurrency(invoiceStats.currentYearSum)}</td>
+                </tr>
+                <tr>
+                    <th>All Time Sum</th>
+                    <td>{formatCurrency(invoiceStats.allTimeSum)}</td>
+                </tr>
+                <tr>
+                    <th>Invoices Count</th>
+                    <td>{invoiceStats.invoicesCount}</td>
+                </tr>
+                </tbody>
+            </table>
 
             <h2>Person Statistics</h2>
             <table className="table">
                 <thead>
                 <tr>
+                    <th>Person ID</th>
                     <th>Person Name</th>
                     <th>Revenue</th>
                 </tr>
@@ -31,8 +46,9 @@ const Statistics = () => {
                 <tbody>
                 {personStats.map(stat => (
                     <tr key={stat.personId}>
+                        <td>{stat.personId}</td>
                         <td>{stat.personName}</td>
-                        <td>{stat.revenue}</td>
+                        <td>{formatCurrency(stat.revenue)}</td>
                     </tr>
                 ))}
                 </tbody>

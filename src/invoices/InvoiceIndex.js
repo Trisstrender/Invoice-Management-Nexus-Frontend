@@ -6,7 +6,8 @@ import { Link } from "react-router-dom";
 const InvoiceIndex = () => {
     const [invoices, setInvoices] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(10);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [totalItems, setTotalItems] = useState(0);
     const [sortField, setSortField] = useState("invoiceNumber");
     const [sortDirection, setSortDirection] = useState("asc");
     const [filters, setFilters] = useState({
@@ -24,12 +25,26 @@ const InvoiceIndex = () => {
             page: currentPage,
             limit: itemsPerPage,
         };
-        apiGet("/api/invoices", params).then((data) => setInvoices(data));
+        apiGet("/api/invoices", params).then((data) => {
+            // Check if data is an array, if not, use an empty array
+            setInvoices(Array.isArray(data) ? data : []);
+            // If total items information is available, update it
+            if (data && data.totalItems) {
+                setTotalItems(data.totalItems);
+            } else {
+                // If not available, use the length of the invoices array
+                setTotalItems(Array.isArray(data) ? data.length : 0);
+            }
+        }).catch(error => {
+            console.error("Error fetching invoices:", error);
+            setInvoices([]);
+            setTotalItems(0);
+        });
     };
 
     useEffect(() => {
         loadInvoices();
-    }, [currentPage, sortField, sortDirection, filters]);
+    }, [currentPage, itemsPerPage, sortField, sortDirection, filters]);
 
     const handleSort = (field) => {
         setSortField(field);
@@ -45,20 +60,43 @@ const InvoiceIndex = () => {
         setCurrentPage(pageNumber);
     };
 
+    const handleItemsPerPageChange = (e) => {
+        setItemsPerPage(parseInt(e.target.value));
+        setCurrentPage(1);
+    };
+
     const deleteInvoice = async (id) => {
         try {
             await apiDelete("/api/invoices/" + id);
-            setInvoices(invoices.filter((item) => item.id !== id));
+            loadInvoices();
         } catch (error) {
             console.error(error.message);
             alert("Error deleting invoice: " + error.message);
         }
     };
 
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
     return (
         <div>
             <h1>Seznam faktur</h1>
             <div className="mb-3">
+                <input
+                    type="text"
+                    name="buyerID"
+                    placeholder="Filter by Buyer ID"
+                    value={filters.buyerID}
+                    onChange={handleFilterChange}
+                    className="form-control mb-2"
+                />
+                <input
+                    type="text"
+                    name="sellerID"
+                    placeholder="Filter by Seller ID"
+                    value={filters.sellerID}
+                    onChange={handleFilterChange}
+                    className="form-control mb-2"
+                />
                 <input
                     type="text"
                     name="product"
@@ -92,7 +130,12 @@ const InvoiceIndex = () => {
                 deleteInvoice={deleteInvoice}
             />
             <div className="mt-3">
-                {Array.from({ length: Math.ceil(invoices.length / itemsPerPage) }, (_, i) => (
+                <select value={itemsPerPage} onChange={handleItemsPerPageChange} className="form-select mb-2">
+                    <option value="10">10 per page</option>
+                    <option value="20">20 per page</option>
+                    <option value="50">50 per page</option>
+                </select>
+                {Array.from({ length: totalPages }, (_, i) => (
                     <button
                         key={i}
                         onClick={() => handlePageChange(i + 1)}

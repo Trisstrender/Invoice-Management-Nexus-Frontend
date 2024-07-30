@@ -1,17 +1,21 @@
-import React, {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
-
-import {apiGet} from "../utils/api";
+import React, { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { apiGet } from "../utils/api";
 import Country from "./Country";
+import InvoiceTable from "../invoices/InvoiceTable";
 
 const PersonDetail = () => {
-    const {id} = useParams();
+    const { id } = useParams();
     const [person, setPerson] = useState({});
+    const [issuedInvoices, setIssuedInvoices] = useState([]);
+    const [receivedInvoices, setReceivedInvoices] = useState([]);
 
     useEffect(() => {
-        // TODO: Add HTTP req.
         apiGet("/api/persons/" + id).then((data) => setPerson(data));
-    }, [id]);
+        apiGet(`/api/identification/${person.identificationNumber}/sales`).then((data) => setIssuedInvoices(data));
+        apiGet(`/api/identification/${person.identificationNumber}/purchases`).then((data) => setReceivedInvoices(data));
+    }, [id, person.identificationNumber]);
+
     const country = Country.CZECHIA === person.country ? "Česká republika" : "Slovensko";
 
     return (
@@ -51,6 +55,16 @@ const PersonDetail = () => {
                     <br/>
                     {person.note}
                 </p>
+
+                <h2>Vystavené faktury</h2>
+                <InvoiceTable items={issuedInvoices} />
+
+                <h2>Přijaté faktury</h2>
+                <InvoiceTable items={receivedInvoices} />
+
+                <Link to={"/persons"} className="btn btn-primary mt-3">
+                    Zpět na seznam osob
+                </Link>
             </div>
         </>
     );

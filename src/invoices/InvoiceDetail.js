@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { apiGet } from "../utils/api";
 import dateStringFormatter from "../utils/dateStringFormatter";
+import formatCurrency from "../utils/currencyFormatter";
 
 const InvoiceDetail = () => {
     const { id } = useParams();
@@ -32,7 +33,7 @@ const InvoiceDetail = () => {
                 <strong>Produkt:</strong> {invoice.product}
             </p>
             <p>
-                <strong>Cena:</strong> {invoice.price} Kč
+                <strong>Cena:</strong> {formatCurrency(invoice.price)}
             </p>
             <p>
                 <strong>DPH:</strong> {invoice.vat}%

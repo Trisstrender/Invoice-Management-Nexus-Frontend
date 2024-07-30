@@ -23,25 +23,30 @@ const ContainerExposedDependency = require("./ContainerExposedDependency");
 /** @typedef {import("../Module").CodeGenerationResult} CodeGenerationResult */
 /** @typedef {import("../Module").LibIdentOptions} LibIdentOptions */
 /** @typedef {import("../Module").NeedBuildContext} NeedBuildContext */
+/** @typedef {import("../Module").SourceTypes} SourceTypes */
 /** @typedef {import("../RequestShortener")} RequestShortener */
 /** @typedef {import("../ResolverFactory").ResolverWithOptions} ResolverWithOptions */
 /** @typedef {import("../WebpackError")} WebpackError */
+/** @typedef {import("../serialization/ObjectMiddleware").ObjectDeserializerContext} ObjectDeserializerContext */
+/** @typedef {import("../serialization/ObjectMiddleware").ObjectSerializerContext} ObjectSerializerContext */
 /** @typedef {import("../util/Hash")} Hash */
 /** @typedef {import("../util/fs").InputFileSystem} InputFileSystem */
 /** @typedef {import("./ContainerEntryDependency")} ContainerEntryDependency */
 
 /**
- * @typedef {Object} ExposeOptions
+ * @typedef {object} ExposeOptions
  * @property {string[]} import requests to exposed modules (last one is exported)
  * @property {string} name custom chunk name for the exposed module
  */
+
+/** @typedef {[string, ExposeOptions][]} ExposesList */
 
 const SOURCE_TYPES = new Set(["javascript"]);
 
 class ContainerEntryModule extends Module {
 	/**
 	 * @param {string} name container entry name
-	 * @param {[string, ExposeOptions][]} exposes list of exposed modules
+	 * @param {ExposesList} exposes list of exposed modules
 	 * @param {string} shareScope name of the share scope
 	 */
 	constructor(name, exposes, shareScope) {
@@ -52,7 +57,7 @@ class ContainerEntryModule extends Module {
 	}
 
 	/**
-	 * @returns {Set<string>} types available (do not mutate)
+	 * @returns {SourceTypes} types available (do not mutate)
 	 */
 	getSourceTypes() {
 		return SOURCE_TYPES;
@@ -260,6 +265,9 @@ class ContainerEntryModule extends Module {
 		return 42;
 	}
 
+	/**
+	 * @param {ObjectSerializerContext} context context
+	 */
 	serialize(context) {
 		const { write } = context;
 		write(this._name);
@@ -268,6 +276,10 @@ class ContainerEntryModule extends Module {
 		super.serialize(context);
 	}
 
+	/**
+	 * @param {ObjectDeserializerContext} context context
+	 * @returns {ContainerEntryModule} deserialized container entry module
+	 */
 	static deserialize(context) {
 		const { read } = context;
 		const obj = new ContainerEntryModule(read(), read(), read());

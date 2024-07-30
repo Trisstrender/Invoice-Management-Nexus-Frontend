@@ -1,12 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import dateStringFormatter from "../utils/dateStringFormatter";
+import formatCurrency from "../utils/currencyFormatter";
 
-const InvoiceTable = ({ items, onSort, sortField, sortDirection, deleteInvoice }) => {
+const InvoiceTable = ({ items = [], onSort, sortField, sortDirection, deleteInvoice }) => {
     const renderSortIcon = (field) => {
         if (sortField !== field) return null;
         return sortDirection === 'asc' ? '▲' : '▼';
     };
+
+    if (!Array.isArray(items) || items.length === 0) {
+        return <p>No invoices found.</p>;
+    }
 
     return (
         <table className="table table-bordered">
@@ -30,12 +35,12 @@ const InvoiceTable = ({ items, onSort, sortField, sortDirection, deleteInvoice }
             </thead>
             <tbody>
             {items.map((item, index) => (
-                <tr key={item.id}>
+                <tr key={item.id || index}>
                     <td>{index + 1}</td>
                     <td>{item.invoiceNumber}</td>
                     <td>{dateStringFormatter(item.issued)}</td>
                     <td>{item.product}</td>
-                    <td>{item.price} Kč</td>
+                    <td>{formatCurrency(item.price)}</td>
                     <td>
                         <div className="btn-group">
                             <Link
