@@ -12,8 +12,8 @@ const PersonTable = ({label, items, deletePerson}) => {
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>Jméno</th>
-                    <th colSpan={3}>Akce</th>
+                    <th>Name</th>
+                    <th colSpan={3}>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -27,19 +27,19 @@ const PersonTable = ({label, items, deletePerson}) => {
                                     to={"/persons/show/" + item.id}
                                     className="btn btn-sm btn-info"
                                 >
-                                    Zobrazit
+                                    View
                                 </Link>
                                 <Link
                                     to={"/persons/edit/" + item.id}
                                     className="btn btn-sm btn-warning"
                                 >
-                                    Upravit
+                                    Edit
                                 </Link>
                                 <button
                                     onClick={() => deletePerson(item.id)}
                                     className="btn btn-sm btn-danger"
                                 >
-                                    Odstranit
+                                    Delete
                                 </button>
                             </div>
                         </td>
@@ -48,7 +48,7 @@ const PersonTable = ({label, items, deletePerson}) => {
                 </tbody>
             </table>
             <Link to={"/persons/create"} className="btn btn-success">
-                Nová osoba
+                New Person
             </Link>
         </div>
     );

@@ -54,13 +54,13 @@ const PersonForm = () => {
 
     return (
         <div>
-            <h1>{id ? "Upravit" : "Vytvořit"} osobu</h1>
+            <h1>{id ? "Edit" : "Create"} Person</h1>
             <hr/>
             {errorState && <div className="alert alert-danger">{errorState}</div>}
             {sentState && (
                 <FlashMessage
                     theme={successState ? "success" : "danger"}
-                    text={successState ? "Uložení osoby proběhlo úspěšně." : "Chyba při ukládání osoby."}
+                    text={successState ? "Person saved successfully." : "Error saving person."}
                 />
             )}
             <form onSubmit={handleSubmit}>
@@ -68,8 +68,8 @@ const PersonForm = () => {
                     required={true}
                     type="text"
                     name="name"
-                    label="Jméno"
-                    prompt="Zadejte celé jméno"
+                    label="Name"
+                    prompt="Enter full name"
                     value={person.name}
                     handleChange={(e) => setPerson({...person, name: e.target.value})}
                 />
@@ -77,8 +77,8 @@ const PersonForm = () => {
                     required={true}
                     type="text"
                     name="identificationNumber"
-                    label="IČO"
-                    prompt="Zadejte IČO"
+                    label="Company ID"
+                    prompt="Enter Company ID"
                     value={person.identificationNumber}
                     handleChange={(e) => setPerson({...person, identificationNumber: e.target.value})}
                 />
@@ -86,8 +86,8 @@ const PersonForm = () => {
                     required={true}
                     type="text"
                     name="taxNumber"
-                    label="DIČ"
-                    prompt="Zadejte DIČ"
+                    label="Tax ID"
+                    prompt="Enter Tax ID"
                     value={person.taxNumber}
                     handleChange={(e) => setPerson({...person, taxNumber: e.target.value})}
                 />
@@ -95,8 +95,8 @@ const PersonForm = () => {
                     required={true}
                     type="text"
                     name="accountNumber"
-                    label="Číslo bankovního účtu"
-                    prompt="Zadejte číslo bankovního účtu"
+                    label="Bank Account Number"
+                    prompt="Enter bank account number"
                     value={person.accountNumber}
                     handleChange={(e) => setPerson({...person, accountNumber: e.target.value})}
                 />
@@ -104,8 +104,8 @@ const PersonForm = () => {
                     required={true}
                     type="text"
                     name="bankCode"
-                    label="Kód banky"
-                    prompt="Zadejte kód banky"
+                    label="Bank Code"
+                    prompt="Enter bank code"
                     value={person.bankCode}
                     handleChange={(e) => setPerson({...person, bankCode: e.target.value})}
                 />
@@ -114,7 +114,7 @@ const PersonForm = () => {
                     type="text"
                     name="iban"
                     label="IBAN"
-                    prompt="Zadejte IBAN"
+                    prompt="Enter IBAN"
                     value={person.iban}
                     handleChange={(e) => setPerson({...person, iban: e.target.value})}
                 />
@@ -122,8 +122,8 @@ const PersonForm = () => {
                     required={true}
                     type="text"
                     name="telephone"
-                    label="Telefon"
-                    prompt="Zadejte Telefon"
+                    label="Phone"
+                    prompt="Enter phone number"
                     value={person.telephone}
                     handleChange={(e) => setPerson({...person, telephone: e.target.value})}
                 />
@@ -131,8 +131,8 @@ const PersonForm = () => {
                     required={true}
                     type="text"
                     name="mail"
-                    label="Mail"
-                    prompt="Zadejte mail"
+                    label="Email"
+                    prompt="Enter email address"
                     value={person.mail}
                     handleChange={(e) => setPerson({...person, mail: e.target.value})}
                 />
@@ -140,8 +140,8 @@ const PersonForm = () => {
                     required={true}
                     type="text"
                     name="street"
-                    label="Ulice"
-                    prompt="Zadejte ulici"
+                    label="Street"
+                    prompt="Enter street address"
                     value={person.street}
                     handleChange={(e) => setPerson({...person, street: e.target.value})}
                 />
@@ -149,8 +149,8 @@ const PersonForm = () => {
                     required={true}
                     type="text"
                     name="zip"
-                    label="PSČ"
-                    prompt="Zadejte PSČ"
+                    label="ZIP Code"
+                    prompt="Enter ZIP code"
                     value={person.zip}
                     handleChange={(e) => setPerson({...person, zip: e.target.value})}
                 />
@@ -158,23 +158,23 @@ const PersonForm = () => {
                     required={true}
                     type="text"
                     name="city"
-                    label="Město"
-                    prompt="Zadejte město"
+                    label="City"
+                    prompt="Enter city"
                     value={person.city}
                     handleChange={(e) => setPerson({...person, city: e.target.value})}
                 />
                 <InputField
                     type="textarea"
                     name="note"
-                    label="Poznámka"
+                    label="Note"
                     value={person.note}
                     handleChange={(e) => setPerson({...person, note: e.target.value})}
                 />
-                <h6>Země:</h6>
+                <h6>Country:</h6>
                 <InputCheck
                     type="radio"
                     name="country"
-                    label="Česká republika"
+                    label="Czech Republic"
                     value={Country.CZECHIA}
                     handleChange={(e) => setPerson({...person, country: e.target.value})}
                     checked={Country.CZECHIA === person.country}
@@ -182,12 +182,12 @@ const PersonForm = () => {
                 <InputCheck
                     type="radio"
                     name="country"
-                    label="Slovensko"
+                    label="Slovakia"
                     value={Country.SLOVAKIA}
                     handleChange={(e) => setPerson({...person, country: e.target.value})}
                     checked={Country.SLOVAKIA === person.country}
                 />
-                <input type="submit" className="btn btn-primary" value="Uložit"/>
+                <input type="submit" className="btn btn-primary" value="Save"/>
             </form>
         </div>
     );

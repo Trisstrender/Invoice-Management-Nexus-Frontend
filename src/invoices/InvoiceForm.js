@@ -88,13 +88,13 @@ const InvoiceForm = () => {
 
     return (
         <div>
-            <h1>{id ? "Upravit" : "Vytvořit"} fakturu</h1>
+            <h1>{id ? "Edit" : "Create"} Invoice</h1>
             <hr/>
             {errorState && <div className="alert alert-danger">{errorState}</div>}
             {sentState && (
                 <FlashMessage
                     theme={successState ? "success" : "danger"}
-                    text={successState ? "Uložení faktury proběhlo úspěšně." : "Chyba při ukládání faktury."}
+                    text={successState ? "Invoice saved successfully." : "Error saving invoice."}
                 />
             )}
             <form onSubmit={handleSubmit}>
@@ -102,8 +102,8 @@ const InvoiceForm = () => {
                     required={true}
                     type="number"
                     name="invoiceNumber"
-                    label="Číslo faktury"
-                    prompt="Zadejte číslo faktury"
+                    label="Invoice Number"
+                    prompt="Enter invoice number"
                     value={invoice.invoiceNumber}
                     handleChange={(e) => setInvoice({...invoice, invoiceNumber: e.target.value})}
                 />
@@ -111,7 +111,7 @@ const InvoiceForm = () => {
                     required={true}
                     type="date"
                     name="issued"
-                    label="Datum vystavení"
+                    label="Issue Date"
                     value={invoice.issued}
                     handleChange={(e) => setInvoice({...invoice, issued: e.target.value})}
                 />
@@ -119,7 +119,7 @@ const InvoiceForm = () => {
                     required={true}
                     type="date"
                     name="dueDate"
-                    label="Datum splatnosti"
+                    label="Due Date"
                     value={invoice.dueDate}
                     handleChange={(e) => setInvoice({...invoice, dueDate: e.target.value})}
                 />
@@ -127,8 +127,8 @@ const InvoiceForm = () => {
                     required={true}
                     type="text"
                     name="product"
-                    label="Produkt"
-                    prompt="Zadejte název produktu"
+                    label="Product"
+                    prompt="Enter product name"
                     value={invoice.product}
                     handleChange={(e) => setInvoice({...invoice, product: e.target.value})}
                 />
@@ -136,8 +136,8 @@ const InvoiceForm = () => {
                     required={true}
                     type="number"
                     name="price"
-                    label="Cena"
-                    prompt="Zadejte cenu"
+                    label="Price"
+                    prompt="Enter price"
                     value={invoice.price}
                     handleChange={(e) => setInvoice({...invoice, price: e.target.value})}
                 />
@@ -145,23 +145,23 @@ const InvoiceForm = () => {
                     required={true}
                     type="number"
                     name="vat"
-                    label="DPH (%)"
-                    prompt="Zadejte sazbu DPH"
+                    label="VAT (%)"
+                    prompt="Enter VAT rate"
                     value={invoice.vat}
                     handleChange={(e) => setInvoice({...invoice, vat: e.target.value})}
                 />
                 <InputField
                     type="textarea"
                     name="note"
-                    label="Poznámka"
+                    label="Note"
                     value={invoice.note}
                     handleChange={(e) => setInvoice({...invoice, note: e.target.value})}
                 />
                 <InputSelect
                     required={true}
                     name="buyer"
-                    label="Kupující"
-                    prompt="Vyberte kupujícího"
+                    label="Buyer"
+                    prompt="Select buyer"
                     items={persons}
                     value={invoice.buyer ? invoice.buyer.id || invoice.buyer._id : ''}
                     handleChange={handlePersonChange('buyer')}
@@ -169,13 +169,13 @@ const InvoiceForm = () => {
                 <InputSelect
                     required={true}
                     name="seller"
-                    label="Prodávající"
-                    prompt="Vyberte prodávajícího"
+                    label="Seller"
+                    prompt="Select seller"
                     items={persons}
                     value={invoice.seller ? invoice.seller.id || invoice.seller._id : ''}
                     handleChange={handlePersonChange('seller')}
                 />
-                <input type="submit" className="btn btn-primary" value="Uložit"/>
+                <input type="submit" className="btn btn-primary" value="Save"/>
             </form>
         </div>
     );

@@ -21,11 +21,11 @@ const PersonIndex = () => {
 
     return (
         <div>
-            <h1>Seznam osob</h1>
+            <h1>List of Persons</h1>
             <PersonTable
                 deletePerson={deletePerson}
                 items={persons}
-                label="Počet osob:"
+                label="Number of Persons:"
             />
         </div>
     );

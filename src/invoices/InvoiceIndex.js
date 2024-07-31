@@ -26,13 +26,10 @@ const InvoiceIndex = () => {
             limit: itemsPerPage,
         };
         apiGet("/api/invoices", params).then((data) => {
-            // Check if data is an array, if not, use an empty array
             setInvoices(Array.isArray(data) ? data : []);
-            // If total items information is available, update it
             if (data && data.totalItems) {
                 setTotalItems(data.totalItems);
             } else {
-                // If not available, use the length of the invoices array
                 setTotalItems(Array.isArray(data) ? data.length : 0);
             }
         }).catch(error => {
@@ -79,7 +76,7 @@ const InvoiceIndex = () => {
 
     return (
         <div>
-            <h1>Seznam faktur</h1>
+            <h1>List of Invoices</h1>
             <div className="mb-3">
                 <input
                     type="text"
@@ -146,7 +143,7 @@ const InvoiceIndex = () => {
                 ))}
             </div>
             <Link to={"/invoices/create"} className="btn btn-success mt-3">
-                Nová faktura
+                New Invoice
             </Link>
         </div>
     );

@@ -18,12 +18,12 @@ export function App() {
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item">
                             <Link to={"/persons"} className="nav-link">
-                                Osoby
+                                Persons
                             </Link>
                         </li>
                         <li className="nav-item">
                             <Link to={"/invoices"} className="nav-link">
-                                Faktury
+                                Invoices
                             </Link>
                         </li>
                         <li className="nav-item">

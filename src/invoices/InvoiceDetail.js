@@ -20,31 +20,31 @@ const InvoiceDetail = () => {
 
     return (
         <div>
-            <h1>Detail faktury</h1>
+            <h1>Invoice Details</h1>
             <hr/>
-            <h3>Faktura č. {invoice.invoiceNumber}</h3>
+            <h3>Invoice No. {invoice.invoiceNumber}</h3>
             <p>
-                <strong>Datum vystavení:</strong> {dateStringFormatter(invoice.issued)}
+                <strong>Issue Date:</strong> {dateStringFormatter(invoice.issued)}
             </p>
             <p>
-                <strong>Datum splatnosti:</strong> {dateStringFormatter(invoice.dueDate)}
+                <strong>Due Date:</strong> {dateStringFormatter(invoice.dueDate)}
             </p>
             <p>
-                <strong>Produkt:</strong> {invoice.product}
+                <strong>Product:</strong> {invoice.product}
             </p>
             <p>
-                <strong>Cena:</strong> {formatCurrency(invoice.price)}
+                <strong>Price:</strong> {formatCurrency(invoice.price)}
             </p>
             <p>
-                <strong>DPH:</strong> {invoice.vat}%
+                <strong>VAT:</strong> {invoice.vat}%
             </p>
             <p>
-                <strong>Poznámka:</strong> {invoice.note}
+                <strong>Note:</strong> {invoice.note}
             </p>
-            <h4>Kupující</h4>
+            <h4>Buyer</h4>
             <p>{invoice.buyer?.name}</p>
             <p>{invoice.buyer?.identificationNumber}</p>
-            <h4>Prodávající</h4>
+            <h4>Seller</h4>
             <p>{invoice.seller?.name}</p>
             <p>{invoice.seller?.identificationNumber}</p>
         </div>

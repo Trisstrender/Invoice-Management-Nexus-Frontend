@@ -19,18 +19,18 @@ const InvoiceTable = ({items = [], onSort, sortField, sortDirection, deleteInvoi
             <tr>
                 <th>#</th>
                 <th onClick={() => onSort('invoiceNumber')} style={{cursor: 'pointer'}}>
-                    Číslo faktury {renderSortIcon('invoiceNumber')}
+                    Invoice Number {renderSortIcon('invoiceNumber')}
                 </th>
                 <th onClick={() => onSort('issued')} style={{cursor: 'pointer'}}>
-                    Datum vystavení {renderSortIcon('issued')}
+                    Issue Date {renderSortIcon('issued')}
                 </th>
                 <th onClick={() => onSort('product')} style={{cursor: 'pointer'}}>
-                    Produkt {renderSortIcon('product')}
+                    Product {renderSortIcon('product')}
                 </th>
                 <th onClick={() => onSort('price')} style={{cursor: 'pointer'}}>
-                    Cena {renderSortIcon('price')}
+                    Price {renderSortIcon('price')}
                 </th>
-                <th colSpan={3}>Akce</th>
+                <th colSpan={3}>Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -47,19 +47,19 @@ const InvoiceTable = ({items = [], onSort, sortField, sortDirection, deleteInvoi
                                 to={`/invoices/show/${item.id}`}
                                 className="btn btn-sm btn-info"
                             >
-                                Zobrazit
+                                View
                             </Link>
                             <Link
                                 to={`/invoices/edit/${item.id}`}
                                 className="btn btn-sm btn-warning"
                             >
-                                Upravit
+                                Edit
                             </Link>
                             <button
                                 onClick={() => deleteInvoice(item.id)}
                                 className="btn btn-sm btn-danger"
                             >
-                                Odstranit
+                                Delete
                             </button>
                         </div>
                     </td>
