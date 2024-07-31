@@ -1,7 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
-const PersonTable = ({ label, items, deletePerson }) => {
+const PersonTable = ({label, items, deletePerson}) => {
     return (
         <div>
             <p>

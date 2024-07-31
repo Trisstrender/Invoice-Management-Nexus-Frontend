@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { apiGet } from '../utils/api';
+import React, {useEffect, useState} from 'react';
+import {apiGet} from '../utils/api';
 import formatCurrency from '../utils/currencyFormatter';
 
 const Statistics = () => {

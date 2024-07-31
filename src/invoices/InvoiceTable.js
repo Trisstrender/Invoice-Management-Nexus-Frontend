@@ -1,9 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import dateStringFormatter from "../utils/dateStringFormatter";
 import formatCurrency from "../utils/currencyFormatter";
 
-const InvoiceTable = ({ items = [], onSort, sortField, sortDirection, deleteInvoice }) => {
+const InvoiceTable = ({items = [], onSort, sortField, sortDirection, deleteInvoice}) => {
     const renderSortIcon = (field) => {
         if (sortField !== field) return null;
         return sortDirection === 'asc' ? '▲' : '▼';

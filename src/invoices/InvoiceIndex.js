@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { apiDelete, apiGet } from "../utils/api";
+import React, {useEffect, useState} from "react";
+import {apiDelete, apiGet} from "../utils/api";
 import InvoiceTable from "./InvoiceTable";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 const InvoiceIndex = () => {
     const [invoices, setInvoices] = useState([]);
@@ -52,8 +52,8 @@ const InvoiceIndex = () => {
     };
 
     const handleFilterChange = (e) => {
-        const { name, value } = e.target;
-        setFilters(prev => ({ ...prev, [name]: value }));
+        const {name, value} = e.target;
+        setFilters(prev => ({...prev, [name]: value}));
     };
 
     const handlePageChange = (pageNumber) => {
@@ -135,7 +135,7 @@ const InvoiceIndex = () => {
                     <option value="20">20 per page</option>
                     <option value="50">50 per page</option>
                 </select>
-                {Array.from({ length: totalPages }, (_, i) => (
+                {Array.from({length: totalPages}, (_, i) => (
                     <button
                         key={i}
                         onClick={() => handlePageChange(i + 1)}

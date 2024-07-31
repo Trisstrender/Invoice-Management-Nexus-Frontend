@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { apiGet } from "../utils/api";
+import React, {useEffect, useState} from "react";
+import {useParams} from "react-router-dom";
+import {apiGet} from "../utils/api";
 import dateStringFormatter from "../utils/dateStringFormatter";
 import formatCurrency from "../utils/currencyFormatter";
 
 const InvoiceDetail = () => {
-    const { id } = useParams();
+    const {id} = useParams();
     const [invoice, setInvoice] = useState({});
 
     useEffect(() => {
@@ -21,7 +21,7 @@ const InvoiceDetail = () => {
     return (
         <div>
             <h1>Detail faktury</h1>
-            <hr />
+            <hr/>
             <h3>Faktura č. {invoice.invoiceNumber}</h3>
             <p>
                 <strong>Datum vystavení:</strong> {dateStringFormatter(invoice.issued)}
