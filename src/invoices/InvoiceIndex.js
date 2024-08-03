@@ -28,6 +28,7 @@ const InvoiceIndex = () => {
      * Fetches invoices from the API based on current filters, sorting, and pagination.
      */
     const loadInvoices = () => {
+        // Prepare parameters for the API call
         const params = {
             ...filters,
             sort: `${sortField},${sortDirection}`,
@@ -35,6 +36,7 @@ const InvoiceIndex = () => {
             limit: itemsPerPage,
         };
         apiGet("/api/invoices", params).then((data) => {
+            // Update state with fetched invoices and total count
             setInvoices(Array.isArray(data) ? data : []);
             if (data && data.totalItems) {
                 setTotalItems(data.totalItems);
@@ -55,6 +57,7 @@ const InvoiceIndex = () => {
 
     /**
      * Handles sorting when a column header is clicked.
+     * Toggles sort direction if the same field is clicked again.
      *
      * @param {string} field - The field to sort by
      */
@@ -65,6 +68,7 @@ const InvoiceIndex = () => {
 
     /**
      * Handles changes in the filter inputs.
+     * Updates the filters state which triggers a new invoice fetch.
      *
      * @param {React.ChangeEvent<HTMLInputElement>} e - The change event
      */

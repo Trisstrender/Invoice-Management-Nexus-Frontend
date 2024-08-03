@@ -42,15 +42,18 @@ const PersonForm = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        // Determine whether to create a new person or update an existing one
         const apiCall = id ? apiPut("/api/persons/" + id, person) : apiPost("/api/persons", person);
 
         apiCall
             .then(() => {
+                // On success, update state and navigate to the persons list
                 setSent(true);
                 setSuccess(true);
                 navigate("/persons");
             })
             .catch((error) => {
+                // On error, update state and display error message
                 setError(error.message);
                 setSent(true);
                 setSuccess(false);

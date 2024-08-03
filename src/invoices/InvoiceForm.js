@@ -60,6 +60,7 @@ const InvoiceForm = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        // Prepare the invoice data for submission
         const submitData = {
             invoiceNumber: parseInt(invoice.invoiceNumber),
             issued: invoice.issued,
@@ -74,15 +75,18 @@ const InvoiceForm = () => {
 
         console.log("Submitting data:", submitData);
 
+        // Determine whether to create a new invoice or update an existing one
         const apiCall = id ? apiPut("/api/invoices/" + id, submitData) : apiPost("/api/invoices", submitData);
 
         apiCall
             .then(() => {
+                // On success, update state and navigate to the invoices list
                 setSent(true);
                 setSuccess(true);
                 navigate("/invoices");
             })
             .catch((error) => {
+                // On error, log the error, update state, and display error message
                 console.error("Error:", error.message);
                 setError(error.message);
                 setSent(true);
