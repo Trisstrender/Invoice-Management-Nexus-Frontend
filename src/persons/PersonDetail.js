@@ -52,8 +52,7 @@ const PersonDetail = () => {
                 <p>
                     <strong>Address:</strong>
                     <br/>
-                    {person.street}, {person.city},
-                    {person.zip}, {country}
+                    {person.street}, {person.city}, {person.zip}, {country}
                 </p>
                 <p>
                     <strong>Note:</strong>
