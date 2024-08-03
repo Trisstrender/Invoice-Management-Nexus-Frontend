@@ -2,6 +2,11 @@ import React, {useEffect, useState} from "react";
 import {apiDelete, apiGet} from "../utils/api";
 import PersonTable from "./PersonTable";
 
+/**
+ * PersonIndex component for displaying a list of persons.
+ *
+ * @returns {React.Element} A div element containing the person list
+ */
 const PersonIndex = () => {
     const [persons, setPersons] = useState([]);
 

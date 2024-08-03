@@ -6,6 +6,11 @@ import InputCheck from "../components/InputCheck";
 import FlashMessage from "../components/FlashMessage";
 import Country from "./Country";
 
+/**
+ * PersonForm component for creating or editing a person.
+ *
+ * @returns {React.Element} A form for creating or editing a person
+ */
 const PersonForm = () => {
     const navigate = useNavigate();
     const {id} = useParams();

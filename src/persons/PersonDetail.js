@@ -4,6 +4,11 @@ import {apiGet} from "../utils/api";
 import Country from "./Country";
 import InvoiceTable from "../invoices/InvoiceTable";
 
+/**
+ * PersonDetail component for displaying details of a specific person.
+ *
+ * @returns {React.Element} A div element containing person details and related invoices
+ */
 const PersonDetail = () => {
     const {id} = useParams();
     const [person, setPerson] = useState({});

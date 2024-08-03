@@ -3,7 +3,13 @@ import {apiDelete, apiGet} from "../utils/api";
 import InvoiceTable from "./InvoiceTable";
 import {Link} from "react-router-dom";
 
+/**
+ * InvoiceIndex component for displaying a list of invoices with filtering, sorting, and pagination.
+ *
+ * @returns {React.Element} A div element containing the invoice list and controls
+ */
 const InvoiceIndex = () => {
+    // State variables
     const [invoices, setInvoices] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -18,6 +24,9 @@ const InvoiceIndex = () => {
         maxPrice: "",
     });
 
+    /**
+     * Fetches invoices from the API based on current filters, sorting, and pagination.
+     */
     const loadInvoices = () => {
         const params = {
             ...filters,
@@ -39,29 +48,55 @@ const InvoiceIndex = () => {
         });
     };
 
+    // Load invoices when component mounts or when dependencies change
     useEffect(() => {
         loadInvoices();
     }, [currentPage, itemsPerPage, sortField, sortDirection, filters]);
 
+    /**
+     * Handles sorting when a column header is clicked.
+     *
+     * @param {string} field - The field to sort by
+     */
     const handleSort = (field) => {
         setSortField(field);
         setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     };
 
+    /**
+     * Handles changes in the filter inputs.
+     *
+     * @param {React.ChangeEvent<HTMLInputElement>} e - The change event
+     */
     const handleFilterChange = (e) => {
         const {name, value} = e.target;
         setFilters(prev => ({...prev, [name]: value}));
     };
 
+    /**
+     * Handles page changes in pagination.
+     *
+     * @param {number} pageNumber - The new page number
+     */
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
 
+    /**
+     * Handles changes in the number of items displayed per page.
+     *
+     * @param {React.ChangeEvent<HTMLSelectElement>} e - The change event
+     */
     const handleItemsPerPageChange = (e) => {
         setItemsPerPage(parseInt(e.target.value));
         setCurrentPage(1);
     };
 
+    /**
+     * Deletes an invoice.
+     *
+     * @param {number} id - The ID of the invoice to delete
+     */
     const deleteInvoice = async (id) => {
         try {
             await apiDelete("/api/invoices/" + id);

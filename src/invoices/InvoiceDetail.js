@@ -4,11 +4,17 @@ import {apiGet} from "../utils/api";
 import dateStringFormatter from "../utils/dateStringFormatter";
 import formatCurrency from "../utils/currencyFormatter";
 
+/**
+ * InvoiceDetail component for displaying details of a specific invoice.
+ *
+ * @returns {React.Element} A div element containing invoice details
+ */
 const InvoiceDetail = () => {
     const {id} = useParams();
     const [invoice, setInvoice] = useState({});
 
     useEffect(() => {
+        // Fetch invoice details when component mounts or id changes
         apiGet("/api/invoices/" + id).then((data) => {
             setInvoice({
                 ...data,

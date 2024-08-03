@@ -5,6 +5,11 @@ import InputField from "../components/InputField";
 import InputSelect from "../components/InputSelect";
 import FlashMessage from "../components/FlashMessage";
 
+/**
+ * InvoiceForm component for creating or editing an invoice.
+ *
+ * @returns {React.Element} A form for creating or editing an invoice
+ */
 const InvoiceForm = () => {
     const navigate = useNavigate();
     const {id} = useParams();
@@ -25,10 +30,9 @@ const InvoiceForm = () => {
     const [errorState, setError] = useState(null);
 
     useEffect(() => {
-        // Fetch persons
+        // Fetch persons and invoice data (if editing) when component mounts
         apiGet("/api/persons").then((data) => setPersons(data));
 
-        // Fetch invoice data if editing
         if (id) {
             apiGet("/api/invoices/" + id).then((data) => {
                 setInvoice({

@@ -3,6 +3,17 @@ import {Link} from "react-router-dom";
 import dateStringFormatter from "../utils/dateStringFormatter";
 import formatCurrency from "../utils/currencyFormatter";
 
+/**
+ * InvoiceTable component for displaying a table of invoices.
+ *
+ * @param {Object} props - Component props
+ * @param {Array} props.items - Array of invoice items to display
+ * @param {Function} props.onSort - Function to call when a sortable column is clicked
+ * @param {string} props.sortField - The current field being sorted
+ * @param {string} props.sortDirection - The current sort direction ('asc' or 'desc')
+ * @param {Function} props.deleteInvoice - Function to call to delete an invoice
+ * @returns {React.Element} A table element containing invoice data
+ */
 const InvoiceTable = ({items = [], onSort, sortField, sortDirection, deleteInvoice}) => {
     const renderSortIcon = (field) => {
         if (sortField !== field) return null;

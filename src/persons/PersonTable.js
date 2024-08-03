@@ -1,6 +1,15 @@
 import React from "react";
 import {Link} from "react-router-dom";
 
+/**
+ * PersonTable component for displaying a table of persons.
+ *
+ * @param {Object} props - Component props
+ * @param {string} props.label - Label for the number of persons
+ * @param {Array} props.items - Array of person items to display
+ * @param {Function} props.deletePerson - Function to call to delete a person
+ * @returns {React.Element} A div element containing a table of persons and controls
+ */
 const PersonTable = ({label, items, deletePerson}) => {
     return (
         <div>

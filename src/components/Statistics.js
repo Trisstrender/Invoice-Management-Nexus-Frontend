@@ -2,11 +2,17 @@ import React, {useEffect, useState} from 'react';
 import {apiGet} from '../utils/api';
 import formatCurrency from '../utils/currencyFormatter';
 
+/**
+ * Statistics component for displaying invoice and person statistics.
+ *
+ * @returns {React.Element} A div element containing statistics tables
+ */
 const Statistics = () => {
     const [invoiceStats, setInvoiceStats] = useState(null);
     const [personStats, setPersonStats] = useState(null);
 
     useEffect(() => {
+        // Fetch invoice and person statistics when component mounts
         apiGet('/api/invoices/statistics').then(setInvoiceStats);
         apiGet('/api/persons/statistics').then(setPersonStats);
     }, []);

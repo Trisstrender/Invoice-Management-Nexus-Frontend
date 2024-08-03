@@ -1,5 +1,18 @@
+/**
+ * Base URL for the API.
+ * This should be updated to match the server's address in production.
+ */
 const API_URL = "http://localhost:8080";
 
+/**
+ * Generic function to fetch data from the API.
+ * This function handles common tasks like URL construction, error handling, and response parsing.
+ *
+ * @param {string} url - The API endpoint (will be appended to API_URL)
+ * @param {Object} requestOptions - Options for the fetch request (method, headers, body, etc.)
+ * @returns {Promise<any>} A promise that resolves with the parsed response data
+ * @throws {Error} If the network response is not ok
+ */
 const fetchData = (url, requestOptions) => {
     const apiUrl = `${API_URL}${url}`;
 
@@ -17,6 +30,7 @@ const fetchData = (url, requestOptions) => {
                 });
             }
 
+            // For DELETE requests, we don't expect a response body
             if (requestOptions.method !== 'DELETE')
                 return response.json();
         })
@@ -40,6 +54,13 @@ const fetchData = (url, requestOptions) => {
         });
 };
 
+/**
+ * Performs a GET request to the API.
+ *
+ * @param {string} url - The API endpoint
+ * @param {Object} [params] - Query parameters to be appended to the URL
+ * @returns {Promise<any>} A promise that resolves with the parsed response data
+ */
 export const apiGet = (url, params) => {
     const filteredParams = Object.fromEntries(
         Object.entries(params || {}).filter(([_, value]) => value != null)
@@ -53,6 +74,13 @@ export const apiGet = (url, params) => {
     return fetchData(apiUrl, requestOptions);
 };
 
+/**
+ * Performs a POST request to the API.
+ *
+ * @param {string} url - The API endpoint
+ * @param {Object} data - The data to be sent in the request body
+ * @returns {Promise<any>} A promise that resolves with the parsed response data
+ */
 export const apiPost = (url, data) => {
     const requestOptions = {
         method: "POST",
@@ -63,6 +91,13 @@ export const apiPost = (url, data) => {
     return fetchData(url, requestOptions);
 };
 
+/**
+ * Performs a PUT request to the API.
+ *
+ * @param {string} url - The API endpoint
+ * @param {Object} data - The data to be sent in the request body
+ * @returns {Promise<any>} A promise that resolves with the parsed response data
+ */
 export const apiPut = (url, data) => {
     const requestOptions = {
         method: "PUT",
@@ -73,6 +108,12 @@ export const apiPut = (url, data) => {
     return fetchData(url, requestOptions);
 };
 
+/**
+ * Performs a DELETE request to the API.
+ *
+ * @param {string} url - The API endpoint
+ * @returns {Promise<void>} A promise that resolves when the delete operation is complete
+ */
 export const apiDelete = (url) => {
     const requestOptions = {
         method: "DELETE",
