@@ -1,8 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { apiGet } from '../utils/api';
+import React, {useEffect, useState} from 'react';
+import {apiGet} from '../utils/api';
 import formatCurrency from '../utils/currencyFormatter';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell, linearGradient, defs, stop } from 'recharts';
-import { ArrowUp, ArrowDown, AlertCircle } from 'lucide-react';
+import {
+    Bar,
+    BarChart,
+    CartesianGrid,
+    Cell,
+    defs,
+    Legend,
+    linearGradient,
+    ResponsiveContainer,
+    stop,
+    Tooltip,
+    XAxis,
+    YAxis
+} from 'recharts';
+import {AlertCircle, ArrowDown, ArrowUp} from 'lucide-react';
 
 const Statistics = () => {
     const [invoiceStats, setInvoiceStats] = useState(null);
@@ -42,7 +55,8 @@ const Statistics = () => {
 
     const renderSortIcon = (field) => {
         if (sortField !== field) return null;
-        return sortDirection === 'asc' ? <ArrowUp className="inline-block ml-2" /> : <ArrowDown className="inline-block ml-2" />;
+        return sortDirection === 'asc' ? <ArrowUp className="inline-block ml-2"/> :
+            <ArrowDown className="inline-block ml-2"/>;
     };
 
     if (loading) {
@@ -53,7 +67,7 @@ const Statistics = () => {
 
     if (error) {
         return <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-            <AlertCircle className="inline-block mr-2" />
+            <AlertCircle className="inline-block mr-2"/>
             <strong className="font-bold">Error!</strong>
             <span className="block sm:inline"> {error}</span>
         </div>;
@@ -68,38 +82,43 @@ const Statistics = () => {
             <div className="mb-12">
                 <h2 className="text-2xl font-semibold mb-4 text-secondary-700">Invoice Statistics</h2>
                 <div className="bg-white shadow-md rounded-lg p-6">
-                    <p className="mb-2"><span className="font-semibold">Current Year Sum:</span> {formatCurrency(invoiceStats.currentYearSum)}</p>
-                    <p className="mb-2"><span className="font-semibold">All Time Sum:</span> {formatCurrency(invoiceStats.allTimeSum)}</p>
+                    <p className="mb-2"><span
+                        className="font-semibold">Current Year Sum:</span> {formatCurrency(invoiceStats.currentYearSum)}
+                    </p>
+                    <p className="mb-2"><span
+                        className="font-semibold">All Time Sum:</span> {formatCurrency(invoiceStats.allTimeSum)}</p>
                     <p><span className="font-semibold">Invoices Count:</span> {invoiceStats.invoicesCount}</p>
                 </div>
             </div>
 
             <div className="mb-12">
                 <h2 className="text-2xl font-semibold mb-4 text-secondary-700">Top 5 Persons by Revenue</h2>
-                <div className="bg-white shadow-md rounded-lg p-6" style={{ height: '400px' }}>
+                <div className="bg-white shadow-md rounded-lg p-6" style={{height: '400px'}}>
                     <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={top5Persons} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                        <BarChart data={top5Persons} margin={{top: 20, right: 30, left: 20, bottom: 5}}>
                             <defs>
                                 {top5Persons.map((entry, index) => (
                                     <linearGradient id={`colorUv${index}`} x1="0" y1="0" x2="0" y2="1" key={index}>
-                                        <stop offset="5%" stopColor="#84d8ff" stopOpacity={0.8} />
-                                        <stop offset="95%" stopColor="#0ea5e9" stopOpacity={1} />
+                                        <stop offset="5%" stopColor="#84d8ff" stopOpacity={0.8}/>
+                                        <stop offset="95%" stopColor="#0ea5e9" stopOpacity={1}/>
                                     </linearGradient>
                                 ))}
                             </defs>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="personName" tick={{ fill: '#4a5568' }} />
-                            <YAxis tick={{ fill: '#4a5568' }} />
-                            <Tooltip formatter={(value) => formatCurrency(value)} contentStyle={{ backgroundColor: '#f0f0f0', borderRadius: '5px' }} />
+                            <CartesianGrid strokeDasharray="3 3"/>
+                            <XAxis dataKey="personName" tick={{fill: '#4a5568'}}/>
+                            <YAxis tick={{fill: '#4a5568'}}/>
+                            <Tooltip formatter={(value) => formatCurrency(value)}
+                                     contentStyle={{backgroundColor: '#f0f0f0', borderRadius: '5px'}}/>
                             <Legend
-                                formatter={(value) => <span style={{ color: '#000' }}>{value.charAt(0).toUpperCase() + value.slice(1)}</span>}
+                                formatter={(value) => <span
+                                    style={{color: '#000'}}>{value.charAt(0).toUpperCase() + value.slice(1)}</span>}
                                 iconType="square"
                                 iconSize={10}
-                                payload={[{ value: 'Revenue', type: 'square', color: '#0ea5e9' }]}
+                                payload={[{value: 'Revenue', type: 'square', color: '#0ea5e9'}]}
                             />
                             <Bar dataKey="revenue">
                                 {top5Persons.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={`url(#colorUv${index})`} />
+                                    <Cell key={`cell-${index}`} fill={`url(#colorUv${index})`}/>
                                 ))}
                             </Bar>
                         </BarChart>
@@ -113,13 +132,16 @@ const Statistics = () => {
                     <table className="min-w-full divide-y divide-secondary-200">
                         <thead className="bg-secondary-50">
                         <tr>
-                            <th onClick={() => handleSort('personId')} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
+                            <th onClick={() => handleSort('personId')}
+                                className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
                                 Person ID {renderSortIcon('personId')}
                             </th>
-                            <th onClick={() => handleSort('personName')} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
+                            <th onClick={() => handleSort('personName')}
+                                className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
                                 Person Name {renderSortIcon('personName')}
                             </th>
-                            <th onClick={() => handleSort('revenue')} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
+                            <th onClick={() => handleSort('revenue')}
+                                className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
                                 Revenue {renderSortIcon('revenue')}
                             </th>
                         </tr>

@@ -1,7 +1,7 @@
 import React from 'react';
-import { CheckSquare, Radio } from 'lucide-react';
+import {CheckSquare, Radio} from 'lucide-react';
 
-const InputCheck = ({ type, name, value, checked, handleChange, label }) => {
+const InputCheck = ({type, name, value, checked, handleChange, label}) => {
     const inputTypes = ['checkbox', 'radio'];
     const inputType = type.toLowerCase();
 
@@ -10,8 +10,8 @@ const InputCheck = ({ type, name, value, checked, handleChange, label }) => {
     }
 
     const icons = {
-        checkbox: <CheckSquare className="inline-block mr-2" />,
-        radio: <Radio className="inline-block mr-2" />
+        checkbox: <CheckSquare className="inline-block mr-2"/>,
+        radio: <Radio className="inline-block mr-2"/>
     };
 
     return (

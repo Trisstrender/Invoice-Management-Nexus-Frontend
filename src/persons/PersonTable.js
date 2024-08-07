@@ -1,9 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Eye, Edit, Trash2, Plus } from "lucide-react";
+import {Link} from "react-router-dom";
+import {motion} from "framer-motion";
+import {Edit, Eye, Plus, Trash2} from "lucide-react";
 
-const PersonTable = ({ label, items, deletePerson }) => {
+const PersonTable = ({label, items, deletePerson}) => {
     if (!Array.isArray(items) || items.length === 0) {
         return <p className="text-secondary-500 text-center py-4">No persons found.</p>;
     }
@@ -18,7 +18,9 @@ const PersonTable = ({ label, items, deletePerson }) => {
                     <tr>
                         <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">#</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">Name</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">Identification Number</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">Identification
+                            Number
+                        </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">Actions</th>
                     </tr>
                     </thead>
@@ -26,9 +28,9 @@ const PersonTable = ({ label, items, deletePerson }) => {
                     {items.map((item, index) => (
                         <motion.tr
                             key={item.id || index}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3, delay: index * 0.05 }}
+                            initial={{opacity: 0, y: 20}}
+                            animate={{opacity: 1, y: 0}}
+                            transition={{duration: 0.3, delay: index * 0.05}}
                         >
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-500">{index + 1}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-800 font-medium">{item.name}</td>
@@ -59,9 +61,9 @@ const PersonTable = ({ label, items, deletePerson }) => {
                 </table>
             </div>
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.2 }}
+                initial={{opacity: 0, y: 20}}
+                animate={{opacity: 1, y: 0}}
+                transition={{duration: 0.3, delay: 0.2}}
             >
                 <Link
                     to="/persons/create"

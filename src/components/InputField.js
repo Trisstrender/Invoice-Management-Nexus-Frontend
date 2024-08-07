@@ -1,7 +1,7 @@
 import React from 'react';
-import { Edit, Hash, Calendar, AlignLeft } from 'lucide-react';
+import {AlignLeft, Calendar, Edit, Hash} from 'lucide-react';
 
-const InputField = ({ type, name, label, prompt, value, handleChange, required, min, rows }) => {
+const InputField = ({type, name, label, prompt, value, handleChange, required, min, rows}) => {
     const inputTypes = ['text', 'number', 'date', 'textarea'];
     const inputType = type.toLowerCase();
     const isTextarea = inputType === 'textarea';
@@ -11,10 +11,10 @@ const InputField = ({ type, name, label, prompt, value, handleChange, required, 
     }
 
     const icons = {
-        text: <Edit className="inline-block mr-2" />,
-        number: <Hash className="inline-block mr-2" />,
-        date: <Calendar className="inline-block mr-2" />,
-        textarea: <AlignLeft className="inline-block mr-2" />
+        text: <Edit className="inline-block mr-2"/>,
+        number: <Hash className="inline-block mr-2"/>,
+        date: <Calendar className="inline-block mr-2"/>,
+        textarea: <AlignLeft className="inline-block mr-2"/>
     };
 
     const baseClasses = "w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500";

@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { apiDelete, apiGet } from "../utils/api";
-import { Eye, Edit, Trash2, Plus, ArrowUp, ArrowDown } from "lucide-react";
+import React, {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
+import {apiDelete, apiGet} from "../utils/api";
+import {ArrowDown, ArrowUp, Edit, Eye, Plus, Trash2} from "lucide-react";
+import FlashMessage from "../components/FlashMessage";
 
 const PersonIndex = () => {
     const [persons, setPersons] = useState([]);
@@ -9,6 +10,7 @@ const PersonIndex = () => {
     const [error, setError] = useState(null);
     const [sortField, setSortField] = useState("name");
     const [sortDirection, setSortDirection] = useState("asc");
+    const [flashMessage, setFlashMessage] = useState(null);
 
     const loadPersons = () => {
         setLoading(true);
@@ -30,14 +32,21 @@ const PersonIndex = () => {
         loadPersons();
     }, []);
 
-    const deletePerson = async (id) => {
-        if (window.confirm("Are you sure you want to delete this person?")) {
+    const deletePerson = async (id, name) => {
+        if (window.confirm(`Are you sure you want to delete ${name}?`)) {
             try {
                 await apiDelete("/api/persons/" + id);
+                setFlashMessage({
+                    theme: 'success',
+                    text: `Person "${name}" has been successfully deleted.`
+                });
                 loadPersons();
             } catch (error) {
                 console.error("Error deleting person:", error);
-                alert("Error deleting person: " + error.message);
+                setFlashMessage({
+                    theme: 'danger',
+                    text: `Error deleting person: ${error.message}`
+                });
             }
         }
     };
@@ -55,15 +64,23 @@ const PersonIndex = () => {
 
     const renderSortIcon = (field) => {
         if (sortField !== field) return null;
-        return sortDirection === 'asc' ? <ArrowUp className="inline-block ml-2"/> : <ArrowDown className="inline-block ml-2"/>;
+        return sortDirection === 'asc' ? <ArrowUp className="inline-block ml-2"/> :
+            <ArrowDown className="inline-block ml-2"/>;
     };
 
     return (
         <div className="container mx-auto px-4">
             <h1 className="text-3xl font-bold mb-6 text-secondary-800">List of Persons</h1>
 
+            {flashMessage && (
+                <div className="mb-4">
+                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text}/>
+                </div>
+            )}
+
             {error && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+                     role="alert">
                     <strong className="font-bold">Error!</strong>
                     <span className="block sm:inline"> {error}</span>
                 </div>
@@ -81,10 +98,12 @@ const PersonIndex = () => {
                         <thead className="bg-secondary-50">
                         <tr>
                             <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">#</th>
-                            <th onClick={() => handleSort('name')} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
+                            <th onClick={() => handleSort('name')}
+                                className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
                                 Name {renderSortIcon('name')}
                             </th>
-                            <th onClick={() => handleSort('identificationNumber')} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
+                            <th onClick={() => handleSort('identificationNumber')}
+                                className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
                                 Identification Number {renderSortIcon('identificationNumber')}
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">Actions</th>
@@ -110,7 +129,7 @@ const PersonIndex = () => {
                                         <Edit className="inline-block mr-1"/> Edit
                                     </Link>
                                     <button
-                                        onClick={() => deletePerson(person.id)}
+                                        onClick={() => deletePerson(person.id, person.name)}
                                         className="text-red-600 hover:text-red-900 transition-colors duration-200"
                                     >
                                         <Trash2 className="inline-block mr-1"/> Delete

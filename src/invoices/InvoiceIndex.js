@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { apiDelete, apiGet } from "../utils/api";
+import React, {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
+import {apiDelete, apiGet} from "../utils/api";
 import formatCurrency from "../utils/currencyFormatter";
 import dateStringFormatter from "../utils/dateStringFormatter";
-import { Eye, Edit, Trash2, Plus, ArrowUp, ArrowDown, Filter } from "lucide-react";
+import {ArrowDown, ArrowUp, Edit, Eye, Filter, Plus, Trash2} from "lucide-react";
+import FlashMessage from "../components/FlashMessage";
 
 const InvoiceIndex = () => {
     const [invoices, setInvoices] = useState([]);
@@ -21,6 +22,7 @@ const InvoiceIndex = () => {
         maxPrice: "",
     });
     const [showFilters, setShowFilters] = useState(false);
+    const [flashMessage, setFlashMessage] = useState(null);
 
     const loadInvoices = () => {
         setLoading(true);
@@ -52,7 +54,7 @@ const InvoiceIndex = () => {
     };
 
     const handleFilterChange = (e) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         setFilters(prev => ({...prev, [name]: value}));
         setCurrentPage(1);
     };
@@ -66,14 +68,21 @@ const InvoiceIndex = () => {
         setCurrentPage(1);
     };
 
-    const deleteInvoice = async (id) => {
-        if (window.confirm("Are you sure you want to delete this invoice?")) {
+    const deleteInvoice = async (id, invoiceNumber) => {
+        if (window.confirm(`Are you sure you want to delete invoice #${invoiceNumber}?`)) {
             try {
                 await apiDelete("/api/invoices/" + id);
+                setFlashMessage({
+                    theme: 'success',
+                    text: `Invoice #${invoiceNumber} has been successfully deleted.`
+                });
                 loadInvoices();
             } catch (error) {
-                console.error(error.message);
-                alert("Error deleting invoice: " + error.message);
+                console.error("Error deleting invoice:", error);
+                setFlashMessage({
+                    theme: 'danger',
+                    text: `Error deleting invoice: ${error.message}`
+                });
             }
         }
     };
@@ -82,12 +91,20 @@ const InvoiceIndex = () => {
 
     const renderSortIcon = (field) => {
         if (sortField !== field) return null;
-        return sortDirection === 'asc' ? <ArrowUp className="inline-block ml-2"/> : <ArrowDown className="inline-block ml-2"/>;
+        return sortDirection === 'asc' ? <ArrowUp className="inline-block ml-2"/> :
+            <ArrowDown className="inline-block ml-2"/>;
     };
 
     return (
         <div className="container mx-auto px-4">
             <h1 className="text-3xl font-bold mb-6 text-secondary-800">List of Invoices</h1>
+
+            {flashMessage && (
+                <div className="mb-4">
+                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text}/>
+                </div>
+            )}
+
             <div className="mb-6">
                 <button
                     onClick={() => setShowFilters(!showFilters)}
@@ -95,7 +112,7 @@ const InvoiceIndex = () => {
                         showFilters ? 'bg-white text-primary-500 border border-primary-500 hover:bg-primary-600 hover:text-white' : 'bg-primary-500 hover:bg-primary-600 text-white'
                     }`}
                 >
-                    <Filter className="inline-block mr-1" /> Filter
+                    <Filter className="inline-block mr-1"/> Filter
                 </button>
                 {showFilters && (
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -145,16 +162,20 @@ const InvoiceIndex = () => {
                         <thead className="bg-secondary-50">
                         <tr>
                             <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">#</th>
-                            <th onClick={() => handleSort('invoiceNumber')} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
+                            <th onClick={() => handleSort('invoiceNumber')}
+                                className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
                                 Invoice Number {renderSortIcon('invoiceNumber')}
                             </th>
-                            <th onClick={() => handleSort('issued')} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
+                            <th onClick={() => handleSort('issued')}
+                                className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
                                 Issue Date {renderSortIcon('issued')}
                             </th>
-                            <th onClick={() => handleSort('product')} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
+                            <th onClick={() => handleSort('product')}
+                                className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
                                 Product {renderSortIcon('product')}
                             </th>
-                            <th onClick={() => handleSort('price')} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
+                            <th onClick={() => handleSort('price')}
+                                className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
                                 Price {renderSortIcon('price')}
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">Actions</th>
@@ -169,9 +190,16 @@ const InvoiceIndex = () => {
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-500">{invoice.product}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-500">{formatCurrency(invoice.price)}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <Link to={`/invoices/show/${invoice.id}`} className="text-primary-600 hover:text-primary-900 mr-2"><Eye className="inline-block mr-1"/> View</Link>
-                                    <Link to={`/invoices/edit/${invoice.id}`} className="text-yellow-600 hover:text-yellow-900 mr-2"><Edit className="inline-block mr-1"/> Edit</Link>
-                                    <button onClick={() => deleteInvoice(invoice.id)} className="text-red-600 hover:text-red-900"><Trash2 className="inline-block mr-1"/> Delete</button>
+                                    <Link to={`/invoices/show/${invoice.id}`}
+                                          className="text-primary-600 hover:text-primary-900 mr-2"><Eye
+                                        className="inline-block mr-1"/> View</Link>
+                                    <Link to={`/invoices/edit/${invoice.id}`}
+                                          className="text-yellow-600 hover:text-yellow-900 mr-2"><Edit
+                                        className="inline-block mr-1"/> Edit</Link>
+                                    <button onClick={() => deleteInvoice(invoice.id, invoice.invoiceNumber)}
+                                            className="text-red-600 hover:text-red-900"><Trash2
+                                        className="inline-block mr-1"/> Delete
+                                    </button>
                                 </td>
                             </tr>
                         ))}
@@ -191,7 +219,7 @@ const InvoiceIndex = () => {
                     <option value="50">50 per page</option>
                 </select>
                 <div className="flex flex-wrap justify-center">
-                    {Array.from({ length: totalPages }, (_, i) => (
+                    {Array.from({length: totalPages}, (_, i) => (
                         <button
                             key={i}
                             onClick={() => handlePageChange(i + 1)}
@@ -216,7 +244,7 @@ const InvoiceIndex = () => {
     );
 };
 
-const InputField = ({ name, placeholder, value, onChange, type = "text" }) => (
+const InputField = ({name, placeholder, value, onChange, type = "text"}) => (
     <div>
         <input
             type={type}
