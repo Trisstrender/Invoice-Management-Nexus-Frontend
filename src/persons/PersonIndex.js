@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import {apiDelete, apiGet} from "../utils/api"; // Add apiDelete here
+import {apiDelete, apiGet} from "../utils/api";
 import {Plus} from "lucide-react";
 import FlashMessage from "../components/FlashMessage";
 import PersonTable from "./PersonTable";

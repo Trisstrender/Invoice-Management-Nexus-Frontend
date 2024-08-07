@@ -69,7 +69,7 @@ const InvoiceForm = () => {
                 seller: invoice.seller,
             };
 
-            const apiCall = id ? apiPut("/api/invoices/" + id, submitData) : apiPost("/api/invoices", submitData);
+            const apiCall = id ? await apiPut("/api/invoices/" + id, submitData) : await apiPost("/api/invoices", submitData);
             await apiCall;
             setFlashMessage({
                 theme: 'success',

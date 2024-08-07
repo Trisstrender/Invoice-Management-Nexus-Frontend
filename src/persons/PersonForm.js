@@ -42,7 +42,7 @@ const PersonForm = () => {
         setFlashMessage(null);
 
         try {
-            const apiCall = id ? apiPut("/api/persons/" + id, person) : apiPost("/api/persons", person);
+            const apiCall = id ? await apiPut("/api/persons/" + id, person) : await apiPost("/api/persons", person);
             await apiCall;
             setFlashMessage({
                 theme: 'success',

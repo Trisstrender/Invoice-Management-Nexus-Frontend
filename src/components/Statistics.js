@@ -1,20 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {apiGet} from '../utils/api';
 import formatCurrency from '../utils/currencyFormatter';
-import {
-    Bar,
-    BarChart,
-    CartesianGrid,
-    Cell,
-    defs,
-    Legend,
-    linearGradient,
-    ResponsiveContainer,
-    stop,
-    Tooltip,
-    XAxis,
-    YAxis
-} from 'recharts';
+import {Bar, BarChart, CartesianGrid, Cell, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 import {AlertCircle, ArrowDown, ArrowUp} from 'lucide-react';
 
 const Statistics = () => {
@@ -79,17 +66,19 @@ const Statistics = () => {
         <div className="container mx-auto px-4">
             <h1 className="text-3xl font-bold mb-6 text-secondary-800">Statistics</h1>
 
-            <div className="mb-12">
-                <h2 className="text-2xl font-semibold mb-4 text-secondary-700">Invoice Statistics</h2>
-                <div className="bg-white shadow-md rounded-lg p-6">
-                    <p className="mb-2"><span
-                        className="font-semibold">Current Year Sum:</span> {formatCurrency(invoiceStats.currentYearSum)}
-                    </p>
-                    <p className="mb-2"><span
-                        className="font-semibold">All Time Sum:</span> {formatCurrency(invoiceStats.allTimeSum)}</p>
-                    <p><span className="font-semibold">Invoices Count:</span> {invoiceStats.invoicesCount}</p>
+            {invoiceStats && (
+                <div className="mb-12">
+                    <h2 className="text-2xl font-semibold mb-4 text-secondary-700">Invoice Statistics</h2>
+                    <div className="bg-white shadow-md rounded-lg p-6">
+                        <p className="mb-2"><span
+                            className="font-semibold">Current Year Sum:</span> {formatCurrency(invoiceStats.currentYearSum)}
+                        </p>
+                        <p className="mb-2"><span
+                            className="font-semibold">All Time Sum:</span> {formatCurrency(invoiceStats.allTimeSum)}</p>
+                        <p><span className="font-semibold">Invoices Count:</span> {invoiceStats.invoicesCount}</p>
+                    </div>
                 </div>
-            </div>
+            )}
 
             <div className="mb-12">
                 <h2 className="text-2xl font-semibold mb-4 text-secondary-700">Top 5 Persons by Revenue</h2>
@@ -148,7 +137,7 @@ const Statistics = () => {
                         </thead>
                         <tbody className="bg-white divide-y divide-secondary-200">
                         {sortedPersonStats.map((stat, index) => (
-                            <tr key={stat.personId} className={index % 2 === 0 ? 'bg-secondary-50' : ''}>
+                            <tr key={stat.personId || index} className={index % 2 === 0 ? 'bg-secondary-50' : ''}>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-500">{stat.personId}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-800 font-medium">{stat.personName}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-500">{formatCurrency(stat.revenue)}</td>
