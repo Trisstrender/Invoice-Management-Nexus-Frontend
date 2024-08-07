@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { apiGet, apiDelete } from "../utils/api";  // Add apiDelete here
-import { Plus } from "lucide-react";
+import React, {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
+import {apiDelete, apiGet} from "../utils/api"; // Add apiDelete here
+import {Plus} from "lucide-react";
 import FlashMessage from "../components/FlashMessage";
 import PersonTable from "./PersonTable";
 
@@ -57,12 +57,13 @@ const PersonIndex = () => {
 
             {flashMessage && (
                 <div className="mb-4">
-                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text} />
+                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text}/>
                 </div>
             )}
 
             {error && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+                     role="alert">
                     <strong className="font-bold">Error!</strong>
                     <span className="block sm:inline"> {error}</span>
                 </div>
@@ -84,7 +85,7 @@ const PersonIndex = () => {
                 to="/persons/create"
                 className="mt-8 inline-block bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
             >
-                <Plus className="inline-block mr-1" /> New Person
+                <Plus className="inline-block mr-1"/> New Person
             </Link>
         </div>
     );

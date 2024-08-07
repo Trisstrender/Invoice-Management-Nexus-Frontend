@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronDown } from 'lucide-react';
+import {ChevronDown} from 'lucide-react';
 
 const InputSelect = ({name, label, prompt, items, value, handleChange, multiple, required}) => {
     return (
@@ -32,7 +32,8 @@ const InputSelect = ({name, label, prompt, items, value, handleChange, multiple,
                         </option>
                     ))}
                 </select>
-                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"/>
+                <ChevronDown
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"/>
             </div>
         </div>
     );

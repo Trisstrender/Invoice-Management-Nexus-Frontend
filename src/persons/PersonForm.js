@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { apiGet, apiPost, apiPut } from "../utils/api";
+import React, {useEffect, useState} from "react";
+import {useNavigate, useParams} from "react-router-dom";
+import {apiGet, apiPost, apiPut} from "../utils/api";
 import Country from "./Country";
 import FlashMessage from "../components/FlashMessage";
 import InputField from "../components/InputField";
@@ -8,7 +8,7 @@ import InputSelect from "../components/InputSelect";
 
 const PersonForm = () => {
     const navigate = useNavigate();
-    const { id } = useParams();
+    const {id} = useParams();
     const [person, setPerson] = useState({
         name: "",
         identificationNumber: "",
@@ -59,8 +59,8 @@ const PersonForm = () => {
     };
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setPerson(prev => ({ ...prev, [name]: value }));
+        const {name, value} = e.target;
+        setPerson(prev => ({...prev, [name]: value}));
     };
 
     if (loading) {
@@ -74,22 +74,28 @@ const PersonForm = () => {
             <h1 className="text-3xl font-bold mb-6 text-secondary-800">{id ? "Edit" : "Create"} Person</h1>
             {flashMessage && (
                 <div className="mb-4">
-                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text} />
+                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text}/>
                 </div>
             )}
             <form onSubmit={handleSubmit} className="space-y-6">
-                <InputField name="name" label="Name" value={person.name} handleChange={handleChange} required />
-                <InputField name="identificationNumber" label="Company ID" value={person.identificationNumber} handleChange={handleChange} required />
-                <InputField name="taxNumber" label="Tax ID" value={person.taxNumber} handleChange={handleChange} required />
-                <InputField name="accountNumber" label="Bank Account Number" value={person.accountNumber} handleChange={handleChange} required />
-                <InputField name="bankCode" label="Bank Code" value={person.bankCode} handleChange={handleChange} required />
-                <InputField name="iban" label="IBAN" value={person.iban} handleChange={handleChange} required />
-                <InputField name="telephone" label="Phone" value={person.telephone} handleChange={handleChange} required />
-                <InputField type="email" name="mail" label="Email" value={person.mail} handleChange={handleChange} required />
-                <InputField name="street" label="Street" value={person.street} handleChange={handleChange} required />
-                <InputField name="zip" label="ZIP Code" value={person.zip} handleChange={handleChange} required />
-                <InputField name="city" label="City" value={person.city} handleChange={handleChange} required />
-                <InputField name="note" label="Note" value={person.note} handleChange={handleChange} />
+                <InputField name="name" label="Name" value={person.name} handleChange={handleChange} required/>
+                <InputField name="identificationNumber" label="Company ID" value={person.identificationNumber}
+                            handleChange={handleChange} required/>
+                <InputField name="taxNumber" label="Tax ID" value={person.taxNumber} handleChange={handleChange}
+                            required/>
+                <InputField name="accountNumber" label="Bank Account Number" value={person.accountNumber}
+                            handleChange={handleChange} required/>
+                <InputField name="bankCode" label="Bank Code" value={person.bankCode} handleChange={handleChange}
+                            required/>
+                <InputField name="iban" label="IBAN" value={person.iban} handleChange={handleChange} required/>
+                <InputField name="telephone" label="Phone" value={person.telephone} handleChange={handleChange}
+                            required/>
+                <InputField type="email" name="mail" label="Email" value={person.mail} handleChange={handleChange}
+                            required/>
+                <InputField name="street" label="Street" value={person.street} handleChange={handleChange} required/>
+                <InputField name="zip" label="ZIP Code" value={person.zip} handleChange={handleChange} required/>
+                <InputField name="city" label="City" value={person.city} handleChange={handleChange} required/>
+                <InputField name="note" label="Note" value={person.note} handleChange={handleChange}/>
 
                 <InputSelect
                     name="country"
@@ -97,8 +103,8 @@ const PersonForm = () => {
                     value={person.country}
                     handleChange={handleChange}
                     items={[
-                        { id: Country.CZECHIA, name: "Czech Republic" },
-                        { id: Country.SLOVAKIA, name: "Slovakia" }
+                        {id: Country.CZECHIA, name: "Czech Republic"},
+                        {id: Country.SLOVAKIA, name: "Slovakia"}
                     ]}
                     required
                 />
