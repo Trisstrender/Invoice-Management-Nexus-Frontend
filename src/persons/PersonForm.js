@@ -1,12 +1,14 @@
-import React, {useEffect, useState} from "react";
-import {useNavigate, useParams} from "react-router-dom";
-import {apiGet, apiPost, apiPut} from "../utils/api";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { apiGet, apiPost, apiPut } from "../utils/api";
 import Country from "./Country";
 import FlashMessage from "../components/FlashMessage";
+import InputField from "../components/InputField";
+import InputSelect from "../components/InputSelect";
 
 const PersonForm = () => {
     const navigate = useNavigate();
-    const {id} = useParams();
+    const { id } = useParams();
     const [person, setPerson] = useState({
         name: "",
         identificationNumber: "",
@@ -57,8 +59,8 @@ const PersonForm = () => {
     };
 
     const handleChange = (e) => {
-        const {name, value} = e.target;
-        setPerson(prev => ({...prev, [name]: value}));
+        const { name, value } = e.target;
+        setPerson(prev => ({ ...prev, [name]: value }));
     };
 
     if (loading) {
@@ -72,36 +74,34 @@ const PersonForm = () => {
             <h1 className="text-3xl font-bold mb-6 text-secondary-800">{id ? "Edit" : "Create"} Person</h1>
             {flashMessage && (
                 <div className="mb-4">
-                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text}/>
+                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text} />
                 </div>
             )}
             <form onSubmit={handleSubmit} className="space-y-6">
-                <InputField name="name" label="Name" value={person.name} onChange={handleChange} required/>
-                <InputField name="identificationNumber" label="Company ID" value={person.identificationNumber}
-                            onChange={handleChange} required/>
-                <InputField name="taxNumber" label="Tax ID" value={person.taxNumber} onChange={handleChange} required/>
-                <InputField name="accountNumber" label="Bank Account Number" value={person.accountNumber}
-                            onChange={handleChange} required/>
-                <InputField name="bankCode" label="Bank Code" value={person.bankCode} onChange={handleChange} required/>
-                <InputField name="iban" label="IBAN" value={person.iban} onChange={handleChange} required/>
-                <InputField name="telephone" label="Phone" value={person.telephone} onChange={handleChange} required/>
-                <InputField name="mail" label="Email" type="email" value={person.mail} onChange={handleChange}
-                            required/>
-                <InputField name="street" label="Street" value={person.street} onChange={handleChange} required/>
-                <InputField name="zip" label="ZIP Code" value={person.zip} onChange={handleChange} required/>
-                <InputField name="city" label="City" value={person.city} onChange={handleChange} required/>
-                <InputField name="note" label="Note" value={person.note} onChange={handleChange}/>
+                <InputField name="name" label="Name" value={person.name} handleChange={handleChange} required />
+                <InputField name="identificationNumber" label="Company ID" value={person.identificationNumber} handleChange={handleChange} required />
+                <InputField name="taxNumber" label="Tax ID" value={person.taxNumber} handleChange={handleChange} required />
+                <InputField name="accountNumber" label="Bank Account Number" value={person.accountNumber} handleChange={handleChange} required />
+                <InputField name="bankCode" label="Bank Code" value={person.bankCode} handleChange={handleChange} required />
+                <InputField name="iban" label="IBAN" value={person.iban} handleChange={handleChange} required />
+                <InputField name="telephone" label="Phone" value={person.telephone} handleChange={handleChange} required />
+                <InputField type="email" name="mail" label="Email" value={person.mail} handleChange={handleChange} required />
+                <InputField name="street" label="Street" value={person.street} handleChange={handleChange} required />
+                <InputField name="zip" label="ZIP Code" value={person.zip} handleChange={handleChange} required />
+                <InputField name="city" label="City" value={person.city} handleChange={handleChange} required />
+                <InputField name="note" label="Note" value={person.note} handleChange={handleChange} />
 
-                <div className="space-y-2">
-                    <label className="block text-sm font-medium text-secondary-700">Country:</label>
-                    <div className="flex space-x-4">
-                        <RadioButton name="country" value={Country.CZECHIA} checked={Country.CZECHIA === person.country}
-                                     onChange={handleChange} label="Czech Republic"/>
-                        <RadioButton name="country" value={Country.SLOVAKIA}
-                                     checked={Country.SLOVAKIA === person.country} onChange={handleChange}
-                                     label="Slovakia"/>
-                    </div>
-                </div>
+                <InputSelect
+                    name="country"
+                    label="Country"
+                    value={person.country}
+                    handleChange={handleChange}
+                    items={[
+                        { id: Country.CZECHIA, name: "Czech Republic" },
+                        { id: Country.SLOVAKIA, name: "Slovakia" }
+                    ]}
+                    required
+                />
 
                 <button
                     type="submit"
@@ -123,37 +123,5 @@ const PersonForm = () => {
         </div>
     );
 };
-
-const InputField = ({name, label, value, onChange, required = false, type = "text"}) => (
-    <div>
-        <label htmlFor={name} className="block text-sm font-medium text-secondary-700">
-            {label}
-            {required && <span className="text-red-500 ml-1">*</span>}
-        </label>
-        <input
-            type={type}
-            id={name}
-            name={name}
-            value={value}
-            onChange={onChange}
-            required={required}
-            className="mt-1 block w-full px-4 py-3 rounded-md border border-secondary-300 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-500 focus:ring-opacity-50 text-lg"
-        />
-    </div>
-);
-
-const RadioButton = ({name, value, checked, onChange, label}) => (
-    <label className="inline-flex items-center">
-        <input
-            type="radio"
-            name={name}
-            value={value}
-            checked={checked}
-            onChange={onChange}
-            className="form-radio text-primary-600 focus:ring-primary-500"
-        />
-        <span className="ml-2">{label}</span>
-    </label>
-);
 
 export default PersonForm;

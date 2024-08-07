@@ -1,59 +1,38 @@
 import React from 'react';
-import {AlignLeft, Calendar, Edit, Hash} from 'lucide-react';
 
-const InputField = ({type, name, label, prompt, value, handleChange, required, min, rows}) => {
-    const inputTypes = ['text', 'number', 'date', 'textarea'];
-    const inputType = type.toLowerCase();
+const InputField = ({type = "text", name, label, value, handleChange, required, min, rows}) => {
+    const inputTypes = ['text', 'number', 'date', 'textarea', 'email'];
+    const inputType = inputTypes.includes(type.toLowerCase()) ? type.toLowerCase() : 'text';
     const isTextarea = inputType === 'textarea';
 
-    if (!inputTypes.includes(inputType)) {
-        return null;
-    }
-
-    const icons = {
-        text: <Edit className="inline-block mr-2"/>,
-        number: <Hash className="inline-block mr-2"/>,
-        date: <Calendar className="inline-block mr-2"/>,
-        textarea: <AlignLeft className="inline-block mr-2"/>
-    };
-
-    const baseClasses = "w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500";
-
     return (
-        <div className="mb-4">
-            <label htmlFor={name} className="block mb-2 text-sm font-bold text-gray-700">
+        <div>
+            <label htmlFor={name} className="block text-sm font-medium text-secondary-700">
                 {label}
+                {required && <span className="text-red-500 ml-1">*</span>}
             </label>
             {isTextarea ? (
-                <div>
-                    {icons.textarea}
-                    <textarea
-                        id={name}
-                        name={name}
-                        rows={rows || 3}
-                        placeholder={prompt}
-                        value={value}
-                        onChange={handleChange}
-                        required={required}
-                        minLength={min}
-                        className={`${baseClasses} resize-y`}
-                    />
-                </div>
+                <textarea
+                    id={name}
+                    name={name}
+                    rows={rows || 3}
+                    value={value}
+                    onChange={handleChange}
+                    required={required}
+                    minLength={min}
+                    className="mt-1 block w-full px-4 py-3 rounded-md border border-secondary-300 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-500 focus:ring-opacity-50 text-lg"
+                />
             ) : (
-                <div>
-                    {icons[inputType]}
-                    <input
-                        type={inputType}
-                        id={name}
-                        name={name}
-                        placeholder={prompt}
-                        value={value}
-                        onChange={handleChange}
-                        required={required}
-                        min={min}
-                        className={baseClasses}
-                    />
-                </div>
+                <input
+                    type={inputType}
+                    id={name}
+                    name={name}
+                    value={value}
+                    onChange={handleChange}
+                    required={required}
+                    min={min}
+                    className="mt-1 block w-full px-4 py-3 rounded-md border border-secondary-300 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-500 focus:ring-opacity-50 text-lg"
+                />
             )}
         </div>
     );

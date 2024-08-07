@@ -1,11 +1,13 @@
-import React, {useEffect, useState} from "react";
-import {useNavigate, useParams} from "react-router-dom";
-import {apiGet, apiPost, apiPut} from "../utils/api";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { apiGet, apiPost, apiPut } from "../utils/api";
 import FlashMessage from "../components/FlashMessage";
+import InputField from "../components/InputField";
+import InputSelect from "../components/InputSelect";
 
 const InvoiceForm = () => {
     const navigate = useNavigate();
-    const {id} = useParams();
+    const { id } = useParams();
     const [invoice, setInvoice] = useState({
         invoiceNumber: "",
         issued: "",
@@ -84,8 +86,8 @@ const InvoiceForm = () => {
     };
 
     const handleChange = (e) => {
-        const {name, value} = e.target;
-        setInvoice(prev => ({...prev, [name]: value}));
+        const { name, value } = e.target;
+        setInvoice(prev => ({ ...prev, [name]: value }));
     };
 
     if (loading) {
@@ -99,60 +101,37 @@ const InvoiceForm = () => {
             <h1 className="text-3xl font-bold mb-6 text-secondary-800">{id ? "Edit" : "Create"} Invoice</h1>
             {flashMessage && (
                 <div className="mb-4">
-                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text}/>
+                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text} />
                 </div>
             )}
             <form onSubmit={handleSubmit} className="space-y-6">
-                <InputField name="invoiceNumber" label="Invoice Number" type="number" value={invoice.invoiceNumber}
-                            onChange={handleChange} required/>
-                <InputField name="issued" label="Issue Date" type="date" value={invoice.issued} onChange={handleChange}
-                            required/>
-                <InputField name="dueDate" label="Due Date" type="date" value={invoice.dueDate} onChange={handleChange}
-                            required/>
-                <InputField name="product" label="Product" value={invoice.product} onChange={handleChange} required/>
-                <InputField name="price" label="Price" type="number" value={invoice.price} onChange={handleChange}
-                            required/>
-                <InputField name="vat" label="VAT (%)" type="number" value={invoice.vat} onChange={handleChange}
-                            required/>
-                <InputField name="note" label="Note" value={invoice.note} onChange={handleChange}/>
+                <InputField type="number" name="invoiceNumber" label="Invoice Number" value={invoice.invoiceNumber} handleChange={handleChange} required />
+                <InputField type="date" name="issued" label="Issue Date" value={invoice.issued} handleChange={handleChange} required />
+                <InputField type="date" name="dueDate" label="Due Date" value={invoice.dueDate} handleChange={handleChange} required />
+                <InputField name="product" label="Product" value={invoice.product} handleChange={handleChange} required />
+                <InputField type="number" name="price" label="Price" value={invoice.price} handleChange={handleChange} required />
+                <InputField type="number" name="vat" label="VAT (%)" value={invoice.vat} handleChange={handleChange} required />
+                <InputField name="note" label="Note" value={invoice.note} handleChange={handleChange} />
 
-                <div>
-                    <label htmlFor="buyer" className="block text-sm font-medium text-secondary-700">Buyer</label>
-                    <select
-                        id="buyer"
-                        name="buyer"
-                        value={invoice.buyer ? invoice.buyer.id || invoice.buyer._id : ''}
-                        onChange={handlePersonChange('buyer')}
-                        required
-                        className="mt-1 block w-full px-4 py-3 rounded-md border border-secondary-300 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-500 focus:ring-opacity-50 text-lg"
-                    >
-                        <option value="">Select buyer</option>
-                        {persons.map(person => (
-                            <option key={person.id || person._id} value={person.id || person._id}>
-                                {person.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                <InputSelect
+                    name="buyer"
+                    label="Buyer"
+                    value={invoice.buyer ? invoice.buyer.id || invoice.buyer._id : ''}
+                    handleChange={handlePersonChange('buyer')}
+                    items={persons.map(person => ({ id: person.id || person._id, name: person.name }))}
+                    prompt="Select buyer"
+                    required
+                />
 
-                <div>
-                    <label htmlFor="seller" className="block text-sm font-medium text-secondary-700">Seller</label>
-                    <select
-                        id="seller"
-                        name="seller"
-                        value={invoice.seller ? invoice.seller.id || invoice.seller._id : ''}
-                        onChange={handlePersonChange('seller')}
-                        required
-                        className="mt-1 block w-full px-4 py-3 rounded-md border border-secondary-300 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-500 focus:ring-opacity-50 text-lg"
-                    >
-                        <option value="">Select seller</option>
-                        {persons.map(person => (
-                            <option key={person.id || person._id} value={person.id || person._id}>
-                                {person.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                <InputSelect
+                    name="seller"
+                    label="Seller"
+                    value={invoice.seller ? invoice.seller.id || invoice.seller._id : ''}
+                    handleChange={handlePersonChange('seller')}
+                    items={persons.map(person => ({ id: person.id || person._id, name: person.name }))}
+                    prompt="Select seller"
+                    required
+                />
 
                 <button
                     type="submit"
@@ -174,23 +153,5 @@ const InvoiceForm = () => {
         </div>
     );
 };
-
-const InputField = ({name, label, value, onChange, required = false, type = "text"}) => (
-    <div>
-        <label htmlFor={name} className="block text-sm font-medium text-secondary-700">
-            {label}
-            {required && <span className="text-red-500 ml-1">*</span>}
-        </label>
-        <input
-            type={type}
-            id={name}
-            name={name}
-            value={value}
-            onChange={onChange}
-            required={required}
-            className="mt-1 block w-full px-4 py-3 rounded-md border border-secondary-300 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-500 focus:ring-opacity-50 text-lg"
-        />
-    </div>
-);
 
 export default InvoiceForm;
