@@ -1,16 +1,13 @@
-import React, {useEffect, useState} from "react";
-import {apiDelete, apiGet} from "../utils/api";
-import InvoiceTable from "./InvoiceTable";
-import {Link} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { apiDelete, apiGet } from "../utils/api";
+import formatCurrency from "../utils/currencyFormatter";
+import dateStringFormatter from "../utils/dateStringFormatter";
+import { Eye, Edit, Trash2, Plus, ArrowUp, ArrowDown, Filter } from "lucide-react";
 
-/**
- * InvoiceIndex component for displaying a list of invoices with filtering, sorting, and pagination.
- *
- * @returns {React.Element} A div element containing the invoice list and controls
- */
 const InvoiceIndex = () => {
-    // State variables
     const [invoices, setInvoices] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [totalItems, setTotalItems] = useState(0);
@@ -23,12 +20,10 @@ const InvoiceIndex = () => {
         minPrice: "",
         maxPrice: "",
     });
+    const [showFilters, setShowFilters] = useState(false);
 
-    /**
-     * Fetches invoices from the API based on current filters, sorting, and pagination.
-     */
     const loadInvoices = () => {
-        // Prepare parameters for the API call
+        setLoading(true);
         const params = {
             ...filters,
             sort: `${sortField},${sortDirection}`,
@@ -36,156 +31,202 @@ const InvoiceIndex = () => {
             limit: itemsPerPage,
         };
         apiGet("/api/invoices", params).then((data) => {
-            // Update state with fetched invoices and total count
             setInvoices(Array.isArray(data) ? data : []);
-            if (data && data.totalItems) {
-                setTotalItems(data.totalItems);
-            } else {
-                setTotalItems(Array.isArray(data) ? data.length : 0);
-            }
+            setTotalItems(data.totalItems || (Array.isArray(data) ? data.length : 0));
+            setLoading(false);
         }).catch(error => {
             console.error("Error fetching invoices:", error);
             setInvoices([]);
             setTotalItems(0);
+            setLoading(false);
         });
     };
 
-    // Load invoices when component mounts or when dependencies change
     useEffect(() => {
         loadInvoices();
     }, [currentPage, itemsPerPage, sortField, sortDirection, filters]);
 
-    /**
-     * Handles sorting when a column header is clicked.
-     * Toggles sort direction if the same field is clicked again.
-     *
-     * @param {string} field - The field to sort by
-     */
     const handleSort = (field) => {
         setSortField(field);
         setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     };
 
-    /**
-     * Handles changes in the filter inputs.
-     * Updates the filters state which triggers a new invoice fetch.
-     *
-     * @param {React.ChangeEvent<HTMLInputElement>} e - The change event
-     */
     const handleFilterChange = (e) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         setFilters(prev => ({...prev, [name]: value}));
+        setCurrentPage(1);
     };
 
-    /**
-     * Handles page changes in pagination.
-     *
-     * @param {number} pageNumber - The new page number
-     */
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
 
-    /**
-     * Handles changes in the number of items displayed per page.
-     *
-     * @param {React.ChangeEvent<HTMLSelectElement>} e - The change event
-     */
     const handleItemsPerPageChange = (e) => {
         setItemsPerPage(parseInt(e.target.value));
         setCurrentPage(1);
     };
 
-    /**
-     * Deletes an invoice.
-     *
-     * @param {number} id - The ID of the invoice to delete
-     */
     const deleteInvoice = async (id) => {
-        try {
-            await apiDelete("/api/invoices/" + id);
-            loadInvoices();
-        } catch (error) {
-            console.error(error.message);
-            alert("Error deleting invoice: " + error.message);
+        if (window.confirm("Are you sure you want to delete this invoice?")) {
+            try {
+                await apiDelete("/api/invoices/" + id);
+                loadInvoices();
+            } catch (error) {
+                console.error(error.message);
+                alert("Error deleting invoice: " + error.message);
+            }
         }
     };
 
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
+    const renderSortIcon = (field) => {
+        if (sortField !== field) return null;
+        return sortDirection === 'asc' ? <ArrowUp className="inline-block ml-2"/> : <ArrowDown className="inline-block ml-2"/>;
+    };
+
     return (
-        <div>
-            <h1>List of Invoices</h1>
-            <div className="mb-3">
-                <input
-                    type="text"
-                    name="buyerID"
-                    placeholder="Filter by Buyer ID"
-                    value={filters.buyerID}
-                    onChange={handleFilterChange}
-                    className="form-control mb-2"
-                />
-                <input
-                    type="text"
-                    name="sellerID"
-                    placeholder="Filter by Seller ID"
-                    value={filters.sellerID}
-                    onChange={handleFilterChange}
-                    className="form-control mb-2"
-                />
-                <input
-                    type="text"
-                    name="product"
-                    placeholder="Filter by product"
-                    value={filters.product}
-                    onChange={handleFilterChange}
-                    className="form-control mb-2"
-                />
-                <input
-                    type="number"
-                    name="minPrice"
-                    placeholder="Min price"
-                    value={filters.minPrice}
-                    onChange={handleFilterChange}
-                    className="form-control mb-2"
-                />
-                <input
-                    type="number"
-                    name="maxPrice"
-                    placeholder="Max price"
-                    value={filters.maxPrice}
-                    onChange={handleFilterChange}
-                    className="form-control mb-2"
-                />
+        <div className="container mx-auto px-4">
+            <h1 className="text-3xl font-bold mb-6 text-secondary-800">List of Invoices</h1>
+            <div className="mb-6">
+                <button
+                    onClick={() => setShowFilters(!showFilters)}
+                    className={`inline-block font-bold py-2 px-4 rounded transition-colors duration-200 ${
+                        showFilters ? 'bg-white text-primary-500 border border-primary-500 hover:bg-primary-600 hover:text-white' : 'bg-primary-500 hover:bg-primary-600 text-white'
+                    }`}
+                >
+                    <Filter className="inline-block mr-1" /> Filter
+                </button>
+                {showFilters && (
+                    <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <InputField
+                            name="buyerID"
+                            placeholder="Filter by Buyer ID"
+                            value={filters.buyerID}
+                            onChange={handleFilterChange}
+                        />
+                        <InputField
+                            name="sellerID"
+                            placeholder="Filter by Seller ID"
+                            value={filters.sellerID}
+                            onChange={handleFilterChange}
+                        />
+                        <InputField
+                            name="product"
+                            placeholder="Filter by product"
+                            value={filters.product}
+                            onChange={handleFilterChange}
+                        />
+                        <InputField
+                            name="minPrice"
+                            type="number"
+                            placeholder="Min price"
+                            value={filters.minPrice}
+                            onChange={handleFilterChange}
+                        />
+                        <InputField
+                            name="maxPrice"
+                            type="number"
+                            placeholder="Max price"
+                            value={filters.maxPrice}
+                            onChange={handleFilterChange}
+                        />
+                    </div>
+                )}
             </div>
-            <InvoiceTable
-                items={invoices}
-                onSort={handleSort}
-                sortField={sortField}
-                sortDirection={sortDirection}
-                deleteInvoice={deleteInvoice}
-            />
-            <div className="mt-3">
-                <select value={itemsPerPage} onChange={handleItemsPerPageChange} className="form-select mb-2">
+
+            {loading ? (
+                <div className="flex justify-center items-center h-64">
+                    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary-500"></div>
+                </div>
+            ) : (
+                <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+                    <table className="min-w-full divide-y divide-secondary-200">
+                        <thead className="bg-secondary-50">
+                        <tr>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">#</th>
+                            <th onClick={() => handleSort('invoiceNumber')} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
+                                Invoice Number {renderSortIcon('invoiceNumber')}
+                            </th>
+                            <th onClick={() => handleSort('issued')} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
+                                Issue Date {renderSortIcon('issued')}
+                            </th>
+                            <th onClick={() => handleSort('product')} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
+                                Product {renderSortIcon('product')}
+                            </th>
+                            <th onClick={() => handleSort('price')} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
+                                Price {renderSortIcon('price')}
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-secondary-200">
+                        {invoices.map((invoice, index) => (
+                            <tr key={invoice.id} className="hover:bg-secondary-50 transition-colors duration-200">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-500">{index + 1}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-500">{invoice.invoiceNumber}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-500">{dateStringFormatter(invoice.issued)}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-500">{invoice.product}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-500">{formatCurrency(invoice.price)}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <Link to={`/invoices/show/${invoice.id}`} className="text-primary-600 hover:text-primary-900 mr-2"><Eye className="inline-block mr-1"/> View</Link>
+                                    <Link to={`/invoices/edit/${invoice.id}`} className="text-yellow-600 hover:text-yellow-900 mr-2"><Edit className="inline-block mr-1"/> Edit</Link>
+                                    <button onClick={() => deleteInvoice(invoice.id)} className="text-red-600 hover:text-red-900"><Trash2 className="inline-block mr-1"/> Delete</button>
+                                </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+
+            <div className="mt-8 flex flex-col sm:flex-row justify-between items-center">
+                <select
+                    value={itemsPerPage}
+                    onChange={handleItemsPerPageChange}
+                    className="mb-4 sm:mb-0 px-2 py-1 border border-secondary-300 rounded-md focus:outline-none focus:ring focus:ring-primary-500 focus:border-primary-500"
+                >
                     <option value="10">10 per page</option>
                     <option value="20">20 per page</option>
                     <option value="50">50 per page</option>
                 </select>
-                {Array.from({length: totalPages}, (_, i) => (
-                    <button
-                        key={i}
-                        onClick={() => handlePageChange(i + 1)}
-                        className={`btn btn-sm ${currentPage === i + 1 ? 'btn-primary' : 'btn-secondary'} mr-1`}
-                    >
-                        {i + 1}
-                    </button>
-                ))}
+                <div className="flex flex-wrap justify-center">
+                    {Array.from({ length: totalPages }, (_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => handlePageChange(i + 1)}
+                            className={`mx-1 px-2 py-1 rounded ${
+                                currentPage === i + 1
+                                    ? 'bg-primary-500 text-white'
+                                    : 'bg-secondary-200 text-secondary-700 hover:bg-secondary-300'
+                            } transition-colors duration-200`}
+                        >
+                            {i + 1}
+                        </button>
+                    ))}
+                </div>
             </div>
-            <Link to={"/invoices/create"} className="btn btn-success mt-3">
-                New Invoice
+            <Link
+                to="/invoices/create"
+                className="mt-8 inline-block bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
+            >
+                <Plus className="inline-block mr-1"/> New Invoice
             </Link>
         </div>
     );
 };
+
+const InputField = ({ name, placeholder, value, onChange, type = "text" }) => (
+    <div>
+        <input
+            type={type}
+            name={name}
+            placeholder={placeholder}
+            value={value}
+            onChange={onChange}
+            className="mt-1 block w-full px-3 py-2 rounded-md border border-secondary-300 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-500 focus:ring-opacity-50 text-sm"
+        />
+    </div>
+);
 
 export default InvoiceIndex;

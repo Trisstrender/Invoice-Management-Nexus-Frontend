@@ -1,41 +1,36 @@
-import React from "react";
+import React from 'react';
+import { CheckSquare, Radio } from 'lucide-react';
 
-/**
- * InputCheck component for rendering checkbox or radio inputs.
- *
- * @param {Object} props - Component props
- * @param {string} props.type - Input type ('checkbox' or 'radio')
- * @param {string} props.name - Input name attribute
- * @param {string} props.value - Input value attribute
- * @param {boolean} props.checked - Whether the input is checked
- * @param {Function} props.handleChange - onChange event handler
- * @param {string} props.label - Label text for the input
- * @returns {React.Element|null} A div element with the input and label, or null if invalid type
- */
-export function InputCheck(props) {
-    const INPUTS = ["checkbox", "radio"];
-    const type = props.type.toLowerCase();
-    const checked = props.checked || "";
+const InputCheck = ({ type, name, value, checked, handleChange, label }) => {
+    const inputTypes = ['checkbox', 'radio'];
+    const inputType = type.toLowerCase();
 
-    if (!INPUTS.includes(type)) {
+    if (!inputTypes.includes(inputType)) {
         return null;
     }
 
+    const icons = {
+        checkbox: <CheckSquare className="inline-block mr-2" />,
+        radio: <Radio className="inline-block mr-2" />
+    };
+
     return (
-        <div className="form-group form-check">
-            <label className="form-check-label">
-                <input
-                    type={props.type}
-                    className="form-check-input"
-                    name={props.name}
-                    value={props.value}
-                    checked={checked}
-                    onChange={props.handleChange}
-                />{" "}
-                {props.label}
+        <div className="flex items-center mb-4">
+            {icons[inputType]}
+            <input
+                type={inputType}
+                id={name}
+                name={name}
+                value={value}
+                checked={checked}
+                onChange={handleChange}
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+            />
+            <label htmlFor={name} className="ml-2 text-sm font-medium text-gray-900">
+                {label}
             </label>
         </div>
     );
-}
+};
 
 export default InputCheck;

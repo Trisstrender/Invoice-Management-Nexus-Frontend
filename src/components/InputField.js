@@ -1,63 +1,62 @@
-import React from "react";
+import React from 'react';
+import { Edit, Hash, Calendar, AlignLeft } from 'lucide-react';
 
-/**
- * InputField component for rendering text, number, date inputs or textarea.
- *
- * @param {Object} props - Component props
- * @param {string} props.type - Input type ('text', 'number', 'date', or 'textarea')
- * @param {string} props.name - Input name attribute
- * @param {string} props.label - Label text for the input
- * @param {string} props.prompt - Placeholder text for the input
- * @param {string|number} props.value - Input value
- * @param {Function} props.handleChange - onChange event handler
- * @param {boolean} props.required - Whether the input is required
- * @param {number} props.min - Minimum value for number/date inputs or minimum length for text/textarea
- * @param {number} props.rows - Number of rows for textarea
- * @returns {React.Element|null} A div element with the input field, or null if invalid type
- */
-export function InputField(props) {
-    const INPUTS = ["text", "number", "date"];
-    const type = props.type.toLowerCase();
-    const isTextarea = type === "textarea";
-    const required = props.required || false;
+const InputField = ({ type, name, label, prompt, value, handleChange, required, min, rows }) => {
+    const inputTypes = ['text', 'number', 'date', 'textarea'];
+    const inputType = type.toLowerCase();
+    const isTextarea = inputType === 'textarea';
 
-    if (!isTextarea && !INPUTS.includes(type)) {
+    if (!inputTypes.includes(inputType)) {
         return null;
     }
 
-    const minProp = props.min || null;
-    const min = ["number", "date"].includes(type) ? minProp : null;
-    const minlength = ["text", "textarea"].includes(type) ? minProp : null;
+    const icons = {
+        text: <Edit className="inline-block mr-2" />,
+        number: <Hash className="inline-block mr-2" />,
+        date: <Calendar className="inline-block mr-2" />,
+        textarea: <AlignLeft className="inline-block mr-2" />
+    };
+
+    const baseClasses = "w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500";
 
     return (
-        <div className="form-group">
-            <label>{props.label}:</label>
+        <div className="mb-4">
+            <label htmlFor={name} className="block mb-2 text-sm font-bold text-gray-700">
+                {label}
+            </label>
             {isTextarea ? (
-                <textarea
-                    required={required}
-                    className="form-control"
-                    placeholder={props.prompt}
-                    rows={props.rows}
-                    minLength={minlength}
-                    name={props.name}
-                    value={props.value}
-                    onChange={props.handleChange}
-                />
+                <div>
+                    {icons.textarea}
+                    <textarea
+                        id={name}
+                        name={name}
+                        rows={rows || 3}
+                        placeholder={prompt}
+                        value={value}
+                        onChange={handleChange}
+                        required={required}
+                        minLength={min}
+                        className={`${baseClasses} resize-y`}
+                    />
+                </div>
             ) : (
-                <input
-                    required={required}
-                    type={type}
-                    className="form-control"
-                    placeholder={props.prompt}
-                    minLength={minlength}
-                    min={min}
-                    name={props.name}
-                    value={props.value}
-                    onChange={props.handleChange}
-                />
+                <div>
+                    {icons[inputType]}
+                    <input
+                        type={inputType}
+                        id={name}
+                        name={name}
+                        placeholder={prompt}
+                        value={value}
+                        onChange={handleChange}
+                        required={required}
+                        min={min}
+                        className={baseClasses}
+                    />
+                </div>
             )}
         </div>
     );
-}
+};
 
 export default InputField;

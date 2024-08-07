@@ -1,51 +1,41 @@
-import React from "react";
+import React from 'react';
+import { ChevronDown } from 'lucide-react';
 
-/**
- * InputSelect component for rendering a select dropdown.
- *
- * @param {Object} props - Component props
- * @param {string} props.name - Select name attribute
- * @param {string} props.label - Label text for the select
- * @param {string} props.prompt - Placeholder text for the select
- * @param {Array} props.items - Array of items to populate the select options
- * @param {string|number} props.value - Currently selected value
- * @param {Function} props.handleChange - onChange event handler
- * @param {boolean} props.multiple - Whether multiple selection is allowed
- * @param {boolean} props.required - Whether the select is required
- * @returns {React.Element} A div element with the select dropdown
- */
-export function InputSelect(props) {
-    const multiple = props.multiple;
-    const required = props.required || false;
-
+const InputSelect = ({ name, label, prompt, items, value, handleChange, multiple, required }) => {
     return (
-        <div className="form-group">
-            <label>{props.label}:</label>
-            <select
-                required={required}
-                className="browser-default form-select"
-                multiple={multiple}
-                name={props.name}
-                onChange={props.handleChange}
-                value={props.value || ''}
-            >
-                {required ? (
-                    <option disabled value="">
-                        {props.prompt}
-                    </option>
-                ) : (
-                    <option value="">
-                        ({props.prompt})
-                    </option>
-                )}
-                {props.items.map((item) => (
-                    <option key={item.id || item._id} value={item.id || item._id}>
-                        {item.name}
-                    </option>
-                ))}
-            </select>
+        <div className="mb-4">
+            <label htmlFor={name} className="block mb-2 text-sm font-bold text-gray-700">
+                {label}
+            </label>
+            <div className="relative">
+                <select
+                    id={name}
+                    name={name}
+                    value={value || ''}
+                    onChange={handleChange}
+                    multiple={multiple}
+                    required={required}
+                    className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500"
+                >
+                    {required ? (
+                        <option value="" disabled>
+                            {prompt}
+                        </option>
+                    ) : (
+                        <option value="">
+                            ({prompt})
+                        </option>
+                    )}
+                    {items.map((item) => (
+                        <option key={item.id || item._id} value={item.id || item._id}>
+                            {item.name}
+                        </option>
+                    ))}
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+            </div>
         </div>
     );
-}
+};
 
 export default InputSelect;

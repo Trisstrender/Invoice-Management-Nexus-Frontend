@@ -1,19 +1,12 @@
-import React, {useEffect, useState} from "react";
-import {useNavigate, useParams} from "react-router-dom";
-import {apiGet, apiPost, apiPut} from "../utils/api";
-import InputField from "../components/InputField";
-import InputCheck from "../components/InputCheck";
-import FlashMessage from "../components/FlashMessage";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { apiGet, apiPost, apiPut } from "../utils/api";
 import Country from "./Country";
+import FlashMessage from "../components/FlashMessage";
 
-/**
- * PersonForm component for creating or editing a person.
- *
- * @returns {React.Element} A form for creating or editing a person
- */
 const PersonForm = () => {
     const navigate = useNavigate();
-    const {id} = useParams();
+    const { id } = useParams();
     const [person, setPerson] = useState({
         name: "",
         identificationNumber: "",
@@ -29,176 +22,132 @@ const PersonForm = () => {
         country: Country.CZECHIA,
         note: ""
     });
-    const [sentState, setSent] = useState(false);
-    const [successState, setSuccess] = useState(false);
-    const [errorState, setError] = useState(null);
+    const [loading, setLoading] = useState(id ? true : false);
+    const [flashMessage, setFlashMessage] = useState(null);
 
     useEffect(() => {
         if (id) {
-            apiGet("/api/persons/" + id).then((data) => setPerson(data));
+            setLoading(true);
+            apiGet("/api/persons/" + id).then((data) => {
+                setPerson(data);
+                setLoading(false);
+            });
         }
     }, [id]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setFlashMessage(null);
 
-        // Determine whether to create a new person or update an existing one
-        const apiCall = id ? apiPut("/api/persons/" + id, person) : apiPost("/api/persons", person);
-
-        apiCall
-            .then(() => {
-                // On success, update state and navigate to the persons list
-                setSent(true);
-                setSuccess(true);
-                navigate("/persons");
-            })
-            .catch((error) => {
-                // On error, update state and display error message
-                setError(error.message);
-                setSent(true);
-                setSuccess(false);
+        try {
+            const apiCall = id ? apiPut("/api/persons/" + id, person) : apiPost("/api/persons", person);
+            await apiCall;
+            setFlashMessage({
+                theme: 'success',
+                text: id
+                    ? `Person "${person.name}" (ID: ${id}) successfully updated!`
+                    : `New person "${person.name}" successfully created!`
             });
+        } catch (error) {
+            setFlashMessage({
+                theme: 'danger',
+                text: `Error ${id ? 'updating' : 'creating'} person: ${error.message}. Please check your input and try again.`
+            });
+        }
     };
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setPerson(prev => ({ ...prev, [name]: value }));
+    };
+
+    if (loading) {
+        return <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary-500"></div>
+        </div>;
+    }
+
     return (
-        <div>
-            <h1>{id ? "Edit" : "Create"} Person</h1>
-            <hr/>
-            {errorState && <div className="alert alert-danger">{errorState}</div>}
-            {sentState && (
-                <FlashMessage
-                    theme={successState ? "success" : "danger"}
-                    text={successState ? "Person saved successfully." : "Error saving person."}
-                />
+        <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
+            <h1 className="text-3xl font-bold mb-6 text-secondary-800">{id ? "Edit" : "Create"} Person</h1>
+            {flashMessage && (
+                <div className="mb-4">
+                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text} />
+                </div>
             )}
-            <form onSubmit={handleSubmit}>
-                <InputField
-                    required={true}
-                    type="text"
-                    name="name"
-                    label="Name"
-                    prompt="Enter full name"
-                    value={person.name}
-                    handleChange={(e) => setPerson({...person, name: e.target.value})}
-                />
-                <InputField
-                    required={true}
-                    type="text"
-                    name="identificationNumber"
-                    label="Company ID"
-                    prompt="Enter Company ID"
-                    value={person.identificationNumber}
-                    handleChange={(e) => setPerson({...person, identificationNumber: e.target.value})}
-                />
-                <InputField
-                    required={true}
-                    type="text"
-                    name="taxNumber"
-                    label="Tax ID"
-                    prompt="Enter Tax ID"
-                    value={person.taxNumber}
-                    handleChange={(e) => setPerson({...person, taxNumber: e.target.value})}
-                />
-                <InputField
-                    required={true}
-                    type="text"
-                    name="accountNumber"
-                    label="Bank Account Number"
-                    prompt="Enter bank account number"
-                    value={person.accountNumber}
-                    handleChange={(e) => setPerson({...person, accountNumber: e.target.value})}
-                />
-                <InputField
-                    required={true}
-                    type="text"
-                    name="bankCode"
-                    label="Bank Code"
-                    prompt="Enter bank code"
-                    value={person.bankCode}
-                    handleChange={(e) => setPerson({...person, bankCode: e.target.value})}
-                />
-                <InputField
-                    required={true}
-                    type="text"
-                    name="iban"
-                    label="IBAN"
-                    prompt="Enter IBAN"
-                    value={person.iban}
-                    handleChange={(e) => setPerson({...person, iban: e.target.value})}
-                />
-                <InputField
-                    required={true}
-                    type="text"
-                    name="telephone"
-                    label="Phone"
-                    prompt="Enter phone number"
-                    value={person.telephone}
-                    handleChange={(e) => setPerson({...person, telephone: e.target.value})}
-                />
-                <InputField
-                    required={true}
-                    type="text"
-                    name="mail"
-                    label="Email"
-                    prompt="Enter email address"
-                    value={person.mail}
-                    handleChange={(e) => setPerson({...person, mail: e.target.value})}
-                />
-                <InputField
-                    required={true}
-                    type="text"
-                    name="street"
-                    label="Street"
-                    prompt="Enter street address"
-                    value={person.street}
-                    handleChange={(e) => setPerson({...person, street: e.target.value})}
-                />
-                <InputField
-                    required={true}
-                    type="text"
-                    name="zip"
-                    label="ZIP Code"
-                    prompt="Enter ZIP code"
-                    value={person.zip}
-                    handleChange={(e) => setPerson({...person, zip: e.target.value})}
-                />
-                <InputField
-                    required={true}
-                    type="text"
-                    name="city"
-                    label="City"
-                    prompt="Enter city"
-                    value={person.city}
-                    handleChange={(e) => setPerson({...person, city: e.target.value})}
-                />
-                <InputField
-                    type="textarea"
-                    name="note"
-                    label="Note"
-                    value={person.note}
-                    handleChange={(e) => setPerson({...person, note: e.target.value})}
-                />
-                <h6>Country:</h6>
-                <InputCheck
-                    type="radio"
-                    name="country"
-                    label="Czech Republic"
-                    value={Country.CZECHIA}
-                    handleChange={(e) => setPerson({...person, country: e.target.value})}
-                    checked={Country.CZECHIA === person.country}
-                />
-                <InputCheck
-                    type="radio"
-                    name="country"
-                    label="Slovakia"
-                    value={Country.SLOVAKIA}
-                    handleChange={(e) => setPerson({...person, country: e.target.value})}
-                    checked={Country.SLOVAKIA === person.country}
-                />
-                <input type="submit" className="btn btn-primary" value="Save"/>
+            <form onSubmit={handleSubmit} className="space-y-6">
+                <InputField name="name" label="Name" value={person.name} onChange={handleChange} required />
+                <InputField name="identificationNumber" label="Company ID" value={person.identificationNumber} onChange={handleChange} required />
+                <InputField name="taxNumber" label="Tax ID" value={person.taxNumber} onChange={handleChange} required />
+                <InputField name="accountNumber" label="Bank Account Number" value={person.accountNumber} onChange={handleChange} required />
+                <InputField name="bankCode" label="Bank Code" value={person.bankCode} onChange={handleChange} required />
+                <InputField name="iban" label="IBAN" value={person.iban} onChange={handleChange} required />
+                <InputField name="telephone" label="Phone" value={person.telephone} onChange={handleChange} required />
+                <InputField name="mail" label="Email" type="email" value={person.mail} onChange={handleChange} required />
+                <InputField name="street" label="Street" value={person.street} onChange={handleChange} required />
+                <InputField name="zip" label="ZIP Code" value={person.zip} onChange={handleChange} required />
+                <InputField name="city" label="City" value={person.city} onChange={handleChange} required />
+                <InputField name="note" label="Note" value={person.note} onChange={handleChange} />
+
+                <div className="space-y-2">
+                    <label className="block text-sm font-medium text-secondary-700">Country:</label>
+                    <div className="flex space-x-4">
+                        <RadioButton name="country" value={Country.CZECHIA} checked={Country.CZECHIA === person.country} onChange={handleChange} label="Czech Republic" />
+                        <RadioButton name="country" value={Country.SLOVAKIA} checked={Country.SLOVAKIA === person.country} onChange={handleChange} label="Slovakia" />
+                    </div>
+                </div>
+
+                <button
+                    type="submit"
+                    className="w-full bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
+                >
+                    Save Person
+                </button>
             </form>
+            {flashMessage && flashMessage.theme === 'success' && (
+                <div className="mt-4">
+                    <button
+                        onClick={() => navigate("/persons")}
+                        className="w-full bg-secondary-500 hover:bg-secondary-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
+                    >
+                        Back to Persons List
+                    </button>
+                </div>
+            )}
         </div>
     );
 };
+
+const InputField = ({ name, label, value, onChange, required = false, type = "text" }) => (
+    <div>
+        <label htmlFor={name} className="block text-sm font-medium text-secondary-700">
+            {label}
+            {required && <span className="text-red-500 ml-1">*</span>}
+        </label>
+        <input
+            type={type}
+            id={name}
+            name={name}
+            value={value}
+            onChange={onChange}
+            required={required}
+            className="mt-1 block w-full px-4 py-3 rounded-md border border-secondary-300 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-500 focus:ring-opacity-50 text-lg"
+        />
+    </div>
+);
+
+const RadioButton = ({ name, value, checked, onChange, label }) => (
+    <label className="inline-flex items-center">
+        <input
+            type="radio"
+            name={name}
+            value={value}
+            checked={checked}
+            onChange={onChange}
+            className="form-radio text-primary-600 focus:ring-primary-500"
+        />
+        <span className="ml-2">{label}</span>
+    </label>
+);
 
 export default PersonForm;

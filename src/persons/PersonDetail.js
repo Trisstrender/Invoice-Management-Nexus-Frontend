@@ -1,76 +1,82 @@
-import React, {useEffect, useState} from "react";
-import {Link, useParams} from "react-router-dom";
-import {apiGet} from "../utils/api";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { apiGet } from "../utils/api";
 import Country from "./Country";
 import InvoiceTable from "../invoices/InvoiceTable";
+import { motion } from "framer-motion";
+import { User, ArrowLeft } from "lucide-react";
 
-/**
- * PersonDetail component for displaying details of a specific person.
- *
- * @returns {React.Element} A div element containing person details and related invoices
- */
 const PersonDetail = () => {
-    const {id} = useParams();
+    const { id } = useParams();
     const [person, setPerson] = useState({});
     const [issuedInvoices, setIssuedInvoices] = useState([]);
     const [receivedInvoices, setReceivedInvoices] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        apiGet("/api/persons/" + id).then((data) => setPerson(data));
-        apiGet(`/api/identification/${person.identificationNumber}/sales`).then((data) => setIssuedInvoices(data));
-        apiGet(`/api/identification/${person.identificationNumber}/purchases`).then((data) => setReceivedInvoices(data));
+        setLoading(true);
+        Promise.all([
+            apiGet("/api/persons/" + id),
+            apiGet(`/api/identification/${person.identificationNumber}/sales`),
+            apiGet(`/api/identification/${person.identificationNumber}/purchases`)
+        ]).then(([personData, issuedData, receivedData]) => {
+            setPerson(personData);
+            setIssuedInvoices(issuedData);
+            setReceivedInvoices(receivedData);
+            setLoading(false);
+        });
     }, [id, person.identificationNumber]);
+
+    if (loading) {
+        return <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary-500"></div>
+        </div>;
+    }
 
     const country = Country.CZECHIA === person.country ? "Czech Republic" : "Slovakia";
 
     return (
-        <>
-            <div>
-                <h1>Person Details</h1>
-                <hr/>
-                <h3>{person.name} ({person.identificationNumber})</h3>
-                <p>
-                    <strong>Tax ID:</strong>
-                    <br/>
-                    {person.taxNumber}
-                </p>
-                <p>
-                    <strong>Bank Account:</strong>
-                    <br/>
-                    {person.accountNumber}/{person.bankCode} ({person.iban})
-                </p>
-                <p>
-                    <strong>Phone:</strong>
-                    <br/>
-                    {person.telephone}
-                </p>
-                <p>
-                    <strong>Email:</strong>
-                    <br/>
-                    {person.mail}
-                </p>
-                <p>
-                    <strong>Address:</strong>
-                    <br/>
-                    {person.street}, {person.city}, {person.zip}, {country}
-                </p>
-                <p>
-                    <strong>Note:</strong>
-                    <br/>
-                    {person.note}
-                </p>
-
-                <h2>Issued Invoices</h2>
-                <InvoiceTable items={issuedInvoices}/>
-
-                <h2>Received Invoices</h2>
-                <InvoiceTable items={receivedInvoices}/>
-
-                <Link to={"/persons"} className="btn btn-primary mt-3">
-                    Back to Person List
-                </Link>
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="container mx-auto px-4"
+        >
+            <h1 className="text-3xl font-bold mb-6 text-secondary-800">Person Details</h1>
+            <div className="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-6">
+                <h2 className="text-2xl font-semibold mb-4 text-secondary-700"><User className="inline-block mr-2" /> {person.name} ({person.identificationNumber})</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <p className="mb-2"><span className="font-semibold text-secondary-600">Tax ID:</span> {person.taxNumber}</p>
+                        <p className="mb-2"><span className="font-semibold text-secondary-600">Bank Account:</span> {person.accountNumber}/{person.bankCode} ({person.iban})</p>
+                        <p className="mb-2"><span className="font-semibold text-secondary-600">Phone:</span> {person.telephone}</p>
+                        <p className="mb-2"><span className="font-semibold text-secondary-600">Email:</span> {person.mail}</p>
+                    </div>
+                    <div>
+                        <p className="mb-2"><span className="font-semibold text-secondary-600">Address:</span> {person.street}, {person.city}, {person.zip}, {country}</p>
+                        <p className="mb-2"><span className="font-semibold text-secondary-600">Note:</span> {person.note}</p>
+                    </div>
+                </div>
             </div>
-        </>
+
+            <div className="mb-8">
+                <h2 className="text-2xl font-semibold mb-4 text-secondary-700">Issued Invoices</h2>
+                <InvoiceTable items={issuedInvoices} />
+            </div>
+
+            <div className="mb-8">
+                <h2 className="text-2xl font-semibold mb-4 text-secondary-700">Received Invoices</h2>
+                <InvoiceTable items={receivedInvoices} />
+            </div>
+
+            <Link
+                to="/persons"
+                className="bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
+            >
+                <ArrowLeft className="inline-block mr-1" /> Back to Person List
+            </Link>
+        </motion.div>
     );
 };
 

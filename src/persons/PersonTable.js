@@ -1,64 +1,75 @@
 import React from "react";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Eye, Edit, Trash2, Plus } from "lucide-react";
 
-/**
- * PersonTable component for displaying a table of persons.
- *
- * @param {Object} props - Component props
- * @param {string} props.label - Label for the number of persons
- * @param {Array} props.items - Array of person items to display
- * @param {Function} props.deletePerson - Function to call to delete a person
- * @returns {React.Element} A div element containing a table of persons and controls
- */
-const PersonTable = ({label, items, deletePerson}) => {
+const PersonTable = ({ label, items, deletePerson }) => {
+    if (!Array.isArray(items) || items.length === 0) {
+        return <p className="text-secondary-500 text-center py-4">No persons found.</p>;
+    }
+
     return (
         <div>
-            <p>
-                {label} {items.length}
-            </p>
+            <p className="text-secondary-600 mb-4">{label} {items.length}</p>
 
-            <table className="table table-bordered">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th colSpan={3}>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {items.map((item, index) => (
-                    <tr key={index + 1}>
-                        <td>{index + 1}</td>
-                        <td>{item.name}</td>
-                        <td>
-                            <div className="btn-group">
+            <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+                <table className="min-w-full divide-y divide-secondary-200">
+                    <thead className="bg-secondary-50">
+                    <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">#</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">Name</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">Identification Number</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-secondary-200">
+                    {items.map((item, index) => (
+                        <motion.tr
+                            key={item.id || index}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3, delay: index * 0.05 }}
+                        >
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-500">{index + 1}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-800 font-medium">{item.name}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-500">{item.identificationNumber}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <Link
-                                    to={"/persons/show/" + item.id}
-                                    className="btn btn-sm btn-info"
+                                    to={`/persons/show/${item.id}`}
+                                    className="text-primary-600 hover:text-primary-900 mr-2 transition-colors duration-200"
                                 >
-                                    View
+                                    <Eye className="inline-block mr-1"/> View
                                 </Link>
                                 <Link
-                                    to={"/persons/edit/" + item.id}
-                                    className="btn btn-sm btn-warning"
+                                    to={`/persons/edit/${item.id}`}
+                                    className="text-yellow-600 hover:text-yellow-900 mr-2 transition-colors duration-200"
                                 >
-                                    Edit
+                                    <Edit className="inline-block mr-1"/> Edit
                                 </Link>
                                 <button
                                     onClick={() => deletePerson(item.id)}
-                                    className="btn btn-sm btn-danger"
+                                    className="text-red-600 hover:text-red-900 transition-colors duration-200"
                                 >
-                                    Delete
+                                    <Trash2 className="inline-block mr-1"/> Delete
                                 </button>
-                            </div>
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-            <Link to={"/persons/create"} className="btn btn-success">
-                New Person
-            </Link>
+                            </td>
+                        </motion.tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.2 }}
+            >
+                <Link
+                    to="/persons/create"
+                    className="mt-6 inline-block bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
+                >
+                    <Plus className="inline-block mr-1"/> New Person
+                </Link>
+            </motion.div>
         </div>
     );
 };
