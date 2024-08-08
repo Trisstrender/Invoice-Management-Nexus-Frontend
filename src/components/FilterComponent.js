@@ -1,6 +1,16 @@
 import React from 'react';
 import {Filter} from 'lucide-react';
 
+/**
+ * Renders a filter component that allows the user to filter data based on various criteria.
+ *
+ * @param {Object} filters - An object containing the current filter values.
+ * @param {Function} setFilters - A function to update the filter values.
+ * @param {boolean} showFilters - A flag indicating whether the filter options should be displayed.
+ * @param {Function} setShowFilters - A function to toggle the display of the filter options.
+ * @returns {JSX.Element} - The rendered filter component.
+ */
+
 const FilterComponent = ({filters, setFilters, showFilters, setShowFilters}) => {
     const handleFilterChange = (e) => {
         const {name, value} = e.target;
