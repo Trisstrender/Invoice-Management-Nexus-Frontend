@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { apiDelete, apiGet } from "../utils/api";
-import { ArrowDown, ArrowUp, Edit, Eye, Plus, Trash2 } from "lucide-react";
+import React, {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
+import {apiDelete, apiGet} from "../utils/api";
+import {ArrowDown, ArrowUp, Edit, Eye, Plus, Trash2} from "lucide-react";
 import FlashMessage from "../components/FlashMessage";
 import FilterComponent from "../components/FilterComponent";
 import formatCurrency from "../utils/currencyFormatter";
@@ -86,8 +86,8 @@ const InvoiceIndex = () => {
 
     const renderSortIcon = (field) => {
         if (sortField !== field) return null;
-        return sortDirection === 'asc' ? <ArrowUp className="inline-block ml-2" /> :
-            <ArrowDown className="inline-block ml-2" />;
+        return sortDirection === 'asc' ? <ArrowUp className="inline-block ml-2"/> :
+            <ArrowDown className="inline-block ml-2"/>;
     };
 
     return (
@@ -96,7 +96,7 @@ const InvoiceIndex = () => {
 
             {flashMessage && (
                 <div className="mb-4">
-                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text} />
+                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text}/>
                 </div>
             )}
 
@@ -117,16 +117,20 @@ const InvoiceIndex = () => {
                         <thead className="bg-secondary-50">
                         <tr>
                             <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">#</th>
-                            <th onClick={() => handleSort('invoiceNumber')} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
+                            <th onClick={() => handleSort('invoiceNumber')}
+                                className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
                                 Invoice Number {renderSortIcon('invoiceNumber')}
                             </th>
-                            <th onClick={() => handleSort('issued')} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
+                            <th onClick={() => handleSort('issued')}
+                                className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
                                 Issue Date {renderSortIcon('issued')}
                             </th>
-                            <th onClick={() => handleSort('product')} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
+                            <th onClick={() => handleSort('product')}
+                                className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
                                 Product {renderSortIcon('product')}
                             </th>
-                            <th onClick={() => handleSort('price')} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
+                            <th onClick={() => handleSort('price')}
+                                className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
                                 Price {renderSortIcon('price')}
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">Actions</th>
@@ -141,13 +145,16 @@ const InvoiceIndex = () => {
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-500">{invoice.product}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-500">{formatCurrency(invoice.price)}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <Link to={`/invoices/show/${invoice.id}`} className="text-primary-600 hover:text-primary-900 mr-2">
+                                    <Link to={`/invoices/show/${invoice.id}`}
+                                          className="text-primary-600 hover:text-primary-900 mr-2">
                                         <Eye className="inline-block mr-1"/> View
                                     </Link>
-                                    <Link to={`/invoices/edit/${invoice.id}`} className="text-yellow-600 hover:text-yellow-900 mr-2">
+                                    <Link to={`/invoices/edit/${invoice.id}`}
+                                          className="text-yellow-600 hover:text-yellow-900 mr-2">
                                         <Edit className="inline-block mr-1"/> Edit
                                     </Link>
-                                    <button onClick={() => deleteInvoice(invoice.id, invoice.invoiceNumber)} className="text-red-600 hover:text-red-900">
+                                    <button onClick={() => deleteInvoice(invoice.id, invoice.invoiceNumber)}
+                                            className="text-red-600 hover:text-red-900">
                                         <Trash2 className="inline-block mr-1"/> Delete
                                     </button>
                                 </td>

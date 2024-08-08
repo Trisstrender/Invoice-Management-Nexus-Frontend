@@ -1,5 +1,5 @@
 import React from "react";
-import {BrowserRouter as Router, Link, Navigate, Route, Routes, useLocation} from "react-router-dom";
+import {BrowserRouter as Router, Link, Route, Routes, useLocation} from "react-router-dom";
 import {AnimatePresence} from "framer-motion";
 import {BarChart2, FileText, Users} from "lucide-react";
 
@@ -10,17 +10,21 @@ import InvoiceIndex from "./invoices/InvoiceIndex";
 import InvoiceDetail from "./invoices/InvoiceDetail";
 import InvoiceForm from "./invoices/InvoiceForm";
 import Statistics from "./components/Statistics";
+import WelcomePage from "./components/WelcomePage";
 
 export function App() {
     return (
         <Router>
-            <div className="min-h-screen bg-secondary-100">
-                <nav className="bg-white shadow-md">
+            <div className="flex flex-col min-h-screen">
+                <nav className="bg-white shadow-md fixed top-0 left-0 right-0 z-10">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="flex justify-between h-16">
                             <div className="flex">
                                 <div className="flex-shrink-0 flex items-center">
-                                    <span className="text-2xl font-bold text-primary-600">Invoice App</span>
+                                    <Link to="/"
+                                          className="text-2xl font-bold text-primary-600 hover:text-primary-800 transition-colors duration-200">
+                                        Invotriss
+                                    </Link>
                                 </div>
                                 <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                                     <NavLink to="/persons" icon={<Users size={20}/>}>Persons</NavLink>
@@ -32,12 +36,12 @@ export function App() {
                     </div>
                 </nav>
 
-                <div className="py-10">
+                <div className="flex-grow py-10 mt-16">
                     <main>
                         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <AnimatePresence mode="wait">
                                 <Routes>
-                                    <Route path="/" element={<Navigate to="/persons"/>}/>
+                                    <Route path="/" element={<WelcomePage/>}/>
                                     <Route path="/persons" element={<PersonIndex/>}/>
                                     <Route path="/persons/show/:id" element={<PersonDetail/>}/>
                                     <Route path="/persons/create" element={<PersonForm/>}/>
@@ -52,6 +56,14 @@ export function App() {
                         </div>
                     </main>
                 </div>
+
+                <footer className="bg-white shadow-md mt-auto">
+                    <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+                        <p className="text-center text-sm text-gray-500">
+                            © 2024 Invotriss. Developed by Jan Dalewski
+                        </p>
+                    </div>
+                </footer>
             </div>
         </Router>
     );

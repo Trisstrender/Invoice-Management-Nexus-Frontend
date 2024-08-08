@@ -1,3 +1,46 @@
+:root {
+    --color1: #0ea5e9;
+    --color2: #0284c7;
+    --color3: #475569;
+    --color4: #0f172a;
+    --animation-duration: 30s;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0 50%;
+    }
+}
+
+@-webkit-keyframes gradientAnimation {
+    0% {
+        background-position: 0 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0 50%;
+    }
+}
+
+.bg-gradient-animate {
+    background: #0ea5e9; /* Fallback color */
+    background: radial-gradient(circle, var(--color1), var(--color2), var(--color3), var(--color4));
+    background-size: 400% 400%;
+    animation: gradientAnimation var(--animation-duration) ease infinite;
+    width: 100%;
+    min-height: 100vh;
+    position: absolute;
+    inset: 0;
+}

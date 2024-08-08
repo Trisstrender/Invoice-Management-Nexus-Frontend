@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { apiDelete, apiGet } from "../utils/api";
-import { Plus } from "lucide-react";
+import React, {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
+import {apiDelete, apiGet} from "../utils/api";
+import {Plus} from "lucide-react";
 import FlashMessage from "../components/FlashMessage";
 import PersonTable from "./PersonTable";
 
@@ -17,7 +17,7 @@ const PersonIndex = () => {
     const loadPersons = () => {
         setLoading(true);
         setError(null);
-        apiGet("/api/persons", { page: currentPage, limit: itemsPerPage })
+        apiGet("/api/persons", {page: currentPage, limit: itemsPerPage})
             .then((data) => {
                 if (Array.isArray(data)) {
                     setPersons(data);
@@ -80,12 +80,13 @@ const PersonIndex = () => {
 
             {flashMessage && (
                 <div className="mb-4">
-                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text} />
+                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text}/>
                 </div>
             )}
 
             {error && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+                     role="alert">
                     <strong className="font-bold">Error!</strong>
                     <span className="block sm:inline"> {error}</span>
                 </div>
@@ -115,7 +116,7 @@ const PersonIndex = () => {
                                 <option value="50">50 per page</option>
                             </select>
                             <div className="flex flex-wrap justify-center">
-                                {Array.from({ length: totalPages }, (_, i) => (
+                                {Array.from({length: totalPages}, (_, i) => (
                                     <button
                                         key={i}
                                         onClick={() => handlePageChange(i + 1)}
@@ -138,7 +139,7 @@ const PersonIndex = () => {
                 to="/persons/create"
                 className="mt-8 inline-block bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
             >
-                <Plus className="inline-block mr-1" /> New Person
+                <Plus className="inline-block mr-1"/> New Person
             </Link>
         </div>
     );
