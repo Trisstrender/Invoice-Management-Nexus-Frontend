@@ -1,7 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Edit, Eye, Trash2 } from "lucide-react";
+import {Link} from "react-router-dom";
+import {motion} from "framer-motion";
+import {Edit, Eye, Trash2} from "lucide-react";
 import dateStringFormatter from "../utils/dateStringFormatter";
 import formatCurrency from "../utils/currencyFormatter";
 
@@ -25,16 +25,20 @@ const InvoiceTable = ({
                 <thead className="bg-secondary-50">
                 <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider w-12">#</th>
-                    <th onClick={() => handleSort('invoiceNumber')} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
+                    <th onClick={() => handleSort('invoiceNumber')}
+                        className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
                         Invoice Number {renderSortIcon('invoiceNumber')}
                     </th>
-                    <th onClick={() => handleSort('issued')} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
+                    <th onClick={() => handleSort('issued')}
+                        className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
                         Issue Date {renderSortIcon('issued')}
                     </th>
-                    <th onClick={() => handleSort('product')} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
+                    <th onClick={() => handleSort('product')}
+                        className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
                         Product {renderSortIcon('product')}
                     </th>
-                    <th onClick={() => handleSort('price')} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
+                    <th onClick={() => handleSort('price')}
+                        className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
                         Price {renderSortIcon('price')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">Actions</th>
@@ -46,9 +50,9 @@ const InvoiceTable = ({
                     return (
                         <motion.tr
                             key={invoiceId}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3, delay: index * 0.05 }}
+                            initial={{opacity: 0, y: 20}}
+                            animate={{opacity: 1, y: 0}}
+                            transition={{duration: 0.3, delay: index * 0.05}}
                             className="hover:bg-secondary-50 transition-colors duration-200"
                         >
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-500">

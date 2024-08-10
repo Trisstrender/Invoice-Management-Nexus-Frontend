@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { apiGet, apiDelete } from "../utils/api";
-import formatCurrency from "../utils/currencyFormatter";
-import dateStringFormatter from "../utils/dateStringFormatter";
-import { ArrowDown, ArrowUp, Edit, Eye, Filter, Plus, Trash2 } from "lucide-react";
+import React, {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
+import {apiDelete, apiGet} from "../utils/api";
+import {ArrowDown, ArrowUp, Filter, Plus} from "lucide-react";
 import FlashMessage from "../components/FlashMessage";
 import InvoiceTable from "./InvoiceTable";
 
@@ -59,8 +57,8 @@ const InvoiceIndex = () => {
     };
 
     const handleFilterChange = (e) => {
-        const { name, value } = e.target;
-        setFilters(prev => ({ ...prev, [name]: value }));
+        const {name, value} = e.target;
+        setFilters(prev => ({...prev, [name]: value}));
         setCurrentPage(1);
     };
 
@@ -183,7 +181,7 @@ const InvoiceIndex = () => {
                     <option value="50">50 per page</option>
                 </select>
                 <div className="flex flex-wrap justify-center">
-                    {Array.from({ length: totalPages }, (_, i) => (
+                    {Array.from({length: totalPages}, (_, i) => (
                         <button
                             key={i}
                             onClick={() => handlePageChange(i + 1)}
@@ -208,7 +206,7 @@ const InvoiceIndex = () => {
     );
 };
 
-const InputField = ({ name, placeholder, value, onChange, type = "text" }) => (
+const InputField = ({name, placeholder, value, onChange, type = "text"}) => (
     <div>
         <input
             type={type}
