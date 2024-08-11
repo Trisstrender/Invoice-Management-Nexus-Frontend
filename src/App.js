@@ -1,7 +1,7 @@
 import React from "react";
-import {BrowserRouter as Router, Link, Route, Routes, useLocation} from "react-router-dom";
-import {AnimatePresence} from "framer-motion";
-import {BarChart2, FileText, Users} from "lucide-react";
+import { BrowserRouter as Router, Link, Route, Routes, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
+import { BarChart2, FileText, Users } from "lucide-react";
 
 import PersonIndex from "./persons/PersonIndex";
 import PersonDetail from "./persons/PersonDetail";

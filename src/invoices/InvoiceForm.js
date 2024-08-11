@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { apiGet, apiPost, apiPut } from "../utils/api";
+import { useParams } from "react-router-dom";
+import { apiGet } from "../utils/api";
 import FlashMessage from "../components/FlashMessage";
 import InputField from "../components/InputField";
 import InputSelect from "../components/InputSelect";
+import useFormHandling from "../utils/useFormHandling";
 
 const InvoiceForm = () => {
-    const navigate = useNavigate();
     const { id } = useParams();
-    const [invoice, setInvoice] = useState({
+    const [persons, setPersons] = useState([]);
+    const initialState = {
         invoiceNumber: "",
         issued: "",
         dueDate: "",
@@ -18,89 +19,29 @@ const InvoiceForm = () => {
         note: "",
         buyer: null,
         seller: null,
-    });
-    const [persons, setPersons] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [flashMessage, setFlashMessage] = useState(null);
+    };
+
+    const {
+        formData,
+        loading,
+        flashMessage,
+        handleChange,
+        handleSubmit,
+        handleBack
+    } = useFormHandling(initialState, "/api/invoices", "/invoices", id);
 
     useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const personsData = await apiGet("/api/persons");
-                setPersons(Array.isArray(personsData) ? personsData : personsData.items || []);
-
-                if (id) {
-                    const invoiceData = await apiGet("/api/invoices/" + id);
-                    setInvoice({
-                        ...invoiceData,
-                        buyer: invoiceData.buyer,
-                        seller: invoiceData.seller,
-                        issued: invoiceData.issued.split('T')[0],
-                        dueDate: invoiceData.dueDate.split('T')[0],
-                    });
-                }
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                setFlashMessage({
-                    theme: 'danger',
-                    text: `Error loading data: ${error.message}`
-                });
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, [id]);
+        apiGet("/api/persons").then((data) => {
+            setPersons(Array.isArray(data) ? data : data.items || []);
+        });
+    }, []);
 
     const handlePersonChange = (field) => (e) => {
         const selectedId = e.target.value;
         const selectedPerson = persons.find(p => String(p.id) === selectedId || String(p._id) === selectedId);
         if (selectedPerson) {
-            setInvoice({
-                ...invoice,
-                [field]: selectedPerson
-            });
+            handleChange({ target: { name: field, value: selectedPerson } });
         }
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setFlashMessage(null);
-
-        try {
-            const submitData = {
-                invoiceNumber: parseInt(invoice.invoiceNumber),
-                issued: invoice.issued,
-                dueDate: invoice.dueDate,
-                product: invoice.product,
-                price: parseInt(invoice.price),
-                vat: parseInt(invoice.vat),
-                note: invoice.note,
-                buyer: invoice.buyer,
-                seller: invoice.seller,
-            };
-
-            const apiCall = id ? apiPut("/api/invoices/" + id, submitData) : apiPost("/api/invoices", submitData);
-            await apiCall;
-            setFlashMessage({
-                theme: 'success',
-                text: id
-                    ? `Invoice #${invoice.invoiceNumber} (ID: ${id}) successfully updated!`
-                    : `New invoice #${invoice.invoiceNumber} successfully created!`
-            });
-        } catch (error) {
-            setFlashMessage({
-                theme: 'danger',
-                text: `Error ${id ? 'updating' : 'creating'} invoice: ${error.message}. Please check your input and try again.`
-            });
-        }
-    };
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setInvoice(prev => ({ ...prev, [name]: value }));
     };
 
     if (loading) {
@@ -118,24 +59,24 @@ const InvoiceForm = () => {
                 </div>
             )}
             <form onSubmit={handleSubmit} className="space-y-6">
-                <InputField type="number" name="invoiceNumber" label="Invoice Number" value={invoice.invoiceNumber}
+                <InputField type="number" name="invoiceNumber" label="Invoice Number" value={formData.invoiceNumber}
                             handleChange={handleChange} required />
-                <InputField type="date" name="issued" label="Issue Date" value={invoice.issued}
+                <InputField type="date" name="issued" label="Issue Date" value={formData.issued}
                             handleChange={handleChange} required />
-                <InputField type="date" name="dueDate" label="Due Date" value={invoice.dueDate}
+                <InputField type="date" name="dueDate" label="Due Date" value={formData.dueDate}
                             handleChange={handleChange} required />
-                <InputField name="product" label="Product" value={invoice.product} handleChange={handleChange}
+                <InputField name="product" label="Product" value={formData.product} handleChange={handleChange}
                             required />
-                <InputField type="number" name="price" label="Price" value={invoice.price} handleChange={handleChange}
+                <InputField type="number" name="price" label="Price" value={formData.price} handleChange={handleChange}
                             required />
-                <InputField type="number" name="vat" label="VAT (%)" value={invoice.vat} handleChange={handleChange}
+                <InputField type="number" name="vat" label="VAT (%)" value={formData.vat} handleChange={handleChange}
                             required />
-                <InputField name="note" label="Note" value={invoice.note} handleChange={handleChange} />
+                <InputField name="note" label="Note" value={formData.note} handleChange={handleChange} />
 
                 <InputSelect
                     name="buyer"
                     label="Buyer"
-                    value={invoice.buyer ? invoice.buyer.id || invoice.buyer._id : ''}
+                    value={formData.buyer ? formData.buyer.id || formData.buyer._id : ''}
                     handleChange={handlePersonChange('buyer')}
                     items={persons.map(person => ({ id: person.id || person._id, name: person.name }))}
                     prompt="Select buyer"
@@ -145,7 +86,7 @@ const InvoiceForm = () => {
                 <InputSelect
                     name="seller"
                     label="Seller"
-                    value={invoice.seller ? invoice.seller.id || invoice.seller._id : ''}
+                    value={formData.seller ? formData.seller.id || formData.seller._id : ''}
                     handleChange={handlePersonChange('seller')}
                     items={persons.map(person => ({ id: person.id || person._id, name: person.name }))}
                     prompt="Select seller"
@@ -162,7 +103,7 @@ const InvoiceForm = () => {
             {flashMessage && flashMessage.theme === 'success' && (
                 <div className="mt-4">
                     <button
-                        onClick={() => navigate("/invoices")}
+                        onClick={handleBack}
                         className="w-full bg-secondary-500 hover:bg-secondary-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
                     >
                         Back to Invoices List

@@ -38,6 +38,7 @@ const PersonTable = ({ persons, deletePerson, handleSort, sortField, sortDirecti
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.3, delay: index * 0.05 }}
+                            className="hover:bg-secondary-50 transition-colors duration-200"
                         >
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-500">{index + 1}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-800 font-medium">{person.name}</td>

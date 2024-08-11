@@ -1,15 +1,14 @@
-import React, {useEffect, useState} from "react";
-import {useNavigate, useParams} from "react-router-dom";
-import {apiGet, apiPost, apiPut} from "../utils/api";
+import React from "react";
+import { useParams } from "react-router-dom";
 import Country from "./Country";
 import FlashMessage from "../components/FlashMessage";
 import InputField from "../components/InputField";
 import InputSelect from "../components/InputSelect";
+import useFormHandling from "../utils/useFormHandling";
 
 const PersonForm = () => {
-    const navigate = useNavigate();
-    const {id} = useParams();
-    const [person, setPerson] = useState({
+    const { id } = useParams();
+    const initialState = {
         name: "",
         identificationNumber: "",
         taxNumber: "",
@@ -23,45 +22,16 @@ const PersonForm = () => {
         city: "",
         country: Country.CZECHIA,
         note: ""
-    });
-    const [loading, setLoading] = useState(!!id);
-    const [flashMessage, setFlashMessage] = useState(null);
-
-    useEffect(() => {
-        if (id) {
-            setLoading(true);
-            apiGet("/api/persons/" + id).then((data) => {
-                setPerson(data);
-                setLoading(false);
-            });
-        }
-    }, [id]);
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setFlashMessage(null);
-
-        try {
-            const apiCall = id ? await apiPut("/api/persons/" + id, person) : await apiPost("/api/persons", person);
-            await apiCall;
-            setFlashMessage({
-                theme: 'success',
-                text: id
-                    ? `Person "${person.name}" (ID: ${id}) successfully updated!`
-                    : `New person "${person.name}" successfully created!`
-            });
-        } catch (error) {
-            setFlashMessage({
-                theme: 'danger',
-                text: `Error ${id ? 'updating' : 'creating'} person: ${error.message}. Please check your input and try again.`
-            });
-        }
     };
 
-    const handleChange = (e) => {
-        const {name, value} = e.target;
-        setPerson(prev => ({...prev, [name]: value}));
-    };
+    const {
+        formData,
+        loading,
+        flashMessage,
+        handleChange,
+        handleSubmit,
+        handleBack
+    } = useFormHandling(initialState, "/api/persons", "/persons", id);
 
     if (loading) {
         return <div className="flex justify-center items-center h-64">
@@ -78,29 +48,29 @@ const PersonForm = () => {
                 </div>
             )}
             <form onSubmit={handleSubmit} className="space-y-6">
-                <InputField name="name" label="Name" value={person.name} handleChange={handleChange} required/>
-                <InputField name="identificationNumber" label="Company ID" value={person.identificationNumber}
+                <InputField name="name" label="Name" value={formData.name} handleChange={handleChange} required/>
+                <InputField name="identificationNumber" label="Company ID" value={formData.identificationNumber}
                             handleChange={handleChange} required/>
-                <InputField name="taxNumber" label="Tax ID" value={person.taxNumber} handleChange={handleChange}
+                <InputField name="taxNumber" label="Tax ID" value={formData.taxNumber} handleChange={handleChange}
                             required/>
-                <InputField name="accountNumber" label="Bank Account Number" value={person.accountNumber}
+                <InputField name="accountNumber" label="Bank Account Number" value={formData.accountNumber}
                             handleChange={handleChange} required/>
-                <InputField name="bankCode" label="Bank Code" value={person.bankCode} handleChange={handleChange}
+                <InputField name="bankCode" label="Bank Code" value={formData.bankCode} handleChange={handleChange}
                             required/>
-                <InputField name="iban" label="IBAN" value={person.iban} handleChange={handleChange} required/>
-                <InputField name="telephone" label="Phone" value={person.telephone} handleChange={handleChange}
+                <InputField name="iban" label="IBAN" value={formData.iban} handleChange={handleChange} required/>
+                <InputField name="telephone" label="Phone" value={formData.telephone} handleChange={handleChange}
                             required/>
-                <InputField type="email" name="mail" label="Email" value={person.mail} handleChange={handleChange}
+                <InputField type="email" name="mail" label="Email" value={formData.mail} handleChange={handleChange}
                             required/>
-                <InputField name="street" label="Street" value={person.street} handleChange={handleChange} required/>
-                <InputField name="zip" label="ZIP Code" value={person.zip} handleChange={handleChange} required/>
-                <InputField name="city" label="City" value={person.city} handleChange={handleChange} required/>
-                <InputField name="note" label="Note" value={person.note} handleChange={handleChange}/>
+                <InputField name="street" label="Street" value={formData.street} handleChange={handleChange} required/>
+                <InputField name="zip" label="ZIP Code" value={formData.zip} handleChange={handleChange} required/>
+                <InputField name="city" label="City" value={formData.city} handleChange={handleChange} required/>
+                <InputField name="note" label="Note" value={formData.note} handleChange={handleChange}/>
 
                 <InputSelect
                     name="country"
                     label="Country"
-                    value={person.country}
+                    value={formData.country}
                     handleChange={handleChange}
                     items={[
                         {id: Country.CZECHIA, name: "Czech Republic"},
@@ -119,7 +89,7 @@ const PersonForm = () => {
             {flashMessage && flashMessage.theme === 'success' && (
                 <div className="mt-4">
                     <button
-                        onClick={() => navigate("/persons")}
+                        onClick={handleBack}
                         className="w-full bg-secondary-500 hover:bg-secondary-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
                     >
                         Back to Persons List

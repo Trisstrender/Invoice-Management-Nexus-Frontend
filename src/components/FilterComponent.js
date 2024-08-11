@@ -1,20 +1,10 @@
 import React from 'react';
-import {Filter} from 'lucide-react';
+import { Filter } from 'lucide-react';
 
-/**
- * Renders a filter component that allows the user to filter data based on various criteria.
- *
- * @param {Object} filters - An object containing the current filter values.
- * @param {Function} setFilters - A function to update the filter values.
- * @param {boolean} showFilters - A flag indicating whether the filter options should be displayed.
- * @param {Function} setShowFilters - A function to toggle the display of the filter options.
- * @returns {JSX.Element} - The rendered filter component.
- */
-
-const FilterComponent = ({filters, setFilters, showFilters, setShowFilters}) => {
+const FilterComponent = ({ filters, setFilters, showFilters, setShowFilters, fields }) => {
     const handleFilterChange = (e) => {
-        const {name, value} = e.target;
-        setFilters(prev => ({...prev, [name]: value}));
+        const { name, value } = e.target;
+        setFilters(prev => ({ ...prev, [name]: value }));
     };
 
     return (
@@ -29,45 +19,23 @@ const FilterComponent = ({filters, setFilters, showFilters, setShowFilters}) => 
             </button>
             {showFilters && (
                 <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <InputField
-                        name="buyerID"
-                        placeholder="Filter by Buyer ID"
-                        value={filters.buyerID}
-                        onChange={handleFilterChange}
-                    />
-                    <InputField
-                        name="sellerID"
-                        placeholder="Filter by Seller ID"
-                        value={filters.sellerID}
-                        onChange={handleFilterChange}
-                    />
-                    <InputField
-                        name="product"
-                        placeholder="Filter by product"
-                        value={filters.product}
-                        onChange={handleFilterChange}
-                    />
-                    <InputField
-                        name="minPrice"
-                        type="number"
-                        placeholder="Min price"
-                        value={filters.minPrice}
-                        onChange={handleFilterChange}
-                    />
-                    <InputField
-                        name="maxPrice"
-                        type="number"
-                        placeholder="Max price"
-                        value={filters.maxPrice}
-                        onChange={handleFilterChange}
-                    />
+                    {fields.map(field => (
+                        <InputField
+                            key={field.name}
+                            name={field.name}
+                            placeholder={field.placeholder}
+                            value={filters[field.name]}
+                            onChange={handleFilterChange}
+                            type={field.type || "text"}
+                        />
+                    ))}
                 </div>
             )}
         </div>
     );
 };
 
-const InputField = ({name, placeholder, value, onChange, type = "text"}) => (
+const InputField = ({ name, placeholder, value, onChange, type = "text" }) => (
     <div>
         <input
             type={type}
