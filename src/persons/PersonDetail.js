@@ -16,12 +16,10 @@ const PersonDetail = () => {
     const [loading, setLoading] = useState(true);
     const [flashMessage, setFlashMessage] = useState(null);
 
-    // Pagination state for issued invoices
     const [issuedCurrentPage, setIssuedCurrentPage] = useState(1);
     const [issuedTotalPages, setIssuedTotalPages] = useState(1);
     const [issuedItemsPerPage, setIssuedItemsPerPage] = useState(10);
 
-    // Pagination state for received invoices
     const [receivedCurrentPage, setReceivedCurrentPage] = useState(1);
     const [receivedTotalPages, setReceivedTotalPages] = useState(1);
     const [receivedItemsPerPage, setReceivedItemsPerPage] = useState(10);
@@ -33,20 +31,20 @@ const PersonDetail = () => {
             setPerson(personData);
 
             const [issuedData, receivedData] = await Promise.all([
-                apiGet(`/api/identification/${personData.identificationNumber}/sales`, {
+                apiGet(`/api/invoices/identification/${personData.identificationNumber}/sales`, {
                     page: issuedCurrentPage,
                     limit: issuedItemsPerPage
                 }),
-                apiGet(`/api/identification/${personData.identificationNumber}/purchases`, {
+                apiGet(`/api/invoices/identification/${personData.identificationNumber}/purchases`, {
                     page: receivedCurrentPage,
                     limit: receivedItemsPerPage
                 })
             ]);
 
-            setIssuedInvoices(issuedData.items || issuedData);
-            setIssuedTotalPages(issuedData.totalPages || Math.ceil(issuedData.length / issuedItemsPerPage));
-            setReceivedInvoices(receivedData.items || receivedData);
-            setReceivedTotalPages(receivedData.totalPages || Math.ceil(receivedData.length / receivedItemsPerPage));
+            setIssuedInvoices(issuedData.items);
+            setIssuedTotalPages(issuedData.totalPages);
+            setReceivedInvoices(receivedData.items);
+            setReceivedTotalPages(receivedData.totalPages);
         } catch (error) {
             console.error("Error fetching person data:", error);
             setFlashMessage({
