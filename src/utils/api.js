@@ -35,16 +35,30 @@ const fetchData = (url, requestOptions) => {
                 return response.json();
         })
         .then(data => {
-            // Convert _id to id if present
+            // Handle paginated responses
+            if (data && data.items) {
+                return {
+                    items: data.items.map(item => ({
+                        ...item,
+                        id: item._id || item.id
+                    })),
+                    currentPage: data.currentPage,
+                    totalPages: data.totalPages,
+                    totalItems: data.totalItems
+                };
+            }
+
+            // Handle non-paginated responses (single items or arrays)
             if (Array.isArray(data)) {
-                return data.map(item => {
-                    if (item._id) {
-                        item.id = item._id;
-                    }
-                    return item;
-                });
+                return data.map(item => ({
+                    ...item,
+                    id: item._id || item.id
+                }));
             } else if (data && data._id) {
-                data.id = data._id;
+                return {
+                    ...data,
+                    id: data._id
+                };
             }
             return data;
         })
