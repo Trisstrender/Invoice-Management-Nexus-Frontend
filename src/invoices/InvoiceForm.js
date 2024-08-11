@@ -31,9 +31,22 @@ const InvoiceForm = () => {
     } = useFormHandling(initialState, "/api/invoices", "/invoices", id);
 
     useEffect(() => {
-        apiGet("/api/persons").then((data) => {
-            setPersons(Array.isArray(data) ? data : data.items || []);
-        });
+        const fetchAllPersons = async () => {
+            let allPersons = [];
+            let page = 1;
+            let hasMore = true;
+
+            while (hasMore) {
+                const response = await apiGet("/api/persons", { page, limit: 100 });
+                allPersons = [...allPersons, ...(response.items || [])];
+                hasMore = response.currentPage < response.totalPages;
+                page++;
+            }
+
+            setPersons(allPersons);
+        };
+
+        fetchAllPersons();
     }, []);
 
     const handlePersonChange = (field) => (e) => {
