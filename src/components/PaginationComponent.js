@@ -1,6 +1,6 @@
 import React from 'react';
 
-const PaginationComponent = ({ currentPage, totalPages, itemsPerPage, setItemsPerPage, onPageChange }) => {
+const PaginationComponent = ({currentPage, totalPages, itemsPerPage, setItemsPerPage, onPageChange}) => {
     return (
         <div className="mt-8 flex flex-col sm:flex-row justify-between items-center">
             <select
@@ -13,7 +13,7 @@ const PaginationComponent = ({ currentPage, totalPages, itemsPerPage, setItemsPe
                 <option value="50">50 per page</option>
             </select>
             <div className="flex flex-wrap justify-center">
-                {Array.from({ length: totalPages }, (_, i) => (
+                {Array.from({length: totalPages}, (_, i) => (
                     <button
                         key={i}
                         onClick={() => onPageChange(i + 1)}

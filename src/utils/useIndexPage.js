@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { apiGet } from './api';
-import { ArrowUp, ArrowDown } from 'lucide-react';
+import {useEffect, useState} from 'react';
+import {apiGet} from './api';
+import {ArrowDown, ArrowUp} from 'lucide-react';
 
 const useIndexPage = (apiEndpoint, defaultSortField) => {
     const [items, setItems] = useState([]);

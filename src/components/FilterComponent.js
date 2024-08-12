@@ -1,10 +1,10 @@
 import React from 'react';
-import { Filter } from 'lucide-react';
+import {Filter} from 'lucide-react';
 
-const FilterComponent = ({ filters, setFilters, showFilters, setShowFilters, fields }) => {
+const FilterComponent = ({filters, setFilters, showFilters, setShowFilters, fields}) => {
     const handleFilterChange = (e) => {
-        const { name, value } = e.target;
-        setFilters(prev => ({ ...prev, [name]: value }));
+        const {name, value} = e.target;
+        setFilters(prev => ({...prev, [name]: value}));
     };
 
     return (
@@ -35,7 +35,7 @@ const FilterComponent = ({ filters, setFilters, showFilters, setShowFilters, fie
     );
 };
 
-const InputField = ({ name, placeholder, value, onChange, type = "text" }) => (
+const InputField = ({name, placeholder, value, onChange, type = "text"}) => (
     <div>
         <input
             type={type}

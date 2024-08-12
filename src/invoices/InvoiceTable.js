@@ -1,11 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Edit, Eye, Trash2 } from "lucide-react";
+import {Link} from "react-router-dom";
+import {motion} from "framer-motion";
+import {Edit, Eye, Trash2} from "lucide-react";
 import dateStringFormatter from "../utils/dateStringFormatter";
 import formatCurrency from "../utils/currencyFormatter";
 
-const InvoiceTable = ({ invoices, deleteInvoice, handleSort, sortField, sortDirection, renderSortIcon }) => {
+const InvoiceTable = ({invoices, deleteInvoice, handleSort, sortField, sortDirection, renderSortIcon}) => {
     if (!Array.isArray(invoices) || invoices.length === 0) {
         return <p className="text-secondary-500 text-center py-4">No invoices found.</p>;
     }
@@ -49,9 +49,9 @@ const InvoiceTable = ({ invoices, deleteInvoice, handleSort, sortField, sortDire
                     return (
                         <motion.tr
                             key={invoiceId}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3, delay: index * 0.05 }}
+                            initial={{opacity: 0, y: 20}}
+                            animate={{opacity: 1, y: 0}}
+                            transition={{duration: 0.3, delay: index * 0.05}}
                             className="hover:bg-secondary-50 transition-colors duration-200"
                         >
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-500">{index + 1}</td>

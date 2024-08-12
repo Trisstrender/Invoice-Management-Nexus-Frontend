@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { apiGet, apiPost, apiPut } from './api';
+import {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {apiGet, apiPost, apiPut} from './api';
 
 const useFormHandling = (initialState, apiEndpoint, redirectPath, idParam = null) => {
     const navigate = useNavigate();
@@ -19,8 +19,8 @@ const useFormHandling = (initialState, apiEndpoint, redirectPath, idParam = null
     }, [idParam, apiEndpoint]);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        const {name, value} = e.target;
+        setFormData(prev => ({...prev, [name]: value}));
     };
 
     const handleSubmit = async (e) => {

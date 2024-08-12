@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import {useParams} from "react-router-dom";
 import Country from "./Country";
 import FlashMessage from "../components/FlashMessage";
 import InputField from "../components/InputField";
@@ -7,7 +7,7 @@ import InputSelect from "../components/InputSelect";
 import useFormHandling from "../utils/useFormHandling";
 
 const PersonForm = () => {
-    const { id } = useParams();
+    const {id} = useParams();
     const initialState = {
         name: "",
         identificationNumber: "",

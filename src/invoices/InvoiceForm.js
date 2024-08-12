@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { apiGet } from "../utils/api";
+import React, {useEffect, useState} from "react";
+import {useParams} from "react-router-dom";
+import {apiGet} from "../utils/api";
 import FlashMessage from "../components/FlashMessage";
 import InputField from "../components/InputField";
 import InputSelect from "../components/InputSelect";
 import useFormHandling from "../utils/useFormHandling";
 
 const InvoiceForm = () => {
-    const { id } = useParams();
+    const {id} = useParams();
     const [persons, setPersons] = useState([]);
     const initialState = {
         invoiceNumber: "",
@@ -37,7 +37,7 @@ const InvoiceForm = () => {
             let hasMore = true;
 
             while (hasMore) {
-                const response = await apiGet("/api/persons", { page, limit: 100 });
+                const response = await apiGet("/api/persons", {page, limit: 100});
                 allPersons = [...allPersons, ...(response.items || [])];
                 hasMore = response.currentPage < response.totalPages;
                 page++;
@@ -53,7 +53,7 @@ const InvoiceForm = () => {
         const selectedId = e.target.value;
         const selectedPerson = persons.find(p => String(p.id) === selectedId || String(p._id) === selectedId);
         if (selectedPerson) {
-            handleChange({ target: { name: field, value: selectedPerson } });
+            handleChange({target: {name: field, value: selectedPerson}});
         }
     };
 
@@ -68,30 +68,30 @@ const InvoiceForm = () => {
             <h1 className="text-3xl font-bold mb-6 text-secondary-800">{id ? "Edit" : "Create"} Invoice</h1>
             {flashMessage && (
                 <div className="mb-4">
-                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text} />
+                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text}/>
                 </div>
             )}
             <form onSubmit={handleSubmit} className="space-y-6">
                 <InputField type="number" name="invoiceNumber" label="Invoice Number" value={formData.invoiceNumber}
-                            handleChange={handleChange} required />
+                            handleChange={handleChange} required/>
                 <InputField type="date" name="issued" label="Issue Date" value={formData.issued}
-                            handleChange={handleChange} required />
+                            handleChange={handleChange} required/>
                 <InputField type="date" name="dueDate" label="Due Date" value={formData.dueDate}
-                            handleChange={handleChange} required />
+                            handleChange={handleChange} required/>
                 <InputField name="product" label="Product" value={formData.product} handleChange={handleChange}
-                            required />
+                            required/>
                 <InputField type="number" name="price" label="Price" value={formData.price} handleChange={handleChange}
-                            required />
+                            required/>
                 <InputField type="number" name="vat" label="VAT (%)" value={formData.vat} handleChange={handleChange}
-                            required />
-                <InputField name="note" label="Note" value={formData.note} handleChange={handleChange} />
+                            required/>
+                <InputField name="note" label="Note" value={formData.note} handleChange={handleChange}/>
 
                 <InputSelect
                     name="buyer"
                     label="Buyer"
                     value={formData.buyer ? formData.buyer.id || formData.buyer._id : ''}
                     handleChange={handlePersonChange('buyer')}
-                    items={persons.map(person => ({ id: person.id || person._id, name: person.name }))}
+                    items={persons.map(person => ({id: person.id || person._id, name: person.name}))}
                     prompt="Select buyer"
                     required
                 />
@@ -101,7 +101,7 @@ const InvoiceForm = () => {
                     label="Seller"
                     value={formData.seller ? formData.seller.id || formData.seller._id : ''}
                     handleChange={handlePersonChange('seller')}
-                    items={persons.map(person => ({ id: person.id || person._id, name: person.name }))}
+                    items={persons.map(person => ({id: person.id || person._id, name: person.name}))}
                     prompt="Select seller"
                     required
                 />

@@ -1,7 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { apiDelete } from "../utils/api";
-import { Plus } from "lucide-react";
+import {Link} from "react-router-dom";
+import {apiDelete} from "../utils/api";
+import {Plus} from "lucide-react";
 import FlashMessage from "../components/FlashMessage";
 import PersonTable from "./PersonTable";
 import FilterComponent from "../components/FilterComponent";
@@ -51,8 +51,8 @@ const PersonIndex = () => {
     };
 
     const filterFields = [
-        { name: "name", placeholder: "Filter by Name" },
-        { name: "identificationNumber", placeholder: "Filter by Identification Number" },
+        {name: "name", placeholder: "Filter by Name"},
+        {name: "identificationNumber", placeholder: "Filter by Identification Number"},
     ];
 
     return (

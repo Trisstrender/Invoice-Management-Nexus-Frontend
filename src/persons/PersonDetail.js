@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { apiDelete, apiGet } from "../utils/api";
+import React, {useEffect, useState} from "react";
+import {Link, useParams} from "react-router-dom";
+import {apiDelete, apiGet} from "../utils/api";
 import Country from "./Country";
 import InvoiceTable from "../invoices/InvoiceTable";
-import { motion } from "framer-motion";
-import { ArrowLeft, User } from "lucide-react";
+import {motion} from "framer-motion";
+import {ArrowLeft, User} from "lucide-react";
 import FlashMessage from "../components/FlashMessage";
 import PaginationComponent from "../components/PaginationComponent";
 
 const PersonDetail = () => {
-    const { id } = useParams();
+    const {id} = useParams();
     const [person, setPerson] = useState(null);
     const [issuedInvoices, setIssuedInvoices] = useState([]);
     const [receivedInvoices, setReceivedInvoices] = useState([]);
@@ -90,12 +90,12 @@ const PersonDetail = () => {
     if (!person) {
         return (
             <div className="container mx-auto px-4">
-                <FlashMessage theme="danger" text="Person not found." />
+                <FlashMessage theme="danger" text="Person not found."/>
                 <Link
                     to="/persons"
                     className="bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
                 >
-                    <ArrowLeft className="inline-block mr-1" /> Back to Person List
+                    <ArrowLeft className="inline-block mr-1"/> Back to Person List
                 </Link>
             </div>
         );
@@ -105,23 +105,23 @@ const PersonDetail = () => {
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
+            initial={{opacity: 0, y: 20}}
+            animate={{opacity: 1, y: 0}}
+            exit={{opacity: 0, y: -20}}
+            transition={{duration: 0.3}}
             className="container mx-auto px-4"
         >
             <h1 className="text-3xl font-bold mb-6 text-secondary-800">Person Details</h1>
 
             {flashMessage && (
                 <div className="mb-4">
-                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text} />
+                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text}/>
                 </div>
             )}
 
             <div className="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-6">
                 <h2 className="text-2xl font-semibold mb-4 text-secondary-700">
-                    <User className="inline-block mr-2" /> {person.name} ({person.identificationNumber})
+                    <User className="inline-block mr-2"/> {person.name} ({person.identificationNumber})
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -153,7 +153,8 @@ const PersonDetail = () => {
                         <InvoiceTable
                             invoices={issuedInvoices}
                             deleteInvoice={deleteInvoice}
-                            handleSort={() => {}}
+                            handleSort={() => {
+                            }}
                             sortField=""
                             sortDirection=""
                             renderSortIcon={() => null}
@@ -178,7 +179,8 @@ const PersonDetail = () => {
                         <InvoiceTable
                             invoices={receivedInvoices}
                             deleteInvoice={deleteInvoice}
-                            handleSort={() => {}}
+                            handleSort={() => {
+                            }}
                             sortField=""
                             sortDirection=""
                             renderSortIcon={() => null}
@@ -200,7 +202,7 @@ const PersonDetail = () => {
                 to="/persons"
                 className="bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
             >
-                <ArrowLeft className="inline-block mr-1" /> Back to Person List
+                <ArrowLeft className="inline-block mr-1"/> Back to Person List
             </Link>
         </motion.div>
     );

@@ -1,7 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { apiDelete } from "../utils/api";
-import { Plus } from "lucide-react";
+import {Link} from "react-router-dom";
+import {apiDelete} from "../utils/api";
+import {Plus} from "lucide-react";
 import FlashMessage from "../components/FlashMessage";
 import InvoiceTable from "./InvoiceTable";
 import FilterComponent from "../components/FilterComponent";
@@ -50,11 +50,11 @@ const InvoiceIndex = () => {
     };
 
     const filterFields = [
-        { name: "buyerID", placeholder: "Filter by Buyer ID" },
-        { name: "sellerID", placeholder: "Filter by Seller ID" },
-        { name: "product", placeholder: "Filter by product" },
-        { name: "minPrice", placeholder: "Min price", type: "number" },
-        { name: "maxPrice", placeholder: "Max price", type: "number" },
+        {name: "buyerID", placeholder: "Filter by Buyer ID"},
+        {name: "sellerID", placeholder: "Filter by Seller ID"},
+        {name: "product", placeholder: "Filter by product"},
+        {name: "minPrice", placeholder: "Min price", type: "number"},
+        {name: "maxPrice", placeholder: "Max price", type: "number"},
     ];
 
     return (
