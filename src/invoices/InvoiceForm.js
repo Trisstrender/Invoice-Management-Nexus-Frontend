@@ -4,7 +4,7 @@ import {apiGet} from "../utils/api";
 import FlashMessage from "../components/FlashMessage";
 import InputField from "../components/InputField";
 import InputSelect from "../components/InputSelect";
-import useFormHandling from "../utils/useFormHandling";
+import useForm from "../utils/useForm";
 
 const InvoiceForm = () => {
     const {id} = useParams();
@@ -28,7 +28,7 @@ const InvoiceForm = () => {
         handleChange,
         handleSubmit,
         handleBack
-    } = useFormHandling(initialState, "/api/invoices", "/invoices", id);
+    } = useForm(initialState, "/api/invoices", "/invoices", id);
 
     useEffect(() => {
         const fetchAllPersons = async () => {

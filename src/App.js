@@ -9,8 +9,8 @@ import PersonForm from "./persons/PersonForm";
 import InvoiceIndex from "./invoices/InvoiceIndex";
 import InvoiceDetail from "./invoices/InvoiceDetail";
 import InvoiceForm from "./invoices/InvoiceForm";
-import Statistics from "./components/Statistics";
-import WelcomePage from "./components/WelcomePage";
+import Statistics from "./statistics/Statistics";
+import WelcomePage from "./WelcomePage";
 
 export function App() {
     return (

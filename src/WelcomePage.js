@@ -37,7 +37,7 @@ const WelcomePage = () => {
                     },
                     {
                         icon: <BarChart2 size={24}/>,
-                        title: 'View Statistics',
+                        title: 'View statistics',
                         description: 'Gain insights from your data',
                         link: '/statistics'
                     },

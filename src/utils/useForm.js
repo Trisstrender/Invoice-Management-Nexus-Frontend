@@ -2,20 +2,31 @@ import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {apiGet, apiPost, apiPut} from './api';
 
-const useFormHandling = (initialState, apiEndpoint, redirectPath, idParam = null) => {
+const useForm = (initialState, apiEndpoint, redirectPath, idParam = null) => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState(initialState);
     const [loading, setLoading] = useState(!!idParam);
     const [flashMessage, setFlashMessage] = useState(null);
 
     useEffect(() => {
-        if (idParam) {
-            setLoading(true);
-            apiGet(`${apiEndpoint}/${idParam}`).then((data) => {
-                setFormData(data);
-                setLoading(false);
-            });
-        }
+        const fetchData = async () => {
+            if (idParam) {
+                setLoading(true);
+                try {
+                    const data = await apiGet(`${apiEndpoint}/${idParam}`);
+                    setFormData(data);
+                } catch (error) {
+                    setFlashMessage({
+                        theme: 'danger',
+                        text: `Error loading data: ${error.message}`
+                    });
+                } finally {
+                    setLoading(false);
+                }
+            }
+        };
+
+        fetchData();
     }, [idParam, apiEndpoint]);
 
     const handleChange = (e) => {
@@ -36,7 +47,6 @@ const useFormHandling = (initialState, apiEndpoint, redirectPath, idParam = null
                     ? `Item successfully updated!`
                     : `New item successfully created!`
             });
-            // Optionally, you can update the form data with the result
             setFormData(result);
         } catch (error) {
             setFlashMessage({
@@ -60,4 +70,4 @@ const useFormHandling = (initialState, apiEndpoint, redirectPath, idParam = null
     };
 };
 
-export default useFormHandling;
+export default useForm;

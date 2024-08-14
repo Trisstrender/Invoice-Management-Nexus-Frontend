@@ -4,7 +4,7 @@ import Country from "./Country";
 import FlashMessage from "../components/FlashMessage";
 import InputField from "../components/InputField";
 import InputSelect from "../components/InputSelect";
-import useFormHandling from "../utils/useFormHandling";
+import useForm from "../utils/useForm";
 
 const PersonForm = () => {
     const {id} = useParams();
@@ -31,7 +31,7 @@ const PersonForm = () => {
         handleChange,
         handleSubmit,
         handleBack
-    } = useFormHandling(initialState, "/api/persons", "/persons", id);
+    } = useForm(initialState, "/api/persons", "/persons", id);
 
     if (loading) {
         return <div className="flex justify-center items-center h-64">
