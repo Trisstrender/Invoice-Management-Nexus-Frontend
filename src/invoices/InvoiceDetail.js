@@ -27,7 +27,7 @@ const InvoiceDetail = () => {
             .catch(error => {
                 console.error("Error fetching invoice:", error);
                 setFlashMessage({
-                    theme: 'danger',
+                    type: 'error',
                     text: `Error loading invoice: ${error.message}`
                 });
                 setLoading(false);
@@ -52,7 +52,7 @@ const InvoiceDetail = () => {
 
             {flashMessage && (
                 <div className="mb-4">
-                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text}/>
+                    <FlashMessage type={flashMessage.type} text={flashMessage.text}/>
                 </div>
             )}
 
@@ -87,7 +87,7 @@ const InvoiceDetail = () => {
                 </div>
             </div>
             <Link
-                to="/invoices"
+                to="../invoices"
                 className="bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
             >
                 <ArrowLeft className="inline-block mr-1"/> Back to Invoices

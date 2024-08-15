@@ -1,13 +1,13 @@
-import React, {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
-import {apiGet} from "../utils/api";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { apiGet } from "../utils/api";
 import FlashMessage from "../components/FlashMessage";
 import InputField from "../components/InputField";
 import InputSelect from "../components/InputSelect";
 import useForm from "../utils/useForm";
 
 const InvoiceForm = () => {
-    const {id} = useParams();
+    const { id } = useParams();
     const [persons, setPersons] = useState([]);
     const initialState = {
         invoiceNumber: "",
@@ -25,6 +25,8 @@ const InvoiceForm = () => {
         formData,
         loading,
         flashMessage,
+        validationErrors,
+        setFlashMessage,
         handleChange,
         handleSubmit,
         handleBack
@@ -32,28 +34,37 @@ const InvoiceForm = () => {
 
     useEffect(() => {
         const fetchAllPersons = async () => {
-            let allPersons = [];
-            let page = 1;
-            let hasMore = true;
+            try {
+                let allPersons = [];
+                let page = 1;
+                let hasMore = true;
 
-            while (hasMore) {
-                const response = await apiGet("/api/persons", {page, limit: 100});
-                allPersons = [...allPersons, ...(response.items || [])];
-                hasMore = response.currentPage < response.totalPages;
-                page++;
+                while (hasMore) {
+                    const response = await apiGet("/api/persons", { page, limit: 100 });
+                    allPersons = [...allPersons, ...(response.items || [])];
+                    hasMore = response.currentPage < response.totalPages;
+                    page++;
+                }
+
+                setPersons(allPersons);
+            } catch (error) {
+                setFlashMessage({
+                    type: 'error',
+                    text: `Error fetching persons: ${error.message}`
+                });
             }
-
-            setPersons(allPersons);
         };
 
         fetchAllPersons();
-    }, []);
+
+        return () => setFlashMessage(null);
+    }, [setFlashMessage]);
 
     const handlePersonChange = (field) => (e) => {
         const selectedId = e.target.value;
         const selectedPerson = persons.find(p => String(p.id) === selectedId || String(p._id) === selectedId);
         if (selectedPerson) {
-            handleChange({target: {name: field, value: selectedPerson}});
+            handleChange({ target: { name: field, value: selectedPerson } });
         }
     };
 
@@ -68,32 +79,27 @@ const InvoiceForm = () => {
             <h1 className="text-3xl font-bold mb-6 text-secondary-800">{id ? "Edit" : "Create"} Invoice</h1>
             {flashMessage && (
                 <div className="mb-4">
-                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text}/>
+                    <FlashMessage type={flashMessage.type} text={flashMessage.text} />
                 </div>
             )}
             <form onSubmit={handleSubmit} className="space-y-6">
-                <InputField type="number" name="invoiceNumber" label="Invoice Number" value={formData.invoiceNumber}
-                            handleChange={handleChange} required/>
-                <InputField type="date" name="issued" label="Issue Date" value={formData.issued}
-                            handleChange={handleChange} required/>
-                <InputField type="date" name="dueDate" label="Due Date" value={formData.dueDate}
-                            handleChange={handleChange} required/>
-                <InputField name="product" label="Product" value={formData.product} handleChange={handleChange}
-                            required/>
-                <InputField type="number" name="price" label="Price" value={formData.price} handleChange={handleChange}
-                            required/>
-                <InputField type="number" name="vat" label="VAT (%)" value={formData.vat} handleChange={handleChange}
-                            required/>
-                <InputField name="note" label="Note" value={formData.note} handleChange={handleChange}/>
+                <InputField type="number" name="invoiceNumber" label="Invoice Number" value={formData.invoiceNumber} handleChange={handleChange} required error={validationErrors.invoiceNumber} />
+                <InputField type="date" name="issued" label="Issue Date" value={formData.issued} handleChange={handleChange} required error={validationErrors.issued} />
+                <InputField type="date" name="dueDate" label="Due Date" value={formData.dueDate} handleChange={handleChange} required error={validationErrors.dueDate} />
+                <InputField name="product" label="Product" value={formData.product} handleChange={handleChange} required error={validationErrors.product} />
+                <InputField type="number" name="price" label="Price" value={formData.price} handleChange={handleChange} required error={validationErrors.price} />
+                <InputField type="number" name="vat" label="VAT (%)" value={formData.vat} handleChange={handleChange} required error={validationErrors.vat} />
+                <InputField name="note" label="Note" value={formData.note} handleChange={handleChange} error={validationErrors.note} />
 
                 <InputSelect
                     name="buyer"
                     label="Buyer"
                     value={formData.buyer ? formData.buyer.id || formData.buyer._id : ''}
                     handleChange={handlePersonChange('buyer')}
-                    items={persons.map(person => ({id: person.id || person._id, name: person.name}))}
+                    items={persons.map(person => ({ id: person.id || person._id, name: person.name }))}
                     prompt="Select buyer"
                     required
+                    error={validationErrors.buyer}
                 />
 
                 <InputSelect
@@ -101,9 +107,10 @@ const InvoiceForm = () => {
                     label="Seller"
                     value={formData.seller ? formData.seller.id || formData.seller._id : ''}
                     handleChange={handlePersonChange('seller')}
-                    items={persons.map(person => ({id: person.id || person._id, name: person.name}))}
+                    items={persons.map(person => ({ id: person.id || person._id, name: person.name }))}
                     prompt="Select seller"
                     required
+                    error={validationErrors.seller}
                 />
 
                 <button
@@ -113,7 +120,7 @@ const InvoiceForm = () => {
                     Save Invoice
                 </button>
             </form>
-            {flashMessage && flashMessage.theme === 'success' && (
+            {flashMessage && flashMessage.type === 'success' && (
                 <div className="mt-4">
                     <button
                         onClick={handleBack}

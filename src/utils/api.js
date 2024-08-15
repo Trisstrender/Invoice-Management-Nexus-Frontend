@@ -6,7 +6,28 @@ const handleResponse = async (response) => {
         console.error('Response status:', response.status);
         console.error('Response statusText:', response.statusText);
         console.error('Response body:', errorText);
-        throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+
+        let errorData;
+        try {
+            errorData = JSON.parse(errorText);
+        } catch (e) {
+            errorData = { message: errorText };
+        }
+
+        // Handle different error formats
+        let formattedError = {};
+        if (typeof errorData === 'string') {
+            formattedError = { message: errorData };
+        } else if (errorData.message) {
+            formattedError = { message: errorData.message };
+        } else if (typeof errorData === 'object') {
+            formattedError = errorData;
+        }
+
+        const error = new Error(formattedError.message || 'An error occurred');
+        error.status = response.status;
+        error.data = formattedError;
+        throw error;
     }
 
     if (response.status === 204) {  // No content
@@ -44,11 +65,12 @@ const handleResponse = async (response) => {
 };
 
 export const apiGet = async (url, params = {}) => {
-    const filteredParams = Object.fromEntries(
+    /** @type {Record<string, string>} */
+    const typedFilteredParams = Object.fromEntries(
         Object.entries(params).filter(([_, value]) => value != null)
     );
 
-    const queryString = new URLSearchParams(filteredParams).toString();
+    const queryString = new URLSearchParams(typedFilteredParams).toString();
     const fullUrl = `${API_URL}${url}${queryString ? `?${queryString}` : ''}`;
 
     try {

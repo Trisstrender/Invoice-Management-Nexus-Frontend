@@ -36,14 +36,14 @@ const PersonIndex = () => {
             try {
                 await apiDelete("/api/persons/" + id);
                 setFlashMessage({
-                    theme: 'success',
+                    type: 'success',
                     text: `Person "${personToDelete.name}" has been successfully deleted.`
                 });
                 loadItems();
             } catch (error) {
                 console.error("Error deleting person:", error);
                 setFlashMessage({
-                    theme: 'danger',
+                    type: 'error',
                     text: `Error deleting person: ${error.message}`
                 });
             }
@@ -61,7 +61,7 @@ const PersonIndex = () => {
 
             {flashMessage && (
                 <div className="mb-4">
-                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text}/>
+                    <FlashMessage type={flashMessage.type} text={flashMessage.text}/>
                 </div>
             )}
 
@@ -99,7 +99,7 @@ const PersonIndex = () => {
             )}
 
             <Link
-                to="/persons/create"
+                to="../persons/create"
                 className="mt-8 inline-block bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
             >
                 <Plus className="inline-block mr-1"/> New Person

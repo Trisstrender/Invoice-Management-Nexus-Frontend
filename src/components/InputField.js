@@ -1,6 +1,6 @@
 import React from 'react';
 
-const InputField = ({type = "text", name, label, value, handleChange, required, min, rows}) => {
+const InputField = ({ type = "text", name, label, value, handleChange, required, min, rows, error }) => {
     const inputTypes = ['text', 'number', 'date', 'textarea', 'email'];
     const inputType = inputTypes.includes(type.toLowerCase()) ? type.toLowerCase() : 'text';
     const isTextarea = inputType === 'textarea';
@@ -20,7 +20,7 @@ const InputField = ({type = "text", name, label, value, handleChange, required, 
                     onChange={handleChange}
                     required={required}
                     minLength={min}
-                    className="mt-1 block w-full px-4 py-3 rounded-md border border-secondary-300 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-500 focus:ring-opacity-50 text-lg"
+                    className={`mt-1 block w-full px-4 py-3 rounded-md border ${error ? 'border-red-500' : 'border-secondary-300'} shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-500 focus:ring-opacity-50 text-lg`}
                 />
             ) : (
                 <input
@@ -31,9 +31,10 @@ const InputField = ({type = "text", name, label, value, handleChange, required, 
                     onChange={handleChange}
                     required={required}
                     min={min}
-                    className="mt-1 block w-full px-4 py-3 rounded-md border border-secondary-300 shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-500 focus:ring-opacity-50 text-lg"
+                    className={`mt-1 block w-full px-4 py-3 rounded-md border ${error ? 'border-red-500' : 'border-secondary-300'} shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-500 focus:ring-opacity-50 text-lg`}
                 />
             )}
+            {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
         </div>
     );
 };

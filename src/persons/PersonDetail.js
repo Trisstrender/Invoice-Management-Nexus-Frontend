@@ -48,7 +48,7 @@ const PersonDetail = () => {
         } catch (error) {
             console.error("Error fetching person data:", error);
             setFlashMessage({
-                theme: 'danger',
+                type: 'error',
                 text: `Error loading data: ${error.message}`
             });
         } finally {
@@ -65,14 +65,14 @@ const PersonDetail = () => {
             try {
                 await apiDelete("/api/invoices/" + invoiceId);
                 setFlashMessage({
-                    theme: 'success',
+                    type: 'success',
                     text: `Invoice #${invoiceNumber} has been successfully deleted.`
                 });
-                loadData();
+                await loadData();
             } catch (error) {
                 console.error("Error deleting invoice:", error);
                 setFlashMessage({
-                    theme: 'danger',
+                    type: 'error',
                     text: `Error deleting invoice: ${error.message}`
                 });
             }
@@ -90,9 +90,9 @@ const PersonDetail = () => {
     if (!person) {
         return (
             <div className="container mx-auto px-4">
-                <FlashMessage theme="danger" text="Person not found."/>
+                <FlashMessage type="error" text="Person not found."/>
                 <Link
-                    to="/persons"
+                    to="../persons"
                     className="bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
                 >
                     <ArrowLeft className="inline-block mr-1"/> Back to Person List
@@ -115,7 +115,7 @@ const PersonDetail = () => {
 
             {flashMessage && (
                 <div className="mb-4">
-                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text}/>
+                    <FlashMessage type={flashMessage.type} text={flashMessage.text}/>
                 </div>
             )}
 
@@ -199,7 +199,7 @@ const PersonDetail = () => {
             </div>
 
             <Link
-                to="/persons"
+                to="../persons"
                 className="bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
             >
                 <ArrowLeft className="inline-block mr-1"/> Back to Person List

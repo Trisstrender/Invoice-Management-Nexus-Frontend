@@ -35,14 +35,14 @@ const InvoiceIndex = () => {
             try {
                 await apiDelete("/api/invoices/" + id);
                 setFlashMessage({
-                    theme: 'success',
+                    type: 'success',
                     text: `Invoice #${invoiceNumber} has been successfully deleted.`
                 });
                 loadItems();
             } catch (error) {
                 console.error("Error deleting invoice:", error);
                 setFlashMessage({
-                    theme: 'danger',
+                    type: 'error',
                     text: `Error deleting invoice: ${error.message}`
                 });
             }
@@ -63,7 +63,7 @@ const InvoiceIndex = () => {
 
             {flashMessage && (
                 <div className="mb-4">
-                    <FlashMessage theme={flashMessage.theme} text={flashMessage.text}/>
+                    <FlashMessage type={flashMessage.type} text={flashMessage.text}/>
                 </div>
             )}
 
@@ -101,7 +101,7 @@ const InvoiceIndex = () => {
             )}
 
             <Link
-                to="/invoices/create"
+                to="../invoices/create"
                 className="mt-8 inline-block bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
             >
                 <Plus className="inline-block mr-1"/> New Invoice

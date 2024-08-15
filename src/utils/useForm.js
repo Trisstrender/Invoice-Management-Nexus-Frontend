@@ -1,12 +1,13 @@
-import {useEffect, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
-import {apiGet, apiPost, apiPut} from './api';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { apiGet, apiPost, apiPut } from './api';
 
 const useForm = (initialState, apiEndpoint, redirectPath, idParam = null) => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState(initialState);
     const [loading, setLoading] = useState(!!idParam);
     const [flashMessage, setFlashMessage] = useState(null);
+    const [validationErrors, setValidationErrors] = useState({});
 
     useEffect(() => {
         const fetchData = async () => {
@@ -17,7 +18,7 @@ const useForm = (initialState, apiEndpoint, redirectPath, idParam = null) => {
                     setFormData(data);
                 } catch (error) {
                     setFlashMessage({
-                        theme: 'danger',
+                        type: 'error',
                         text: `Error loading data: ${error.message}`
                     });
                 } finally {
@@ -30,29 +31,51 @@ const useForm = (initialState, apiEndpoint, redirectPath, idParam = null) => {
     }, [idParam, apiEndpoint]);
 
     const handleChange = (e) => {
-        const {name, value} = e.target;
-        setFormData(prev => ({...prev, [name]: value}));
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+        // Clear validation error for this field when user starts typing
+        setValidationErrors(prev => ({ ...prev, [name]: null }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setFlashMessage(null);
+        setValidationErrors({});
 
         try {
             const apiCall = idParam ? apiPut(`${apiEndpoint}/${idParam}`, formData) : apiPost(apiEndpoint, formData);
             const result = await apiCall;
             setFlashMessage({
-                theme: 'success',
+                type: 'success',
                 text: idParam
                     ? `Item successfully updated!`
                     : `New item successfully created!`
             });
             setFormData(result);
         } catch (error) {
-            setFlashMessage({
-                theme: 'danger',
-                text: `Error ${idParam ? 'updating' : 'creating'} item: ${error.message}. Please check your input and try again.`
-            });
+            console.error('Form submission error:', error);
+            if (error.status === 400 && error.data) {
+                // Handle validation errors
+                if (typeof error.data === 'object' && !error.data.message) {
+                    setValidationErrors(error.data);
+                    setFlashMessage({
+                        type: 'error',
+                        text: 'Please correct the errors in the form.'
+                    });
+                } else {
+                    // If it's a general message, show it as a flash message
+                    setFlashMessage({
+                        type: 'error',
+                        text: error.data.message || 'An error occurred. Please check your input and try again.'
+                    });
+                }
+            } else {
+                // Handle other types of errors
+                setFlashMessage({
+                    type: 'error',
+                    text: `Error ${idParam ? 'updating' : 'creating'} item: ${error.message}. Please try again.`
+                });
+            }
         }
     };
 
@@ -64,6 +87,8 @@ const useForm = (initialState, apiEndpoint, redirectPath, idParam = null) => {
         formData,
         loading,
         flashMessage,
+        validationErrors,
+        setFlashMessage,
         handleChange,
         handleSubmit,
         handleBack

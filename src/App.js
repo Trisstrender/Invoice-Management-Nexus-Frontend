@@ -27,9 +27,9 @@ export function App() {
                                     </Link>
                                 </div>
                                 <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                                    <NavLink to="/persons" icon={<Users size={20}/>}>Persons</NavLink>
-                                    <NavLink to="/invoices" icon={<FileText size={20}/>}>Invoices</NavLink>
-                                    <NavLink to="/statistics" icon={<BarChart2 size={20}/>}>Statistics</NavLink>
+                                    <NavLink to="./persons" icon={<Users size={20}/>}>Persons</NavLink>
+                                    <NavLink to="./invoices" icon={<FileText size={20}/>}>Invoices</NavLink>
+                                    <NavLink to="./statistics" icon={<BarChart2 size={20}/>}>Statistics</NavLink>
                                 </div>
                             </div>
                         </div>

@@ -1,21 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import {apiGet} from '../utils/api';
-import {AlertCircle} from 'lucide-react';
-import InvoiceStatistics from './/InvoiceStatistics';
-import Top5PersonsChart from './/Top5PersonsChart';
-import PersonStatisticsTable from './/PersonStatisticsTable';
+import InvoiceStatistics from './InvoiceStatistics';
+import Top5PersonsChart from './Top5PersonsChart';
+import PersonStatisticsTable from './PersonStatisticsTable';
+import FlashMessage from '../components/FlashMessage';
 
 const Statistics = () => {
     const [invoiceStats, setInvoiceStats] = useState(null);
     const [personStats, setPersonStats] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [flashMessage, setFlashMessage] = useState(null);
     const [sortField, setSortField] = useState("personName");
     const [sortDirection, setSortDirection] = useState("asc");
 
     useEffect(() => {
         setLoading(true);
-        setError(null);
+        setFlashMessage(null);
         Promise.all([
             apiGet('/api/invoices/statistics'),
             apiGet('/api/persons/statistics')
@@ -25,7 +25,10 @@ const Statistics = () => {
             setLoading(false);
         }).catch(error => {
             console.error("Error fetching statistics:", error);
-            setError("Failed to load statistics. Please try again.");
+            setFlashMessage({
+                type: 'error',
+                text: "Failed to load statistics. Please try again."
+            });
             setLoading(false);
         });
     }, []);
@@ -47,19 +50,17 @@ const Statistics = () => {
         </div>;
     }
 
-    if (error) {
-        return <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-            <AlertCircle className="inline-block mr-2"/>
-            <strong className="font-bold">Error!</strong>
-            <span className="block sm:inline"> {error}</span>
-        </div>;
-    }
-
     const top5Persons = personStats.sort((a, b) => b.revenue - a.revenue).slice(0, 5);
 
     return (
         <div className="container mx-auto px-4">
             <h1 className="text-3xl font-bold mb-6 text-secondary-800">Statistics</h1>
+
+            {flashMessage && (
+                <div className="mb-4">
+                    <FlashMessage type={flashMessage.type} text={flashMessage.text}/>
+                </div>
+            )}
 
             <InvoiceStatistics invoiceStats={invoiceStats}/>
 
