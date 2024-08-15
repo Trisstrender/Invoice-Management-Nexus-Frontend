@@ -16,13 +16,13 @@ const PersonStatisticsTable = ({personStats, sortField, sortDirection, handleSor
                 <table className="min-w-full divide-y divide-secondary-200">
                     <thead className="bg-secondary-50">
                     <tr>
-                        <th onClick={() => handleSort('personId')}
+                        <th onClick={() => handleSort('id')}
                             className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
-                            Person ID {renderSortIcon('personId')}
+                            Person ID {renderSortIcon('id')}
                         </th>
-                        <th onClick={() => handleSort('personName')}
+                        <th onClick={() => handleSort('name')}
                             className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">
-                            Person Name {renderSortIcon('personName')}
+                            Person Name {renderSortIcon('name')}
                         </th>
                         <th onClick={() => handleSort('revenue')}
                             className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider cursor-pointer">

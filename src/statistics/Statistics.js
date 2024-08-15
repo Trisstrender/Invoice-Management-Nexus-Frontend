@@ -4,24 +4,28 @@ import InvoiceStatistics from './InvoiceStatistics';
 import Top5PersonsChart from './Top5PersonsChart';
 import PersonStatisticsTable from './PersonStatisticsTable';
 import FlashMessage from '../components/FlashMessage';
+import PaginationComponent from '../components/PaginationComponent';
 
 const Statistics = () => {
     const [invoiceStats, setInvoiceStats] = useState(null);
     const [personStats, setPersonStats] = useState([]);
     const [loading, setLoading] = useState(true);
     const [flashMessage, setFlashMessage] = useState(null);
-    const [sortField, setSortField] = useState("personName");
+    const [sortField, setSortField] = useState("id");
     const [sortDirection, setSortDirection] = useState("asc");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
 
     useEffect(() => {
         setLoading(true);
         setFlashMessage(null);
         Promise.all([
             apiGet('/api/invoices/statistics'),
-            apiGet('/api/persons/statistics')
-        ]).then(([invoiceData, personData]) => {
+            fetchPersonStats()
+        ]).then(([invoiceData, _]) => {
             setInvoiceStats(invoiceData);
-            setPersonStats(personData);
             setLoading(false);
         }).catch(error => {
             console.error("Error fetching statistics:", error);
@@ -31,26 +35,51 @@ const Statistics = () => {
             });
             setLoading(false);
         });
-    }, []);
+    }, [currentPage, itemsPerPage, sortField, sortDirection]);
+
+    const fetchPersonStats = async () => {
+        try {
+            const response = await apiGet('/api/persons/statistics', {
+                page: currentPage,
+                limit: itemsPerPage,
+                sort: `${sortField},${sortDirection}`
+            });
+            setPersonStats(response.items);
+            setTotalPages(response.totalPages);
+            setTotalItems(response.totalItems);
+
+            // If the current page is now empty (due to filtering), go to the last page
+            if (response.items.length === 0 && currentPage > 1) {
+                setCurrentPage(response.totalPages);
+            }
+        } catch (error) {
+            console.error("Error fetching person statistics:", error);
+            setFlashMessage({
+                type: 'error',
+                text: "Failed to load person statistics. Please try again."
+            });
+        }
+    };
 
     const handleSort = (field) => {
         setSortField(field);
         setSortDirection(currentDirection => currentDirection === "asc" ? "desc" : "asc");
     };
 
-    const sortedPersonStats = [...personStats].sort((a, b) => {
-        if (a[sortField] < b[sortField]) return sortDirection === "asc" ? -1 : 1;
-        if (a[sortField] > b[sortField]) return sortDirection === "asc" ? 1 : -1;
-        return 0;
-    });
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+    };
+
+    const handleItemsPerPageChange = (newItemsPerPage) => {
+        setItemsPerPage(newItemsPerPage);
+        setCurrentPage(1);
+    };
 
     if (loading) {
         return <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary-500"></div>
         </div>;
     }
-
-    const top5Persons = personStats.sort((a, b) => b.revenue - a.revenue).slice(0, 5);
 
     return (
         <div className="container mx-auto px-4">
@@ -64,14 +93,26 @@ const Statistics = () => {
 
             <InvoiceStatistics invoiceStats={invoiceStats}/>
 
-            <Top5PersonsChart top5Persons={top5Persons}/>
+            <Top5PersonsChart top5Persons={personStats.slice(0, 5)}/>
 
             <PersonStatisticsTable
-                personStats={sortedPersonStats}
+                personStats={personStats}
                 sortField={sortField}
                 sortDirection={sortDirection}
                 handleSort={handleSort}
             />
+
+            <PaginationComponent
+                currentPage={currentPage}
+                totalPages={totalPages}
+                itemsPerPage={itemsPerPage}
+                setItemsPerPage={handleItemsPerPageChange}
+                onPageChange={handlePageChange}
+            />
+
+            <p className="mt-4 text-secondary-600">
+                Showing {personStats.length} out of {totalItems} people with non-zero revenue
+            </p>
         </div>
     );
 };
