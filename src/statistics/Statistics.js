@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {apiGet} from '../utils/api';
+import React, { useEffect, useState } from 'react';
+import { apiGet } from '../utils/api';
 import InvoiceStatistics from './InvoiceStatistics';
 import Top5PersonsChart from './Top5PersonsChart';
 import PersonStatisticsTable from './PersonStatisticsTable';
@@ -9,6 +9,7 @@ import PaginationComponent from '../components/PaginationComponent';
 const Statistics = () => {
     const [invoiceStats, setInvoiceStats] = useState(null);
     const [personStats, setPersonStats] = useState([]);
+    const [top5PersonStats, setTop5PersonStats] = useState([]);
     const [loading, setLoading] = useState(true);
     const [flashMessage, setFlashMessage] = useState(null);
     const [sortField, setSortField] = useState("id");
@@ -44,13 +45,13 @@ const Statistics = () => {
                 limit: itemsPerPage,
                 sort: `${sortField},${sortDirection}`
             });
-            setPersonStats(response.items);
-            setTotalPages(response.totalPages);
-            setTotalItems(response.totalItems);
+            setPersonStats(response.paginatedData.items);
+            setTop5PersonStats(response.top5ByRevenue);
+            setTotalPages(response.paginatedData.totalPages);
+            setTotalItems(response.paginatedData.totalItems);
 
-            // If the current page is now empty (due to filtering), go to the last page
-            if (response.items.length === 0 && currentPage > 1) {
-                setCurrentPage(response.totalPages);
+            if (response.paginatedData.items.length === 0 && currentPage > 1) {
+                setCurrentPage(response.paginatedData.totalPages);
             }
         } catch (error) {
             console.error("Error fetching person statistics:", error);
@@ -93,7 +94,7 @@ const Statistics = () => {
 
             <InvoiceStatistics invoiceStats={invoiceStats}/>
 
-            <Top5PersonsChart top5Persons={personStats.slice(0, 5)}/>
+            <Top5PersonsChart top5Persons={top5PersonStats}/>
 
             <PersonStatisticsTable
                 personStats={personStats}
