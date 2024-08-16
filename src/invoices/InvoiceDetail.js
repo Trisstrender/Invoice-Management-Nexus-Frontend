@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from "react";
-import {Link, useParams} from "react-router-dom";
-import {apiGet} from "../utils/api";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { apiGet } from "../utils/api";
 import dateStringFormatter from "../utils/dateStringFormatter";
 import formatCurrency from "../utils/currencyFormatter";
-import {motion} from "framer-motion";
-import {ArrowLeft} from "lucide-react";
+import { motion } from "framer-motion";
 import FlashMessage from "../components/FlashMessage";
+import BackButton from "../components/BackButton";
 
 const InvoiceDetail = () => {
-    const {id} = useParams();
+    const { id } = useParams();
     const [invoice, setInvoice] = useState({});
     const [loading, setLoading] = useState(true);
     const [flashMessage, setFlashMessage] = useState(null);
@@ -40,19 +40,24 @@ const InvoiceDetail = () => {
         </div>;
     }
 
+    // Helper function to get the correct ID
+    const getPersonId = (person) => person?.id || person?._id;
+
     return (
         <motion.div
-            initial={{opacity: 0, y: 20}}
-            animate={{opacity: 1, y: 0}}
-            exit={{opacity: 0, y: -20}}
-            transition={{duration: 0.3}}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
             className="container mx-auto px-4"
         >
             <h1 className="text-3xl font-bold mb-6 text-secondary-800">Invoice Details</h1>
 
+            <BackButton />
+
             {flashMessage && (
                 <div className="mb-4">
-                    <FlashMessage type={flashMessage.type} text={flashMessage.text}/>
+                    <FlashMessage type={flashMessage.type} text={flashMessage.text} />
                 </div>
             )}
 
@@ -60,38 +65,39 @@ const InvoiceDetail = () => {
                 <h3 className="text-2xl font-semibold mb-4 text-secondary-700">Invoice No. {invoice.invoiceNumber}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <p className="mb-2"><span
-                            className="font-semibold text-secondary-600">Issue Date:</span> {dateStringFormatter(invoice.issued)}
-                        </p>
-                        <p className="mb-2"><span
-                            className="font-semibold text-secondary-600">Due Date:</span> {dateStringFormatter(invoice.dueDate)}
-                        </p>
-                        <p className="mb-2"><span
-                            className="font-semibold text-secondary-600">Product:</span> {invoice.product}</p>
-                        <p className="mb-2"><span
-                            className="font-semibold text-secondary-600">Price:</span> {formatCurrency(invoice.price)}
-                        </p>
-                        <p className="mb-2"><span className="font-semibold text-secondary-600">VAT:</span> {invoice.vat}%
-                        </p>
-                        <p className="mb-2"><span
-                            className="font-semibold text-secondary-600">Note:</span> {invoice.note}</p>
+                        <p className="mb-2"><span className="font-semibold text-secondary-600">Issue Date:</span> {dateStringFormatter(invoice.issued)}</p>
+                        <p className="mb-2"><span className="font-semibold text-secondary-600">Due Date:</span> {dateStringFormatter(invoice.dueDate)}</p>
+                        <p className="mb-2"><span className="font-semibold text-secondary-600">Product:</span> {invoice.product}</p>
+                        <p className="mb-2"><span className="font-semibold text-secondary-600">Price:</span> {formatCurrency(invoice.price)}</p>
+                        <p className="mb-2"><span className="font-semibold text-secondary-600">VAT:</span> {invoice.vat}%</p>
+                        <p className="mb-2"><span className="font-semibold text-secondary-600">Note:</span> {invoice.note}</p>
                     </div>
                     <div>
                         <h4 className="text-xl font-semibold mb-2 text-secondary-700">Buyer</h4>
-                        <p className="mb-1 text-secondary-600">{invoice.buyer?.name}</p>
+                        <p className="mb-1 text-secondary-600">
+                            {getPersonId(invoice.buyer) ? (
+                                <Link to={`/persons/show/${getPersonId(invoice.buyer)}`} className="text-primary-600 hover:text-primary-800 transition-colors duration-200">
+                                    {invoice.buyer?.name}
+                                </Link>
+                            ) : (
+                                invoice.buyer?.name
+                            )}
+                        </p>
                         <p className="mb-4 text-secondary-600">{invoice.buyer?.identificationNumber}</p>
                         <h4 className="text-xl font-semibold mb-2 text-secondary-700">Seller</h4>
-                        <p className="mb-1 text-secondary-600">{invoice.seller?.name}</p>
+                        <p className="mb-1 text-secondary-600">
+                            {getPersonId(invoice.seller) ? (
+                                <Link to={`/persons/show/${getPersonId(invoice.seller)}`} className="text-primary-600 hover:text-primary-800 transition-colors duration-200">
+                                    {invoice.seller?.name}
+                                </Link>
+                            ) : (
+                                invoice.seller?.name
+                            )}
+                        </p>
                         <p className="text-secondary-600">{invoice.seller?.identificationNumber}</p>
                     </div>
                 </div>
             </div>
-            <Link
-                to="../invoices"
-                className="bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
-            >
-                <ArrowLeft className="inline-block mr-1"/> Back to Invoices
-            </Link>
         </motion.div>
     );
 };

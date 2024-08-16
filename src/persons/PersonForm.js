@@ -5,6 +5,7 @@ import FlashMessage from "../components/FlashMessage";
 import InputField from "../components/InputField";
 import InputSelect from "../components/InputSelect";
 import useForm from "../utils/useForm";
+import BackButton from "../components/BackButton";
 
 const PersonForm = () => {
     const { id } = useParams();
@@ -48,6 +49,9 @@ const PersonForm = () => {
     return (
         <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
             <h1 className="text-3xl font-bold mb-6 text-secondary-800">{id ? "Edit" : "Create"} Person</h1>
+
+            <BackButton />
+
             {flashMessage && (
                 <div className="mb-4">
                     <FlashMessage type={flashMessage.type} text={flashMessage.text} />
