@@ -27,9 +27,9 @@ export function App() {
                                 </Link>
                             </div>
                             <div className="hidden sm:flex sm:items-center sm:ml-6 sm:space-x-8">
-                                <NavLink to="./persons" icon={<Users size={20}/>}>Persons</NavLink>
-                                <NavLink to="./invoices" icon={<FileText size={20}/>}>Invoices</NavLink>
-                                <NavLink to="./statistics" icon={<BarChart2 size={20}/>}>Statistics</NavLink>
+                                <NavLink to="/persons" icon={<Users size={20}/>}>Persons</NavLink>
+                                <NavLink to="/invoices" icon={<FileText size={20}/>}>Invoices</NavLink>
+                                <NavLink to="/statistics" icon={<BarChart2 size={20}/>}>Statistics</NavLink>
                             </div>
                         </div>
                     </div>
@@ -68,11 +68,11 @@ export function App() {
     );
 }
 
-const NavLink = ({to, children, icon}) => {
+const NavLink = ({ to, children, icon }) => {
     const location = useLocation();
     const isActive = location.pathname.startsWith(to);
     const activeClassName = isActive
-        ? "border-primary-600 text-primary-600 bg-primary-50"
+        ? "border-primary-600 text-primary-600 bg-primary-100 shadow-lg"
         : "border-transparent text-secondary-600 hover:text-primary-600 hover:border-primary-300 hover:bg-primary-50";
 
     return (
