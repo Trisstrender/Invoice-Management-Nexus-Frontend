@@ -2,6 +2,7 @@ import React from 'react';
 import {motion} from 'framer-motion';
 
 const Table = ({columns, data, onSort, sortField, sortDirection, renderActions, renderSortIcon}) => {
+    // If no data is provided or data is empty, display a message
     if (!Array.isArray(data) || data.length === 0) {
         return <p className="text-secondary-500 text-center py-4">No data found.</p>;
     }

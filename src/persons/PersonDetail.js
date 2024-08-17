@@ -10,27 +10,33 @@ import PaginationComponent from "../components/PaginationComponent";
 import BackButton from "../components/BackButton";
 
 const PersonDetail = () => {
+    // Get the person id from the URL parameters
     const { id } = useParams();
+    // State variables for person details and related data
     const [person, setPerson] = useState(null);
     const [issuedInvoices, setIssuedInvoices] = useState([]);
     const [receivedInvoices, setReceivedInvoices] = useState([]);
     const [loading, setLoading] = useState(true);
     const [flashMessage, setFlashMessage] = useState(null);
 
+    // Pagination state for issued invoices
     const [issuedCurrentPage, setIssuedCurrentPage] = useState(1);
     const [issuedTotalPages, setIssuedTotalPages] = useState(1);
     const [issuedItemsPerPage, setIssuedItemsPerPage] = useState(10);
 
+    // Pagination state for received invoices
     const [receivedCurrentPage, setReceivedCurrentPage] = useState(1);
     const [receivedTotalPages, setReceivedTotalPages] = useState(1);
     const [receivedItemsPerPage, setReceivedItemsPerPage] = useState(10);
 
+    // Function to load person data and related invoices
     const loadData = async () => {
         setLoading(true);
         try {
             const personData = await apiGet("/api/persons/" + id);
             setPerson(personData);
 
+            // Fetch issued and received invoices simultaneously
             const [issuedData, receivedData] = await Promise.all([
                 apiGet(`/api/invoices/identification/${personData.identificationNumber}/sales`, {
                     page: issuedCurrentPage,
@@ -57,10 +63,12 @@ const PersonDetail = () => {
         }
     };
 
+    // Load data when component mounts or when pagination changes
     useEffect(() => {
         loadData();
     }, [id, issuedCurrentPage, issuedItemsPerPage, receivedCurrentPage, receivedItemsPerPage]);
 
+    // Function to handle invoice deletion
     const deleteInvoice = async (invoiceId, invoiceNumber) => {
         if (window.confirm(`Are you sure you want to delete invoice #${invoiceNumber}?`)) {
             try {
@@ -80,6 +88,7 @@ const PersonDetail = () => {
         }
     };
 
+    // Show loading spinner while data is being fetched
     if (loading) {
         return (
             <div className="flex justify-center items-center h-64">
@@ -88,6 +97,7 @@ const PersonDetail = () => {
         );
     }
 
+    // Show error message if person data couldn't be loaded
     if (!person) {
         return (
             <div className="container mx-auto px-4">
@@ -117,11 +127,13 @@ const PersonDetail = () => {
                 </div>
             )}
 
+            {/* Person details card */}
             <div className="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-6">
                 <h2 className="text-2xl font-semibold mb-4 text-secondary-700">
                     <User className="inline-block mr-2" /> {person.name} ({person.identificationNumber})
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Left column */}
                     <div>
                         <p><strong>Tax Number:</strong> {person.taxNumber}</p>
                         <p><strong>Account Number:</strong> {person.accountNumber}</p>
@@ -129,6 +141,7 @@ const PersonDetail = () => {
                         <p><strong>IBAN:</strong> {person.iban}</p>
                         <p><strong>Telephone:</strong> {person.telephone}</p>
                     </div>
+                    {/* Right column */}
                     <div>
                         <p><strong>Email:</strong> {person.mail}</p>
                         <p><strong>Street:</strong> {person.street}</p>
@@ -144,6 +157,7 @@ const PersonDetail = () => {
                 )}
             </div>
 
+            {/* Issued Invoices section */}
             <div className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4 text-secondary-700">Issued Invoices</h2>
                 {issuedInvoices.length > 0 ? (
@@ -169,6 +183,7 @@ const PersonDetail = () => {
                 )}
             </div>
 
+            {/* Received Invoices section */}
             <div className="mb-8">
                 <h2 className="text-2xl font-semibold mb-4 text-secondary-700">Received Invoices</h2>
                 {receivedInvoices.length > 0 ? (

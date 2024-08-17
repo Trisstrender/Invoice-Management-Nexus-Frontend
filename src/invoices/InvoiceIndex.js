@@ -9,6 +9,7 @@ import PaginationComponent from "../components/PaginationComponent";
 import useIndexPage from "../utils/useIndexPage";
 
 const InvoiceIndex = () => {
+    // Use the custom hook to manage state and API calls
     const {
         items: invoices,
         loading,
@@ -30,6 +31,7 @@ const InvoiceIndex = () => {
         loadItems,
     } = useIndexPage("/api/invoices", "invoiceNumber");
 
+    // Function to handle invoice deletion
     const deleteInvoice = async (id, invoiceNumber) => {
         if (window.confirm(`Are you sure you want to delete invoice #${invoiceNumber}?`)) {
             try {
@@ -49,6 +51,7 @@ const InvoiceIndex = () => {
         }
     };
 
+    // Define filter fields for the FilterComponent
     const filterFields = [
         {name: "buyerID", placeholder: "Filter by Buyer ID"},
         {name: "sellerID", placeholder: "Filter by Seller ID"},

@@ -3,6 +3,7 @@ import React from 'react';
 const PaginationComponent = ({currentPage, totalPages, itemsPerPage, setItemsPerPage, onPageChange}) => {
     return (
         <div className="mt-8 flex flex-col sm:flex-row justify-between items-center">
+            {/* Dropdown to select number of items per page */}
             <select
                 value={itemsPerPage}
                 onChange={(e) => setItemsPerPage(Number(e.target.value))}
@@ -12,6 +13,7 @@ const PaginationComponent = ({currentPage, totalPages, itemsPerPage, setItemsPer
                 <option value="20">20 per page</option>
                 <option value="50">50 per page</option>
             </select>
+            {/* Page number buttons */}
             <div className="flex flex-wrap justify-center">
                 {Array.from({length: totalPages}, (_, i) => (
                     <button

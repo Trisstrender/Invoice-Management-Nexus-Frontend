@@ -8,7 +8,10 @@ import useForm from "../utils/useForm";
 import BackButton from "../components/BackButton";
 
 const PersonForm = () => {
+    // Get the id parameter from the URL, if it exists
     const { id } = useParams();
+
+    // Define the initial state for the form
     const initialState = {
         name: "",
         identificationNumber: "",
@@ -25,6 +28,7 @@ const PersonForm = () => {
         note: ""
     };
 
+    // Use the custom useForm hook to manage form state and submission
     const {
         formData,
         loading,
@@ -36,10 +40,12 @@ const PersonForm = () => {
         handleBack
     } = useForm(initialState, "/api/persons", "/persons", id);
 
+    // Clear flash message when component unmounts
     useEffect(() => {
         return () => setFlashMessage(null);
     }, [setFlashMessage]);
 
+    // Show loading spinner while data is being fetched
     if (loading) {
         return <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary-500"></div>
@@ -52,12 +58,14 @@ const PersonForm = () => {
 
             <BackButton />
 
+            {/* Display flash message if it exists */}
             {flashMessage && (
                 <div className="mb-4">
                     <FlashMessage type={flashMessage.type} text={flashMessage.text} />
                 </div>
             )}
             <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Form fields */}
                 <InputField name="name" label="Name" value={formData.name} handleChange={handleChange} required error={validationErrors.name} />
                 <InputField name="identificationNumber" label="Company ID" value={formData.identificationNumber} handleChange={handleChange} required error={validationErrors.identificationNumber} />
                 <InputField name="taxNumber" label="Tax ID" value={formData.taxNumber} handleChange={handleChange} required error={validationErrors.taxNumber} />
@@ -71,6 +79,7 @@ const PersonForm = () => {
                 <InputField name="city" label="City" value={formData.city} handleChange={handleChange} required error={validationErrors.city} />
                 <InputField name="note" label="Note" value={formData.note} handleChange={handleChange} error={validationErrors.note} />
 
+                {/* Country selection */}
                 <InputSelect
                     name="country"
                     label="Country"
@@ -84,6 +93,7 @@ const PersonForm = () => {
                     error={validationErrors.country}
                 />
 
+                {/* Submit button */}
                 <button
                     type="submit"
                     className="w-full bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
@@ -91,6 +101,7 @@ const PersonForm = () => {
                     Save Person
                 </button>
             </form>
+            {/* Back button (only shown after successful submission) */}
             {flashMessage && flashMessage.type === 'success' && (
                 <div className="mt-4">
                     <button

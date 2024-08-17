@@ -9,6 +9,7 @@ export const dateStringFormatter = (str, locale = false) => {
     const d = new Date(str);
 
     if (locale) {
+        // Return date in localized format (Czech)
         return d.toLocaleDateString("cs-CZ", {
             year: "numeric",
             month: "long",
@@ -16,6 +17,7 @@ export const dateStringFormatter = (str, locale = false) => {
         });
     }
 
+    // Return date in ISO format (YYYY-MM-DD)
     const year = d.getFullYear();
     const month = "" + (d.getMonth() + 1);
     const day = "" + d.getDate();

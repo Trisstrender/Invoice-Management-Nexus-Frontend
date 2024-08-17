@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
 const BackButton = () => {
+    // Hook to programmatically navigate
     const navigate = useNavigate();
 
+    // Function to go back to the previous page
     const goBack = () => {
         navigate(-1);
     };

@@ -6,6 +6,7 @@ import dateStringFormatter from "../utils/dateStringFormatter";
 import formatCurrency from "../utils/currencyFormatter";
 
 const InvoiceTable = ({invoices, deleteInvoice, handleSort, sortField, sortDirection, renderSortIcon}) => {
+    // Define columns for the table
     const columns = [
         {key: 'invoiceNumber', label: 'Invoice Number', sortable: true},
         {
@@ -23,6 +24,7 @@ const InvoiceTable = ({invoices, deleteInvoice, handleSort, sortField, sortDirec
         },
     ];
 
+    // Define action buttons for each row
     const renderActions = (invoice) => (
         <>
             <Link

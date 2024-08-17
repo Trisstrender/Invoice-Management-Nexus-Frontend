@@ -4,11 +4,13 @@ import {Edit, Eye, Trash2} from "lucide-react";
 import Table from "../components/Table";
 
 const PersonTable = ({persons, deletePerson, handleSort, sortField, sortDirection, renderSortIcon}) => {
+    // Define columns for the table
     const columns = [
         {key: 'name', label: 'Name', sortable: true},
         {key: 'identificationNumber', label: 'Identification Number', sortable: true},
     ];
 
+    // Define action buttons for each row
     const renderActions = (person) => (
         <>
             <Link

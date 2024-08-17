@@ -9,6 +9,7 @@ import PaginationComponent from "../components/PaginationComponent";
 import useIndexPage from "../utils/useIndexPage";
 
 const PersonIndex = () => {
+    // Use the custom hook useIndexPage to manage state and API calls
     const {
         items: persons,
         loading,
@@ -30,6 +31,7 @@ const PersonIndex = () => {
         loadItems,
     } = useIndexPage("/api/persons", "name");
 
+    // Function to handle person deletion
     const deletePerson = async (id) => {
         const personToDelete = persons.find(p => p.id === id);
         if (personToDelete && window.confirm(`Are you sure you want to delete ${personToDelete.name}?`)) {
@@ -50,6 +52,7 @@ const PersonIndex = () => {
         }
     };
 
+    // Define filter fields for the FilterComponent
     const filterFields = [
         {name: "name", placeholder: "Filter by Name"},
         {name: "identificationNumber", placeholder: "Filter by Identification Number"},
@@ -59,12 +62,14 @@ const PersonIndex = () => {
         <div className="container mx-auto px-4">
             <h1 className="text-3xl font-bold mb-6 text-secondary-800">List of Persons</h1>
 
+            {/* Display flash message if exists */}
             {flashMessage && (
                 <div className="mb-4">
                     <FlashMessage type={flashMessage.type} text={flashMessage.text}/>
                 </div>
             )}
 
+            {/* Filter component */}
             <FilterComponent
                 filters={filters}
                 setFilters={setFilters}
@@ -73,6 +78,7 @@ const PersonIndex = () => {
                 fields={filterFields}
             />
 
+            {/* Display loading spinner or person table */}
             {loading ? (
                 <div className="flex justify-center items-center h-64">
                     <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary-500"></div>
@@ -98,6 +104,7 @@ const PersonIndex = () => {
                 </>
             )}
 
+            {/* Link to create new person */}
             <Link
                 to="../persons/create"
                 className="mt-8 inline-block bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200"

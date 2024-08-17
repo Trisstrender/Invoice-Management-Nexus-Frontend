@@ -12,13 +12,16 @@ import InvoiceForm from "./invoices/InvoiceForm";
 import Statistics from "./statistics/Statistics";
 import WelcomePage from "./WelcomePage";
 
+// Main App component
 export function App() {
     return (
         <Router>
             <div className="flex flex-col min-h-screen">
+                {/* Navigation bar */}
                 <nav className="bg-white shadow-md fixed top-0 left-0 right-0 z-10">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="flex justify-between h-16">
+                            {/* Logo/Home link */}
                             <div className="flex-shrink-0 flex items-center">
                                 <Link to="/" className="text-3xl font-bold">
                                     <span className="bg-gradient-to-r from-primary-500 to-secondary-500 text-transparent bg-clip-text hover:from-primary-600 hover:to-secondary-600 transition-all duration-300">
@@ -26,6 +29,7 @@ export function App() {
                                     </span>
                                 </Link>
                             </div>
+                            {/* Navigation links */}
                             <div className="hidden sm:flex sm:items-center sm:ml-6 sm:space-x-8">
                                 <NavLink to="/persons" icon={<Users size={20}/>}>Persons</NavLink>
                                 <NavLink to="/invoices" icon={<FileText size={20}/>}>Invoices</NavLink>
@@ -35,9 +39,11 @@ export function App() {
                     </div>
                 </nav>
 
+                {/* Main content area */}
                 <div className="flex-grow py-10 mt-16">
                     <main>
                         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                            {/* AnimatePresence enables animations when routes change */}
                             <AnimatePresence mode="wait">
                                 <Routes>
                                     <Route path="/" element={<WelcomePage/>}/>
@@ -56,6 +62,7 @@ export function App() {
                     </main>
                 </div>
 
+                {/* Footer */}
                 <footer className="bg-white shadow-md mt-auto">
                     <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
                         <p className="text-center text-sm text-gray-500">
@@ -68,6 +75,7 @@ export function App() {
     );
 }
 
+// NavLink component for navigation items
 const NavLink = ({ to, children, icon }) => {
     const location = useLocation();
     const isActive = location.pathname.startsWith(to);

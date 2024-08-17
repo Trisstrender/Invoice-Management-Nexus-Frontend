@@ -1,8 +1,11 @@
 import React from 'react';
 
 const InputField = ({ type = "text", name, label, value, handleChange, required, min, rows, error }) => {
+    // List of valid input types
     const inputTypes = ['text', 'number', 'date', 'textarea', 'email'];
+    // Ensure the input type is valid, default to 'text' if not
     const inputType = inputTypes.includes(type.toLowerCase()) ? type.toLowerCase() : 'text';
+    // Check if the input should be a textarea
     const isTextarea = inputType === 'textarea';
 
     return (

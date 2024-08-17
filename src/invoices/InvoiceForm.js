@@ -8,8 +8,11 @@ import useForm from "../utils/useForm";
 import BackButton from "../components/BackButton";
 
 const InvoiceForm = () => {
+    // Get the id parameter from the URL, if it exists (for editing)
     const { id } = useParams();
+    // State to store the list of persons (for buyer and seller selection)
     const [persons, setPersons] = useState([]);
+    // Initial state for the form
     const initialState = {
         invoiceNumber: "",
         issued: "",
@@ -22,6 +25,7 @@ const InvoiceForm = () => {
         seller: null,
     };
 
+    // Use the custom useForm hook to manage form state and submission
     const {
         formData,
         loading,
@@ -33,6 +37,7 @@ const InvoiceForm = () => {
         handleBack
     } = useForm(initialState, "/api/invoices", "/invoices", id);
 
+    // Fetch the list of persons when the component mounts
     useEffect(() => {
         const fetchAllPersons = async () => {
             try {
@@ -40,6 +45,7 @@ const InvoiceForm = () => {
                 let page = 1;
                 let hasMore = true;
 
+                // Fetch all pages of persons
                 while (hasMore) {
                     const response = await apiGet("/api/persons", { page, limit: 100 });
                     allPersons = [...allPersons, ...(response.items || [])];
@@ -58,9 +64,11 @@ const InvoiceForm = () => {
 
         fetchAllPersons();
 
+        // Clear flash message when component unmounts
         return () => setFlashMessage(null);
     }, [setFlashMessage]);
 
+    // Handle changes to buyer or seller selection
     const handlePersonChange = (field) => (e) => {
         const selectedId = e.target.value;
         const selectedPerson = persons.find(p => String(p.id) === selectedId || String(p._id) === selectedId);
@@ -69,6 +77,7 @@ const InvoiceForm = () => {
         }
     };
 
+    // Show loading spinner while data is being fetched
     if (loading) {
         return <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary-500"></div>
@@ -81,12 +90,14 @@ const InvoiceForm = () => {
 
             <BackButton />
 
+            {/* Display flash message if it exists */}
             {flashMessage && (
                 <div className="mb-4">
                     <FlashMessage type={flashMessage.type} text={flashMessage.text} />
                 </div>
             )}
             <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Form fields */}
                 <InputField type="number" name="invoiceNumber" label="Invoice Number" value={formData.invoiceNumber} handleChange={handleChange} required error={validationErrors.invoiceNumber} />
                 <InputField type="date" name="issued" label="Issue Date" value={formData.issued} handleChange={handleChange} required error={validationErrors.issued} />
                 <InputField type="date" name="dueDate" label="Due Date" value={formData.dueDate} handleChange={handleChange} required error={validationErrors.dueDate} />
@@ -95,6 +106,7 @@ const InvoiceForm = () => {
                 <InputField type="number" name="vat" label="VAT (%)" value={formData.vat} handleChange={handleChange} required error={validationErrors.vat} />
                 <InputField name="note" label="Note" value={formData.note} handleChange={handleChange} error={validationErrors.note} />
 
+                {/* Buyer selection */}
                 <InputSelect
                     name="buyer"
                     label="Buyer"
@@ -106,6 +118,7 @@ const InvoiceForm = () => {
                     error={validationErrors.buyer}
                 />
 
+                {/* Seller selection */}
                 <InputSelect
                     name="seller"
                     label="Seller"
@@ -117,6 +130,7 @@ const InvoiceForm = () => {
                     error={validationErrors.seller}
                 />
 
+                {/* Submit button */}
                 <button
                     type="submit"
                     className="w-full bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
@@ -124,6 +138,7 @@ const InvoiceForm = () => {
                     Save Invoice
                 </button>
             </form>
+            {/* Back button (only shown after successful submission) */}
             {flashMessage && flashMessage.type === 'success' && (
                 <div className="mt-4">
                     <button

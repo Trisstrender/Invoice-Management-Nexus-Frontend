@@ -15,6 +15,7 @@ const useIndexPage = (apiEndpoint, defaultSortField) => {
     const [showFilters, setShowFilters] = useState(false);
     const [flashMessage, setFlashMessage] = useState(null);
 
+    // Function to load items from the API
     const loadItems = () => {
         setLoading(true);
         const params = {
@@ -40,24 +41,29 @@ const useIndexPage = (apiEndpoint, defaultSortField) => {
             });
     };
 
+    // Load items when dependencies change
     useEffect(() => {
         loadItems();
     }, [currentPage, itemsPerPage, sortField, sortDirection, filters]);
 
+    // Handle sorting
     const handleSort = (field) => {
         setSortField(field);
         setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     };
 
+    // Handle page change
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
 
+    // Handle items per page change
     const handleItemsPerPageChange = (newItemsPerPage) => {
         setItemsPerPage(newItemsPerPage);
         setCurrentPage(1);
     };
 
+    // Render sort icon
     const renderSortIcon = (field) => {
         if (sortField !== field) return null;
         return sortDirection === 'asc' ? <ArrowUp className="inline-block ml-2"/> :

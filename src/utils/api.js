@@ -1,5 +1,6 @@
 const API_URL = "http://localhost:8080";
 
+// Helper function to handle API responses
 const handleResponse = async (response) => {
     if (!response.ok) {
         const errorText = await response.text();
@@ -64,6 +65,7 @@ const handleResponse = async (response) => {
     return data;
 };
 
+// GET request
 export const apiGet = async (url, params = {}) => {
     /** @type {Record<string, string>} */
     const typedFilteredParams = Object.fromEntries(
@@ -82,6 +84,7 @@ export const apiGet = async (url, params = {}) => {
     }
 };
 
+// POST request
 export const apiPost = async (url, data) => {
     try {
         const response = await fetch(`${API_URL}${url}`, {
@@ -96,6 +99,7 @@ export const apiPost = async (url, data) => {
     }
 };
 
+// PUT request
 export const apiPut = async (url, data) => {
     try {
         const response = await fetch(`${API_URL}${url}`, {
@@ -110,6 +114,7 @@ export const apiPut = async (url, data) => {
     }
 };
 
+// DELETE request
 export const apiDelete = async (url) => {
     try {
         const response = await fetch(`${API_URL}${url}`, {method: "DELETE"});

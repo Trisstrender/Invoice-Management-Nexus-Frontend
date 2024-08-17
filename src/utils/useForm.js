@@ -9,6 +9,7 @@ const useForm = (initialState, apiEndpoint, redirectPath, idParam = null) => {
     const [flashMessage, setFlashMessage] = useState(null);
     const [validationErrors, setValidationErrors] = useState({});
 
+    // Fetch data if editing an existing item
     useEffect(() => {
         const fetchData = async () => {
             if (idParam) {
@@ -30,6 +31,7 @@ const useForm = (initialState, apiEndpoint, redirectPath, idParam = null) => {
         fetchData();
     }, [idParam, apiEndpoint]);
 
+    // Handle form field changes
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
@@ -37,6 +39,7 @@ const useForm = (initialState, apiEndpoint, redirectPath, idParam = null) => {
         setValidationErrors(prev => ({ ...prev, [name]: null }));
     };
 
+    // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         setFlashMessage(null);
@@ -79,6 +82,7 @@ const useForm = (initialState, apiEndpoint, redirectPath, idParam = null) => {
         }
     };
 
+    // Handle navigation back to the list view
     const handleBack = () => {
         navigate(redirectPath);
     };

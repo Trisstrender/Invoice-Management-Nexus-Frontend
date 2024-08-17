@@ -9,6 +9,7 @@ const Top5PersonsChart = ({top5Persons}) => {
             <div className="bg-white shadow-md rounded-lg p-6" style={{height: '400px'}}>
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={top5Persons} margin={{top: 20, right: 30, left: 20, bottom: 5}}>
+                        {/* Define gradients for bar colors */}
                         <defs>
                             {top5Persons.map((entry, index) => (
                                 <linearGradient id={`colorUv${index}`} x1="0" y1="0" x2="0" y2="1" key={index}>

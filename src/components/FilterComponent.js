@@ -2,6 +2,7 @@ import React from 'react';
 import {Filter} from 'lucide-react';
 
 const FilterComponent = ({filters, setFilters, showFilters, setShowFilters, fields}) => {
+    // Handle changes to filter inputs
     const handleFilterChange = (e) => {
         const {name, value} = e.target;
         setFilters(prev => ({...prev, [name]: value}));
@@ -9,6 +10,7 @@ const FilterComponent = ({filters, setFilters, showFilters, setShowFilters, fiel
 
     return (
         <div className="mb-6">
+            {/* Toggle button to show/hide filters */}
             <button
                 onClick={() => setShowFilters(!showFilters)}
                 className={`inline-block font-bold py-2 px-4 rounded transition-colors duration-200 ${
@@ -17,6 +19,7 @@ const FilterComponent = ({filters, setFilters, showFilters, setShowFilters, fiel
             >
                 <Filter className="inline-block mr-1"/> Filter
             </button>
+            {/* Filter fields */}
             {showFilters && (
                 <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
                     {fields.map(field => (
@@ -35,6 +38,7 @@ const FilterComponent = ({filters, setFilters, showFilters, setShowFilters, fiel
     );
 };
 
+// Helper component for filter input fields
 const InputField = ({name, placeholder, value, onChange, type = "text"}) => (
     <div>
         <input
