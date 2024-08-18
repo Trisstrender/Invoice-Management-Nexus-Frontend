@@ -53,7 +53,7 @@ const Statistics = () => {
             setTotalPages(response.paginatedData.totalPages);
             setTotalItems(response.paginatedData.totalItems);
 
-            // If current page is empty and it's not the first page, go to the last page
+            // If current page is empty, and it's not the first page, go to the last page
             if (response.paginatedData.items.length === 0 && currentPage > 1) {
                 setCurrentPage(response.paginatedData.totalPages);
             }
