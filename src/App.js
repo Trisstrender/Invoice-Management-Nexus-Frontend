@@ -12,15 +12,16 @@ import InvoiceForm from "./invoices/InvoiceForm";
 import Statistics from "./statistics/Statistics";
 import WelcomePage from "./WelcomePage";
 
-// Updated Logo Component
+// Logo Component
 const InvoiceManagementNexusLogo = () => (
     <div className="flex items-center space-x-3">
         <div className="text-secondary-700 transition-colors duration-300 group-hover:text-primary-600">
-            <Layers3 size={36} />
+            <Layers3 size={36} strokeWidth={1.5} />
         </div>
-        <div className="text-xl font-bold leading-tight text-secondary-700">
-            <span className="block transition-colors duration-300 group-hover:text-primary-600">Invoice Management</span>
-            <span className="block transition-colors duration-300 group-hover:text-primary-600">Nexus</span>
+        <div className="text-xl font-light text-secondary-700 whitespace-nowrap">
+            <span className="transition-colors duration-300 group-hover:text-primary-600">
+                Invoice Management Nexus
+            </span>
         </div>
     </div>
 );
