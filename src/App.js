@@ -1,7 +1,7 @@
 import React from "react";
 import {BrowserRouter as Router, Link, Route, Routes, useLocation} from "react-router-dom";
 import {AnimatePresence} from "framer-motion";
-import {BarChart2, FileText, Users} from "lucide-react";
+import {BarChart2, FileText, Users, Layers3} from "lucide-react";
 
 import PersonIndex from "./persons/PersonIndex";
 import PersonDetail from "./persons/PersonDetail";
@@ -11,6 +11,19 @@ import InvoiceDetail from "./invoices/InvoiceDetail";
 import InvoiceForm from "./invoices/InvoiceForm";
 import Statistics from "./statistics/Statistics";
 import WelcomePage from "./WelcomePage";
+
+// Updated Logo Component
+const InvoiceManagementNexusLogo = () => (
+    <div className="flex items-center space-x-3">
+        <div className="text-secondary-700 transition-colors duration-300 group-hover:text-primary-600">
+            <Layers3 size={36} />
+        </div>
+        <div className="text-xl font-bold leading-tight text-secondary-700">
+            <span className="block transition-colors duration-300 group-hover:text-primary-600">Invoice Management</span>
+            <span className="block transition-colors duration-300 group-hover:text-primary-600">Nexus</span>
+        </div>
+    </div>
+);
 
 // Main App component
 export function App() {
@@ -23,11 +36,8 @@ export function App() {
                         <div className="flex justify-between h-16">
                             {/* Logo/Home link */}
                             <div className="flex-shrink-0 flex items-center">
-                                <Link to="/" className="text-3xl font-bold">
-                                    <span
-                                        className="bg-gradient-to-r from-primary-500 to-secondary-500 text-transparent bg-clip-text hover:from-primary-600 hover:to-secondary-600 transition-all duration-300">
-                                        INVOTRISS
-                                    </span>
+                                <Link to="/" aria-label="Home" className="group">
+                                    <InvoiceManagementNexusLogo />
                                 </Link>
                             </div>
                             {/* Navigation links */}
@@ -67,7 +77,7 @@ export function App() {
                 <footer className="bg-white shadow-md mt-auto">
                     <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
                         <p className="text-center text-sm text-gray-500">
-                            © 2024 Invotriss. Developed by Jan Dalewski
+                            © 2024 Invoice Management Nexus. Developed by Jan Dalewski
                         </p>
                     </div>
                 </footer>
