@@ -1,7 +1,7 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes, useLocation, Link } from "react-router-dom";
-import { AnimatePresence } from "framer-motion";
-import { BarChart2, FileText, Users } from "lucide-react";
+import {BrowserRouter as Router, Link, Route, Routes, useLocation} from "react-router-dom";
+import {AnimatePresence} from "framer-motion";
+import {BarChart2, FileText, Users} from "lucide-react";
 
 import PersonIndex from "./persons/PersonIndex";
 import PersonDetail from "./persons/PersonDetail";
@@ -24,7 +24,8 @@ export function App() {
                             {/* Logo/Home link */}
                             <div className="flex-shrink-0 flex items-center">
                                 <Link to="/" className="text-3xl font-bold">
-                                    <span className="bg-gradient-to-r from-primary-500 to-secondary-500 text-transparent bg-clip-text hover:from-primary-600 hover:to-secondary-600 transition-all duration-300">
+                                    <span
+                                        className="bg-gradient-to-r from-primary-500 to-secondary-500 text-transparent bg-clip-text hover:from-primary-600 hover:to-secondary-600 transition-all duration-300">
                                         INVOTRISS
                                     </span>
                                 </Link>
@@ -76,7 +77,7 @@ export function App() {
 }
 
 // NavLink component for navigation items
-const NavLink = ({ to, children, icon }) => {
+const NavLink = ({to, children, icon}) => {
     const location = useLocation();
     const isActive = location.pathname.startsWith(to);
     const activeClassName = isActive
@@ -88,7 +89,7 @@ const NavLink = ({ to, children, icon }) => {
             to={to}
             className={`inline-flex items-center px-1 pt-1 border-b-2 text-lg font-medium transition-all duration-200 ${activeClassName}`}
         >
-            {React.cloneElement(icon, { className: isActive ? "text-primary-600" : "text-secondary-400" })}
+            {React.cloneElement(icon, {className: isActive ? "text-primary-600" : "text-secondary-400"})}
             <span className="ml-2">{children}</span>
         </Link>
     );

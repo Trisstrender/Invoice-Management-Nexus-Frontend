@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { apiGet, apiDelete } from "../utils/api";
+import React, {useEffect, useState} from "react";
+import {useParams} from "react-router-dom";
+import {apiDelete, apiGet} from "../utils/api";
 import Country from "./Country";
 import InvoiceTable from "../invoices/InvoiceTable";
-import { motion } from "framer-motion";
-import { User } from "lucide-react";
+import {motion} from "framer-motion";
+import {User} from "lucide-react";
 import FlashMessage from "../components/FlashMessage";
 import PaginationComponent from "../components/PaginationComponent";
 import BackButton from "../components/BackButton";
 
 const PersonDetail = () => {
     // Get the person id from the URL parameters
-    const { id } = useParams();
+    const {id} = useParams();
     // State variables for person details and related data
     const [person, setPerson] = useState(null);
     const [issuedInvoices, setIssuedInvoices] = useState([]);
@@ -101,8 +101,8 @@ const PersonDetail = () => {
     if (!person) {
         return (
             <div className="container mx-auto px-4">
-                <FlashMessage type="error" text="Person not found." />
-                <BackButton />
+                <FlashMessage type="error" text="Person not found."/>
+                <BackButton/>
             </div>
         );
     }
@@ -111,26 +111,26 @@ const PersonDetail = () => {
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
+            initial={{opacity: 0, y: 20}}
+            animate={{opacity: 1, y: 0}}
+            exit={{opacity: 0, y: -20}}
+            transition={{duration: 0.3}}
             className="container mx-auto px-4"
         >
             <h1 className="text-3xl font-bold mb-6 text-secondary-800">Person Details</h1>
 
-            <BackButton />
+            <BackButton/>
 
             {flashMessage && (
                 <div className="mb-4">
-                    <FlashMessage type={flashMessage.type} text={flashMessage.text} />
+                    <FlashMessage type={flashMessage.type} text={flashMessage.text}/>
                 </div>
             )}
 
             {/* Person details card */}
             <div className="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-6">
                 <h2 className="text-2xl font-semibold mb-4 text-secondary-700">
-                    <User className="inline-block mr-2" /> {person.name} ({person.identificationNumber})
+                    <User className="inline-block mr-2"/> {person.name} ({person.identificationNumber})
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Left column */}
@@ -165,7 +165,8 @@ const PersonDetail = () => {
                         <InvoiceTable
                             invoices={issuedInvoices}
                             deleteInvoice={deleteInvoice}
-                            handleSort={() => {}}
+                            handleSort={() => {
+                            }}
                             sortField=""
                             sortDirection=""
                             renderSortIcon={() => null}
@@ -191,7 +192,8 @@ const PersonDetail = () => {
                         <InvoiceTable
                             invoices={receivedInvoices}
                             deleteInvoice={deleteInvoice}
-                            handleSort={() => {}}
+                            handleSort={() => {
+                            }}
                             sortField=""
                             sortDirection=""
                             renderSortIcon={() => null}

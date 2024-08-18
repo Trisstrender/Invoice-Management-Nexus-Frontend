@@ -1,7 +1,7 @@
 import React from 'react';
-import { ChevronDown } from 'lucide-react';
+import {ChevronDown} from 'lucide-react';
 
-const InputSelect = ({ name, label, prompt, items, value, handleChange, multiple, required, error }) => {
+const InputSelect = ({name, label, prompt, items, value, handleChange, multiple, required, error}) => {
     return (
         <div className="mb-4">
             <label htmlFor={name} className="block mb-2 text-sm font-bold text-gray-700">

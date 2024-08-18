@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { apiGet, apiPost, apiPut } from './api';
+import {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {apiGet, apiPost, apiPut} from './api';
 
 const useForm = (initialState, apiEndpoint, redirectPath, idParam = null) => {
     const navigate = useNavigate();
@@ -33,10 +33,10 @@ const useForm = (initialState, apiEndpoint, redirectPath, idParam = null) => {
 
     // Handle form field changes
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        const {name, value} = e.target;
+        setFormData(prev => ({...prev, [name]: value}));
         // Clear validation error for this field when user starts typing
-        setValidationErrors(prev => ({ ...prev, [name]: null }));
+        setValidationErrors(prev => ({...prev, [name]: null}));
     };
 
     // Handle form submission

@@ -10,7 +10,8 @@ const InvoiceStatistics = ({invoiceStats}) => {
             <h2 className="text-2xl font-semibold mb-4 text-secondary-700">Invoice Statistics</h2>
             <div className="bg-white shadow-md rounded-lg p-6">
                 <p className="mb-2">
-                    <span className="font-semibold">Current Year Sum:</span> {formatCurrency(invoiceStats.currentYearSum)}
+                    <span
+                        className="font-semibold">Current Year Sum:</span> {formatCurrency(invoiceStats.currentYearSum)}
                 </p>
                 <p className="mb-2">
                     <span className="font-semibold">All Time Sum:</span> {formatCurrency(invoiceStats.allTimeSum)}

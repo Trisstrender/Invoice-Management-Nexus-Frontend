@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { apiGet } from '../utils/api';
+import React, {useEffect, useState} from 'react';
+import {apiGet} from '../utils/api';
 import InvoiceStatistics from './InvoiceStatistics';
 import Top5PersonsChart from './Top5PersonsChart';
 import PersonStatisticsTable from './PersonStatisticsTable';

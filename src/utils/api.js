@@ -12,15 +12,15 @@ const handleResponse = async (response) => {
         try {
             errorData = JSON.parse(errorText);
         } catch (e) {
-            errorData = { message: errorText };
+            errorData = {message: errorText};
         }
 
         // Handle different error formats
         let formattedError = {};
         if (typeof errorData === 'string') {
-            formattedError = { message: errorData };
+            formattedError = {message: errorData};
         } else if (errorData.message) {
-            formattedError = { message: errorData.message };
+            formattedError = {message: errorData.message};
         } else if (typeof errorData === 'object') {
             formattedError = errorData;
         }
