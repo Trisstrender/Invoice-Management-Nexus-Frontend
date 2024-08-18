@@ -86,4 +86,4 @@ The project is organized into the following key directories:
 
 ## Backend Repository
 
-The backend API that powers this frontend application can be found at [Invoice Management Nexus Backend](https://github.com/your-username/invoice-management-nexus-backend).
+The backend API that powers this frontend application can be found at [Invoice Management Nexus Backend](https://github.com/Trisstrender/invoice-management-nexus-backend).
