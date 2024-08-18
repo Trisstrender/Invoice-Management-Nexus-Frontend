@@ -1,8 +1,4 @@
-/**
- * Enum for countries supported in the application.
- * @readonly
- * @enum {string}
- */
+//Enum for countries supported in the application
 const Country = Object.freeze({
     CZECHIA: 'CZECHIA',
     SLOVAKIA: 'SLOVAKIA',
