@@ -1,10 +1,4 @@
-/**
- * Formats a number as Czech currency (CZK)
- *
- * @param {number} amount - The amount to format
- * @param {boolean} [includeCurrency=true] - Whether to include the currency symbol
- * @returns {string} The formatted currency string
- */
+// Formats a number as Czech currency (CZK)
 export const formatCurrency = (amount, includeCurrency = true) => {
     const formatter = new Intl.NumberFormat('cs-CZ', {
         style: includeCurrency ? 'currency' : 'decimal',

@@ -1,10 +1,4 @@
-/**
- * Formats a date string into a localized or ISO format.
- *
- * @param {string} str - The date string to format
- * @param {boolean} [locale=false] - Whether to use localized format
- * @returns {string} The formatted date string
- */
+// Formats a date string into localized or ISO format
 export const dateStringFormatter = (str, locale = false) => {
     const d = new Date(str);
 
