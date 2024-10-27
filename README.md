@@ -87,3 +87,50 @@ The project is organized into the following key directories:
 ## Backend Repository
 
 The backend API that powers this frontend application can be found at [Invoice Management Nexus Backend](https://github.com/Trisstrender/invoice-management-nexus-backend).
+
+## Usage Examples
+
+Here are some examples of how to use the application:
+
+### Creating a New Invoice
+
+1. Navigate to the "Invoices" section from the navigation bar.
+2. Click on the "New Invoice" button.
+3. Fill in the required fields such as Invoice Number, Issue Date, Due Date, Product, Price, VAT, Buyer, and Seller.
+4. Click "Save Invoice" to create the invoice.
+
+### Viewing Invoice Details
+
+1. Navigate to the "Invoices" section from the navigation bar.
+2. Click on the "View" button next to the invoice you want to view.
+3. The invoice details will be displayed, including buyer and seller information, product details, and pricing.
+
+### Editing an Invoice
+
+1. Navigate to the "Invoices" section from the navigation bar.
+2. Click on the "Edit" button next to the invoice you want to edit.
+3. Update the necessary fields and click "Save Invoice" to save the changes.
+
+### Deleting an Invoice
+
+1. Navigate to the "Invoices" section from the navigation bar.
+2. Click on the "Delete" button next to the invoice you want to delete.
+3. Confirm the deletion in the prompt that appears.
+
+### Managing Persons
+
+1. Navigate to the "Persons" section from the navigation bar.
+2. You can create, view, edit, and delete person records similar to how you manage invoices.
+
+### Viewing Statistics
+
+1. Navigate to the "Statistics" section from the navigation bar.
+2. View various financial statistics and charts to gain insights into your data.
+
+## Contributing
+
+We welcome contributions to improve the Invoice Management Nexus. If you have any suggestions, bug reports, or feature requests, please open an issue or submit a pull request.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

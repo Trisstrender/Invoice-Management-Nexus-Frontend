@@ -8,11 +8,13 @@ import useForm from "../utils/useForm";
 import BackButton from "../components/BackButton";
 
 const InvoiceForm = () => {
-    // Get the id parameter from the URL, if it exists (for editing)
+    // Get the id parameter from the URL, if it exists
     const {id} = useParams();
-    // State to store the list of persons (for buyer and seller selection)
+    // State to store the list of persons
     const [persons, setPersons] = useState([]);
-    // Initial state for the form
+    // Loading state for persons
+    const [loadingPersons, setLoadingPersons] = useState(true);
+    // Define the initial state for the form
     const initialState = {
         invoiceNumber: "",
         issued: "",
@@ -37,7 +39,7 @@ const InvoiceForm = () => {
         handleBack
     } = useForm(initialState, "/api/invoices", "/invoices", id);
 
-    // Fetch the list of persons when the component mounts
+    // Fetch all persons when the component mounts
     useEffect(() => {
         const fetchAllPersons = async () => {
             try {
@@ -45,7 +47,6 @@ const InvoiceForm = () => {
                 let page = 1;
                 let hasMore = true;
 
-                // Fetch all pages of persons
                 while (hasMore) {
                     const response = await apiGet("/api/persons", {page, limit: 100});
                     allPersons = [...allPersons, ...(response.items || [])];
@@ -54,21 +55,22 @@ const InvoiceForm = () => {
                 }
 
                 setPersons(allPersons);
+                setLoadingPersons(false);
             } catch (error) {
                 setFlashMessage({
                     type: 'error',
                     text: `Error fetching persons: ${error.message}`
                 });
+                setLoadingPersons(false);
             }
         };
 
         fetchAllPersons();
 
-        // Clear flash message when component unmounts
         return () => setFlashMessage(null);
     }, [setFlashMessage]);
 
-    // Handle changes to buyer or seller selection
+    // Handle person selection change
     const handlePersonChange = (field) => (e) => {
         const selectedId = e.target.value;
         const selectedPerson = persons.find(p => String(p.id) === selectedId || String(p._id) === selectedId);
@@ -78,7 +80,7 @@ const InvoiceForm = () => {
     };
 
     // Show loading spinner while data is being fetched
-    if (loading) {
+    if (loading || loadingPersons) {
         return <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary-500"></div>
         </div>;
