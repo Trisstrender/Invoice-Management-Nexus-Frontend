@@ -121,11 +121,23 @@ Here are some examples of how to use the application:
 
 1. Navigate to the "Persons" section from the navigation bar.
 2. You can create, view, edit, and delete person records similar to how you manage invoices.
+3. To create a new person, click on the "New Person" button.
+4. Fill in the required fields such as Name, Identification Number, Tax Number, Account Number, Bank Code, IBAN, Telephone, Email, Street, ZIP, City, Country, and Note.
+5. Click "Save Person" to create the person record.
 
 ### Viewing Statistics
 
 1. Navigate to the "Statistics" section from the navigation bar.
 2. View various financial statistics and charts to gain insights into your data.
+3. The statistics section includes:
+   - Invoice Statistics: Displays the current year sum, all-time sum, and the count of invoices.
+   - Top 5 Persons by Revenue: A bar chart showing the top 5 persons by revenue.
+   - Person Statistics: A table displaying person statistics with sorting and pagination.
+
+### Welcome Page
+
+1. The `WelcomePage` component provides navigation to different sections of the application.
+2. It includes links to manage persons, handle invoices, and view statistics.
 
 ## Contributing
 
